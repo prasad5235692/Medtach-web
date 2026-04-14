@@ -312,7 +312,7 @@ export default function Navbar() {
                   setMobileMoreOpen(false);
                 }}
               >
-                Login
+               For business
               </Link>
             )}
             <Link
