@@ -161,7 +161,7 @@ export default function Navbar() {
               href="/login"
               className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
             >
-              Login
+              For business
             </Link>
           )}
           <Link
