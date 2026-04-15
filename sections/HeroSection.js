@@ -78,7 +78,7 @@ export default function HeroSection() {
                 href="/contact"
                 className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10"
               >
-                Join 1-on-1 Career Consultant
+                Join 1-1 career Counseling
               </Link>
             </div>
 
