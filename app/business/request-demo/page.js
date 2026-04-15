@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Check, Building2, Users, Globe, BarChart3,
-  Puzzle, ArrowRight, Phone, Mail,
+  Puzzle, ArrowRight, Phone, Mail, ChevronLeft,
 } from "lucide-react";
 
 const benefits = [
@@ -78,15 +78,24 @@ export default function RequestDemoPage() {
         <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-0 h-80 w-80 rounded-full bg-purple-700/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full bg-orange-500/10 blur-3xl" />
         <div className="page-container relative">
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-white/5 px-3 py-1.5 text-xs font-semibold text-purple-200 transition hover:bg-white/10 hover:text-white"
+          >
+            <ChevronLeft size={14} />
+            Back to MedTech Career
+          </Link>
+          <div className="flex flex-col items-center">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-400">
             Free Demo
           </p>
-          <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-4xl">
             Get your <span className="text-orange-400">personalised demo</span>
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-purple-100/80">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-purple-100/80">
             Tell us your needs and we'll build a custom plan to drive results for your healthcare team.
           </p>
+          </div>
         </div>
       </section>
 

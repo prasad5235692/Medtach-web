@@ -2,7 +2,7 @@
 import {
   Check, Minus, Users, Building2, Brain, GraduationCap,
   Zap, Shield, BarChart3, Globe, Puzzle, HeartHandshake,
-  Star, ArrowRight,
+  Star, ArrowRight, ChevronLeft,
 } from "lucide-react";
 
 // ─── Plan data ────────────────────────────────────────────────────────────────
@@ -204,6 +204,18 @@ export default function PricingPage() {
       <section className="relative overflow-hidden bg-linear-to-br from-[#0d0422] via-[#1a0535] to-[#0f172a] py-20 text-white">
         <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-purple-700/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
+
+        {/* Back button */}
+        <div className="relative mx-auto max-w-7xl ">
+          <Link
+            href="/"
+            className="mb-8 inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-white/5 px-3 py-1.5 text-xs font-semibold text-purple-200 transition hover:bg-white/10 hover:text-white"
+          >
+            <ChevronLeft size={14} />
+            Back to MedTech Career
+          </Link>
+        </div>
+
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-orange-400">
             Plans &amp; Pricing

@@ -78,7 +78,7 @@ export default function HeroSection() {
                 href="/contact"
                 className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10"
               >
-                Get Started
+                Join 1-on-1 Career Consultant
               </Link>
             </div>
 
@@ -98,46 +98,46 @@ export default function HeroSection() {
               ))}
             </div>
           </div>
+<div
+  className="hidden lg:flex animate-fadeIn justify-center lg:justify-end"
+  style={{ animationDelay: "1.8s" }}
+>
+  <div className="relative w-full max-w-md">
+    <Image
+      src="/background/students.png"
+      alt="Hero Image"
+      width={500}
+      height={500}
+      className="relative z-10 rounded-2xl shadow-lg"
+    />
 
-          <div
-            className="animate-fadeIn flex justify-center lg:justify-end"
-            style={{ animationDelay: "1.8s" }}
-          >
-            <div className="relative w-full max-w-md">
-              <Image
-                src="/background/students.png"
-                alt="Hero Image"
-                width={500}
-                height={500}
-                className="relative z-10 rounded-2xl shadow-lg"
-              />  
+    <div className="absolute -bottom-5 -left-5 z-10 flex items-center gap-3 rounded-xl border border-white/10 bg-[#07071a] px-4 py-3 shadow-xl">
+      <Award size={20} className="text-white/60" />
+      <div>
+        <p className="text-xs text-white/40">Certification</p>
+        <p className="text-sm font-bold text-white">CPC / CCS Ready</p>
+      </div>
+    </div>
 
-              <div className="absolute -bottom-5 -left-5 z-10 flex items-center gap-3 rounded-xl border border-white/10 bg-[#07071a] px-4 py-3 shadow-xl">
-                <Award size={20} className="text-white/60" />
-                <div>
-                  <p className="text-xs text-white/40">Certification</p>
-                  <p className="text-sm font-bold text-white">CPC / CCS Ready</p>
-                </div>
-              </div>
+    <div className="absolute -right-5 -top-5 z-10 flex items-center gap-3 rounded-xl border border-purple-500/20 bg-purple-600/10 px-4 py-3 shadow-xl backdrop-blur-sm">
+      <Calendar size={20} className="text-purple-300/60" />
+      <div>
+        <p className="text-xs text-purple-300/60">Live Classes</p>
+        <p className="text-sm font-bold text-purple-200">Daily Sessions</p>
+      </div>
+    </div>
 
-              <div className="absolute -right-5 -top-5 z-10 flex items-center gap-3 rounded-xl border border-purple-500/20 bg-purple-600/10 px-4 py-3 shadow-xl backdrop-blur-sm">
-                <Calendar size={20} className="text-purple-300/60" />
-                <div>
-                  <p className="text-xs text-purple-300/60">Live Classes</p>
-                  <p className="text-sm font-bold text-purple-200">Daily Sessions</p>
-                </div>
-              </div>
-
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 opacity-20"
-                style={{
-                  backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 2px)",
-                  backgroundSize: "12px 12px",
-                }}
-              />
-            </div>
-          </div>
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 opacity-20"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 2px)",
+        backgroundSize: "12px 12px",
+      }}
+    />
+  </div>
+</div>
 
     </div>
     </div>

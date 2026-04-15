@@ -11,6 +11,7 @@ import {
   BarChart3,
   Clock,
   Globe,
+  ChevronLeft,
 } from "lucide-react";
 
 const stats = [
@@ -97,6 +98,17 @@ export default function BusinessHome() {
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-purple-400/10 blur-3xl"
         />
+
+        {/* Back button */}
+        <div className="page-container relative">
+          <Link
+            href="/"
+            className="mb-8 inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-white/5 px-3 py-1.5 text-xs font-semibold text-purple-200 transition hover:bg-white/10 hover:text-white"
+          >
+            <ChevronLeft size={14} />
+            Back to MedTech Career
+          </Link>
+        </div>
 
         <div className="page-container relative text-center">
           <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-600/10 px-4 py-1.5 text-xs font-semibold text-purple-300 uppercase tracking-wider">
