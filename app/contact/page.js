@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import SectionHeading from "@/components/SectionHeading";
 import { MapPin, Phone, Mail, Clock, CheckCircle2 } from "lucide-react";
@@ -48,7 +48,7 @@ export default function ContactPage() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-3">
+        <div className="page-container relative grid grid-cols-1 gap-12 lg:grid-cols-3">
 
           {/* Contact info */}
           <div className="flex flex-col gap-6">

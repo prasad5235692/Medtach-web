@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
@@ -66,7 +66,7 @@ export default function BranchesPage() {
 
       {/* Branch Cards */}
       <section className="relative bg-white py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {branches.map((branch, i) => (
               <AnimateOnScroll key={branch.id} animation="fade-up" delay={i * 100}>
@@ -134,7 +134,7 @@ export default function BranchesPage() {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Why Visit in Person" title="The Classroom Advantage" subtitle="Our classroom sessions are designed to deliver hands-on, projector-based training that replicates actual US healthcare BPO workflows." />
           </AnimateOnScroll>

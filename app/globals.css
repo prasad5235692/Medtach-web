@@ -20,6 +20,7 @@
   --color-accent-dark: var(--accent-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --width-8xl: 88rem;
 }
 
 body {
@@ -27,6 +28,20 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
 }
+
+/* ── Consistent page container ── */
+/* Replaces all max-w-7xl / max-w-8xl patterns site-wide.            */
+/* Provides: centering, max-width cap, and responsive side padding.  */
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1rem;        /* 16 px  – mobile   */
+}
+@media (min-width: 640px)  { .page-container { padding-inline: 1rem; }  } /* 24 px  – sm      */
+@media (min-width: 1024px) { .page-container { padding-inline: 2rem; }  } /* 40 px  – lg      */
+@media (min-width: 1280px) { .page-container { padding-inline: 2rem;   }  } /* 48 px  – xl      */
+@media (min-width: 1536px) { .page-container { padding-inline: 2rem;   }  } /* 64 px  – 2xl     */
 
 /* ── Infinite logo scroll ── */
 @keyframes logo-scroll {
@@ -143,3 +158,29 @@ body {
 .delay-400 { transition-delay: 400ms; }
 .delay-500 { transition-delay: 500ms; }
 .delay-600 { transition-delay: 600ms; }
+
+/* ── Business Navbar dropdown animations ── */
+@keyframes nav-menu-open {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-nav-menu {
+  animation: nav-menu-open 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top center;
+}
+
+@keyframes nav-submenu-open {
+  from { opacity: 0; transform: translateX(6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-nav-submenu {
+  animation: nav-submenu-open 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes mobile-menu-open {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-mobile-menu {
+  animation: mobile-menu-open 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

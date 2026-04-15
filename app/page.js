@@ -1,4 +1,4 @@
-import HeroSection from "@/sections/HeroSection";
+﻿import HeroSection from "@/sections/HeroSection";
 import CoursesSection from "@/sections/CoursesSection";
 import WhyUsSection from "@/sections/WhyUsSection";
 import StatsSection from "@/sections/StatsSection";

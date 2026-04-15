@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { BookOpen, ShieldCheck, Award, TrendingUp, Users, BarChart3, ArrowRight } from "lucide-react";
 
 const solutions = [
@@ -48,13 +48,13 @@ export default function SolutionsPage() {
   return (
     <div className="bg-white">
       {/* Header */}
-      <section className="bg-linear-to-br from-[#042a2b] to-[#0a4d4f] py-20 text-white">
+      <section className="bg-linear-to-br from-[#0d0422] to-[#0f172a] py-20 text-white">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-teal-400">Our Programmes</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-purple-400">Our Programmes</p>
           <h1 className="mt-3 text-4xl font-extrabold md:text-5xl">
             Training Solutions for Every Healthcare Role
           </h1>
-          <p className="mt-5 text-base text-teal-100/80">
+          <p className="mt-5 text-base text-purple-100/80">
             Purpose-built programmes for coders, billers, compliance teams, and revenue cycle professionals.
           </p>
         </div>
@@ -62,14 +62,14 @@ export default function SolutionsPage() {
 
       {/* Solutions grid */}
       <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {solutions.map(({ icon: Icon, title, desc, tags }) => (
               <div
                 key={title}
-                className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-teal-200 hover:shadow-md"
+                className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-purple-200 hover:shadow-md"
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700">
                   <Icon size={22} />
                 </span>
                 <h3 className="mt-4 text-base font-semibold text-gray-900">{title}</h3>
@@ -78,7 +78,7 @@ export default function SolutionsPage() {
                   {tags.map((t) => (
                     <span
                       key={t}
-                      className="rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700"
+                      className="rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-medium text-purple-800"
                     >
                       {t}
                     </span>
@@ -91,7 +91,7 @@ export default function SolutionsPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-teal-50 py-16">
+      <section className="bg-purple-50 py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <h2 className="text-2xl font-extrabold text-gray-900">
             Can't find exactly what you need?
@@ -101,7 +101,7 @@ export default function SolutionsPage() {
           </p>
           <Link
             href="/business/contact"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-teal-600 px-7 py-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-purple-700 px-7 py-3 text-sm font-semibold text-white transition hover:bg-purple-800"
           >
             Request a Custom Programme <ArrowRight size={14} />
           </Link>

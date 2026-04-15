@@ -1,4 +1,4 @@
-import BusinessNavbar from "@/components/BusinessNavbar";
+﻿import BusinessNavbar from "@/components/BusinessNavbar";
 import BusinessFooter from "@/components/BusinessFooter";
 
 export const metadata = {

@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import TestimonialCard from "@/components/TestimonialCard";
 import SectionHeading from "@/components/SectionHeading";
 import { testimonials } from "@/data/testimonials";
@@ -15,7 +15,7 @@ export default function TestimonialsSection() {
         aria-hidden="true"
         className="pointer-events-none absolute right-0 bottom-0 h-56 w-56 rounded-full bg-orange-200/20 blur-3xl"
       />
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="page-container relative">
         <AnimateOnScroll animation="fade-up">
           <SectionHeading
             center

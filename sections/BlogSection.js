@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import BlogCard from "@/components/BlogCard";
 import SectionHeading from "@/components/SectionHeading";
 import { blogPosts } from "@/data/blog";
@@ -17,7 +17,7 @@ export default function BlogSection() {
           backgroundSize: "20px 20px",
         }}
       />
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="page-container relative">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading

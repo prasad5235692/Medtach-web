@@ -1,4 +1,4 @@
-
+﻿
 export default function FeatureCard({ icon: Icon, title, description }) {
   return (
     <div className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1.5">

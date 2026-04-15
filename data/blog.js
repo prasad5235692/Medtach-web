@@ -1,4 +1,4 @@
-export const blogPosts = [
+﻿export const blogPosts = [
   {
     slug: "what-is-medical-coding",
     title: "What Is Medical Coding? A Complete Beginner's Guide",

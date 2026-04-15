@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   Building2,
   Users,
@@ -87,32 +87,32 @@ export default function BusinessHome() {
   return (
     <div className="bg-white">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-linear-to-br from-[#042a2b] via-[#063a3b] to-[#0a4d4f] py-24 text-white">
+      <section className="relative overflow-hidden bg-linear-to-br from-[#0d0422] via-[#1a0535] to-[#0f172a] py-24 text-white">
         {/* Background blobs */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl"
+          className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-purple-600/10 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-teal-400/10 blur-3xl"
+          className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-purple-400/10 blur-3xl"
         />
 
-        <div className="relative mx-auto max-w-7xl px-6 text-center">
-          <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-xs font-semibold text-teal-300 uppercase tracking-wider">
+        <div className="page-container relative text-center">
+          <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-600/10 px-4 py-1.5 text-xs font-semibold text-purple-300 uppercase tracking-wider">
             <Building2 size={13} />
             Enterprise Healthcare Training
           </div>
 
           <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
             Upskill Your{" "}
-            <span className="bg-linear-to-r from-teal-300 to-cyan-300 bg-clip-text text-transparent">
+            <span className="text-orange-400">
               Healthcare Team
             </span>{" "}
             at Scale
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-teal-100/80">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-purple-100/80">
             Medtech Business provides hospitals, clinics, and healthcare
             organisations with certified, flexible, and results-driven training
             in medical coding, billing, and compliance.
@@ -121,20 +121,20 @@ export default function BusinessHome() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/business/contact"
-              className="inline-flex items-center gap-2 rounded-xl bg-teal-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-900/40 transition hover:bg-teal-400"
+              className="inline-flex items-center gap-2 rounded-xl bg-purple-700 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-purple-950/40 transition hover:bg-purple-600"
             >
               Get a Free Demo <ArrowRight size={16} />
             </Link>
             <Link
               href="/business/solutions"
-              className="inline-flex items-center gap-2 rounded-xl border border-teal-400/40 bg-white/5 px-8 py-3.5 text-base font-semibold text-teal-200 transition hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-xl border border-purple-400/40 bg-white/5 px-8 py-3.5 text-base font-semibold text-purple-200 transition hover:bg-white/10"
             >
               Explore Solutions
             </Link>
           </div>
 
           {/* Trust badges */}
-          <p className="mt-8 text-xs text-teal-400/60">
+          <p className="mt-8 text-xs text-purple-400/60">
             Trusted by 500+ healthcare organisations across India
           </p>
         </div>
@@ -146,7 +146,7 @@ export default function BusinessHome() {
           <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
             {stats.map((s) => (
               <div key={s.label}>
-                <p className="text-4xl font-extrabold text-teal-700">{s.value}</p>
+                <p className="text-4xl font-extrabold text-purple-800">{s.value}</p>
                 <p className="mt-1 text-sm font-medium text-gray-500">{s.label}</p>
               </div>
             ))}
@@ -156,9 +156,9 @@ export default function BusinessHome() {
 
       {/* ── Solutions ── */}
       <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-teal-600">
+            <p className="text-xs font-semibold uppercase tracking-widest text-purple-700">
               What We Offer
             </p>
             <h2 className="mt-2 text-3xl font-extrabold text-gray-900 md:text-4xl">
@@ -174,9 +174,9 @@ export default function BusinessHome() {
             {solutions.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="group rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-teal-200 hover:shadow-md"
+                className="group rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:border-purple-200 hover:shadow-md"
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-600 transition group-hover:bg-teal-100">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700 transition group-hover:bg-purple-100">
                   <Icon size={22} />
                 </span>
                 <h3 className="mt-4 text-base font-semibold text-gray-900">{title}</h3>
@@ -188,7 +188,7 @@ export default function BusinessHome() {
           <div className="mt-10 text-center">
             <Link
               href="/business/solutions"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-teal-700 transition hover:text-teal-600"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 transition hover:text-purple-700"
             >
               View all solutions <ArrowRight size={14} />
             </Link>
@@ -197,11 +197,11 @@ export default function BusinessHome() {
       </section>
 
       {/* ── Why MedTech Business ── */}
-      <section className="bg-linear-to-br from-teal-50 to-cyan-50 py-20">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="bg-linear-to-br from-purple-50 to-purple-50 py-20">
+        <div className="page-container">
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-teal-600">
+              <p className="text-xs font-semibold uppercase tracking-widest text-purple-700">
                 Why Choose Us
               </p>
               <h2 className="mt-3 text-3xl font-extrabold text-gray-900 md:text-4xl">
@@ -216,7 +216,7 @@ export default function BusinessHome() {
                   <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
                     <CheckCircle2
                       size={18}
-                      className="mt-0.5 shrink-0 text-teal-600"
+                      className="mt-0.5 shrink-0 text-purple-700"
                     />
                     {item}
                   </li>
@@ -224,7 +224,7 @@ export default function BusinessHome() {
               </ul>
               <Link
                 href="/business/contact"
-                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-teal-600 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
+                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-purple-700 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-purple-800"
               >
                 Talk to Our Team <ArrowRight size={14} />
               </Link>
@@ -240,9 +240,9 @@ export default function BusinessHome() {
               ].map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="rounded-2xl border border-teal-100 bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-purple-100 bg-white p-5 shadow-sm"
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
                     <Icon size={20} />
                   </span>
                   <h4 className="mt-3 text-sm font-semibold text-gray-900">{title}</h4>
@@ -256,9 +256,9 @@ export default function BusinessHome() {
 
       {/* ── Testimonials ── */}
       <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-teal-600">
+            <p className="text-xs font-semibold uppercase tracking-widest text-purple-700">
               What Clients Say
             </p>
             <h2 className="mt-2 text-3xl font-extrabold text-gray-900">
@@ -274,7 +274,7 @@ export default function BusinessHome() {
                 <p className="text-sm leading-relaxed text-gray-600">"{quote}"</p>
                 <div className="mt-5">
                   <p className="text-sm font-semibold text-gray-900">{name}</p>
-                  <p className="text-xs text-teal-600">{role}</p>
+                  <p className="text-xs text-purple-700">{role}</p>
                 </div>
               </div>
             ))}
@@ -283,25 +283,25 @@ export default function BusinessHome() {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="bg-linear-to-r from-teal-700 to-teal-600 py-16">
+      <section className="bg-linear-to-r from-purple-800 to-purple-700 py-16">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <h2 className="text-3xl font-extrabold text-white md:text-4xl">
             Ready to transform your team?
           </h2>
-          <p className="mt-4 text-base text-teal-100">
+          <p className="mt-4 text-base text-purple-100">
             Book a free 30-minute discovery call and we'll design a custom
             learning plan for your organisation.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/business/contact"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-teal-700 shadow transition hover:bg-teal-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-purple-800 shadow transition hover:bg-purple-50"
             >
               Book a Demo Call <ArrowRight size={16} />
             </Link>
             <Link
               href="/business/pricing"
-              className="inline-flex items-center gap-2 rounded-xl border border-teal-300/50 bg-teal-600/40 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-teal-600/60"
+              className="inline-flex items-center gap-2 rounded-xl border border-purple-300/50 bg-purple-700/40 px-8 py-3.5 text-base font-semibold text-white transition hover:bg-purple-700/60"
             >
               View Pricing
             </Link>

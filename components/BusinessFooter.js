@@ -1,5 +1,6 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Building2, Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
+import Image from "next/image";
 
 const footerLinks = {
   Solutions: [
@@ -30,31 +31,32 @@ const socials = [
 
 export default function BusinessFooter() {
   return (
-    <footer className="relative overflow-hidden bg-[#042a2b] text-white">
+    <footer className="relative overflow-hidden bg-[#0d0422] text-white">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 -top-40 h-80 w-80 rounded-full bg-teal-800/20 blur-3xl"
+        className="pointer-events-none absolute -left-40 -top-40 h-80 w-80 rounded-full bg-purple-900/20 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-teal-500/10 blur-3xl"
+        className="pointer-events-none absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-purple-600/10 blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-16">
+      <div className="page-container relative py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           {/* Brand column */}
           <div className="md:col-span-1">
             <Link href="/business" className="inline-flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600">
-                <Building2 size={18} className="text-white" />
-              </span>
-              <div className="leading-tight">
-                <span className="block text-sm font-bold text-white">MedTech</span>
-                <span className="block text-xs font-semibold tracking-widest text-teal-400 uppercase">
-                  Business
-                </span>
-              </div>
-            </Link>
+           
+          <Image
+            src="/bnusiness logo.png"
+            alt="Medtech Career"
+            width={260}
+             height={92}
+             className="h-26 w-auto "
+          />
+        </Link>
+
+
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-gray-400">
               Empowering healthcare organizations with targeted upskilling
               solutions for medical coding, billing, and compliance teams.
@@ -62,7 +64,7 @@ export default function BusinessFooter() {
             <div className="mt-6 flex flex-col gap-3">
               <a
                 href="tel:+919876543210"
-                className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-teal-300"
+                className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-purple-300"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5">
                   <Phone size={14} />
@@ -71,7 +73,7 @@ export default function BusinessFooter() {
               </a>
               <a
                 href="mailto:business@medtechcareer.com"
-                className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-teal-300"
+                className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-purple-300"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5">
                   <Mail size={14} />
@@ -91,7 +93,7 @@ export default function BusinessFooter() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-teal-400/50 hover:bg-teal-400/10 hover:text-teal-300"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-purple-400/50 hover:bg-purple-400/10 hover:text-purple-300"
                 >
                   <Icon size={15} />
                 </a>
@@ -102,7 +104,7 @@ export default function BusinessFooter() {
           {/* Links */}
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section}>
-              <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-teal-300/60">
+              <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-purple-300/60">
                 {section}
               </h3>
               <ul className="flex flex-col gap-3">
@@ -110,7 +112,7 @@ export default function BusinessFooter() {
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-sm text-gray-400 transition hover:text-teal-300"
+                      className="text-sm text-gray-400 transition hover:text-purple-300"
                     >
                       {l.label}
                     </Link>
@@ -122,13 +124,13 @@ export default function BusinessFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-teal-900/50 pt-8 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-950/50 pt-8 sm:flex-row">
           <p className="text-xs text-gray-600">
             © {new Date().getFullYear()} Medtech Career Business. All rights reserved.
           </p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Use", "Enterprise Agreement"].map((t) => (
-              <a key={t} href="#" className="text-xs text-gray-500 transition hover:text-teal-300">
+              <a key={t} href="#" className="text-xs text-gray-500 transition hover:text-purple-300">
                 {t}
               </a>
             ))}

@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseActions from "@/components/CourseActions";
 import { courses, getCourseBySlug } from "@/data/courses";
 import { notFound } from "next/navigation";
@@ -60,7 +60,7 @@ export default async function CourseDetailPage({ params }) {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             {/* Main */}
             <div className="lg:col-span-2">
@@ -133,7 +133,7 @@ export default async function CourseDetailPage({ params }) {
       {/* Topics Covered */}
       {course.topics && (
         <section className="bg-white py-16">
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="page-container">
             <AnimateOnScroll animation="fade-up">
               <h2 className="text-2xl font-bold text-gray-900">Topics Covered</h2>
               <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -152,7 +152,7 @@ export default async function CourseDetailPage({ params }) {
       {/* Training Details */}
       {course.trainingDetails && (
         <section className="bg-[#f8fafc] py-16">
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="page-container">
             <AnimateOnScroll animation="fade-up">
               <h2 className="text-2xl font-bold text-gray-900">Training Programme Details</h2>
               <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -177,7 +177,7 @@ export default async function CourseDetailPage({ params }) {
       {/* Salient Features */}
       {course.features && (
         <section className="bg-white py-16">
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="page-container">
             <AnimateOnScroll animation="fade-up">
               <h2 className="text-2xl font-bold text-gray-900">Salient Features</h2>
               <ul className="mt-6 flex flex-col gap-3">
@@ -200,7 +200,7 @@ export default async function CourseDetailPage({ params }) {
       {/* Study Materials */}
       {course.studyMaterials && (
         <section className="bg-[#f8fafc] py-16">
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="page-container">
             <AnimateOnScroll animation="fade-up">
               <h2 className="text-2xl font-bold text-gray-900">Study Materials Included</h2>
               <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -262,7 +262,7 @@ export default async function CourseDetailPage({ params }) {
 
       {/* Other courses */}
       <section className="bg-[#f8fafc] py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <h2 className="text-xl font-bold text-gray-900">Explore Other Courses</h2>
           <div className="mt-6 flex flex-wrap gap-3">
             {courses

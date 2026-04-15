@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Image from "next/image";
 import AnimateOnScroll from "./AnimateOnScroll";
 import SectionHeading from "./SectionHeading";
@@ -24,7 +24,7 @@ export default function ClientLogosSlider() {
       <AnimateOnScroll animation="fade-up">
         <SectionHeading center label="Clients" title="Our Valued Clients" subtitle="Trusted by leading healthcare BPOs &amp; MNCs across India." />
 
-        <div className="relative mx-auto max-w-7xl px-4">
+        <div className="page-container relative">
           <div className="overflow-hidden rounded-3xl border border-white/40 bg-white/30 py-12 shadow-xl shadow-purple-100/40 backdrop-blur-md">
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 rounded-l-3xl bg-linear-to-r from-[#faf5ff] to-transparent" />
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 rounded-r-3xl bg-linear-to-l from-[#faf5ff] to-transparent" />

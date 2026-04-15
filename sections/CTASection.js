@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import Link from "next/link";
 
 export default function CTASection() {

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Stethoscope, BookOpen, Trophy, Clock, Users, BarChart2 } from "lucide-react";
 
 const badgeClasses = {

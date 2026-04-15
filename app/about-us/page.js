@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 
@@ -54,7 +54,7 @@ export default function AboutUsPage() {
       {/* Who We Are + Mission */}
       <section className="relative overflow-hidden bg-white py-20">
         <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-purple-100/30 blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 sm:grid-cols-2">
+        <div className="page-container relative grid grid-cols-1 gap-12 sm:grid-cols-2">
           <AnimateOnScroll animation="fade-right">
             <div>
               <SectionHeading label="Who We Are" title="An Established Training & Placement Centre" />
@@ -102,7 +102,7 @@ export default function AboutUsPage() {
 
       {/* Stats */}
       <section className="bg-purple-700 py-14 text-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
             {[
               { label: "Courses Offered",     value: "14+" },
@@ -130,7 +130,7 @@ export default function AboutUsPage() {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -160,27 +160,71 @@ export default function AboutUsPage() {
 
       {/* Timeline */}
       <section className="relative overflow-hidden bg-white py-20">
-        <div className="relative mx-auto max-w-3xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Journey" title="Our Milestones" />
           </AnimateOnScroll>
-          <ol className="relative mt-12 border-l-2 border-purple-200 pl-8">
-            {milestones.map((m, i) => (
-              <AnimateOnScroll key={m.year} animation="fade-up" delay={i * 100}>
-                <li className="mb-10 last:mb-0">
-                  <span className="absolute -left-5 flex h-4 w-4 items-center justify-center rounded-full bg-purple-700 ring-4 ring-white" />
-                  <p className="text-xs font-semibold uppercase tracking-widest text-purple-700">{m.year}</p>
-                  <p className="mt-1 text-sm text-gray-500">{m.text}</p>
-                </li>
-              </AnimateOnScroll>
-            ))}
-          </ol>
+
+          <div className="relative mx-auto mt-14 max-w-4xl">
+            {/* Spine — left edge on mobile, center on desktop */}
+            <span
+              aria-hidden="true"
+              className="absolute left-4 top-3 h-[calc(100%-1.5rem)] w-px bg-gradient-to-b from-purple-400 via-purple-200 to-transparent lg:left-1/2 lg:-translate-x-px"
+            />
+
+            <ol className="space-y-8 lg:space-y-0">
+              {milestones.map((m, i) => {
+                const isLeft = i % 2 === 0;
+                return (
+                  <AnimateOnScroll
+                    key={m.year}
+                    animation={isLeft ? "fade-right" : "fade-left"}
+                    delay={i * 80}
+                  >
+                    <li className={`relative lg:flex ${i < milestones.length - 1 ? "lg:pb-12" : ""}`}>
+                      <div
+                        className={`relative ${
+                          isLeft
+                            ? "pl-12 lg:w-1/2 lg:pl-0 lg:pr-12"
+                            : "pl-12 lg:ml-auto lg:w-1/2 lg:pl-12 lg:pr-0"
+                        }`}
+                      >
+                        {/* Dot — mobile (left spine) */}
+                        <span className="absolute left-0 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-purple-700 text-[10px] font-bold text-white shadow-md shadow-purple-200/60 ring-4 ring-white lg:hidden">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {/* Dot — desktop (center spine) */}
+                        <span
+                          className={`absolute top-4 z-10 hidden h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xs font-bold text-white shadow-lg shadow-purple-300/50 ring-4 ring-white lg:flex ${
+                            isLeft ? "-right-5" : "-left-5"
+                          }`}
+                        >
+                          {m.year.slice(2)}
+                        </span>
+                        {/* Card */}
+                        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-100 hover:shadow-lg">
+                          <div className="h-1 bg-gradient-to-r from-purple-600 to-purple-300" />
+                          <div className="p-6">
+                            <span className="text-xs font-bold uppercase tracking-widest text-purple-700">
+                              {m.year}
+                            </span>
+                            <div className="mb-3 mt-2 h-px w-8 rounded-full bg-purple-100" />
+                            <p className="text-sm leading-relaxed text-gray-500">{m.text}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </AnimateOnScroll>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </section>
 
       {/* Team */}
       <section className="bg-[#f8fafc] py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Leadership" title="Meet Our Management Team" />
           </AnimateOnScroll>

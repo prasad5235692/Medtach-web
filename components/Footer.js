@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
 
@@ -43,7 +43,7 @@ export default function Footer() {
         className="pointer-events-none absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-orange-600/10 blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-16">
+      <div className="page-container relative py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="md:col-span-2">
             <Link href="/" className="inline-flex items-center">

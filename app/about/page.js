@@ -5,8 +5,8 @@ import Link from "next/link";
 const team = [
   { name: "Dr. Kavitha Rajan",  role: "Founder & Director",           avatar: "KR", bg: "bg-purple-700" },
   { name: "Mr. Senthil Kumar",  role: "Head of Training & Operations", avatar: "SK", bg: "bg-orange-500" },
-  { name: "Dr. Meena Iyer",     role: "Lead Faculty â€” Medical Coding", avatar: "MI", bg: "bg-purple-600" },
-  { name: "Ms. Rekha Venkatesh", role: "Lead Faculty â€” Medical Billing", avatar: "RV", bg: "bg-teal-600" },
+  { name: "Dr. Meena Iyer",     role: "Lead Faculty — Medical Coding", avatar: "MI", bg: "bg-purple-600" },
+  { name: "Ms. Rekha Venkatesh", role: "Lead Faculty — Medical Billing", avatar: "RV", bg: "bg-teal-600" },
 ];
 
 const milestones = [
@@ -19,7 +19,7 @@ const milestones = [
 ];
 
 export const metadata = {
-  title: "About Us â€” Medtech Career",
+  title: "About Us — Medtech Career",
 };
 
 export default function AboutPage() {
@@ -51,15 +51,15 @@ export default function AboutPage() {
       {/* About Description */}
       <section className="relative overflow-hidden bg-white py-20">
         <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-purple-100/30 blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 sm:grid-cols-2">
+        <div className="page-container relative grid grid-cols-1 gap-12 sm:grid-cols-2">
           <AnimateOnScroll animation="fade-right">
             <div>
               <SectionHeading label="Who We Are" title="An Established Training & Placement Centre" />
               <p className="mt-5 text-sm leading-relaxed text-gray-500">
-                Medtech Career is a certified, well-established Training, Placement, and Certification centre providing projector-based intensive classroom training â€” combined with live online sessions â€” for all Medical, Paramedical, and Life Science graduates and post-graduates.
+                Medtech Career is a certified, well-established Training, Placement, and Certification centre providing projector-based intensive classroom training — combined with live online sessions — for all Medical, Paramedical, and Life Science graduates and post-graduates.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-gray-500">
-                Our programmes cover Medical Terminology, ICD-10 CM, CPT-4, and key specialties including Radiology, Surgery, E/M, Anesthesia, and Pathology â€” preparing students for successful US healthcare BPO careers. All Medtech Career certificates are valid and accepted by healthcare BPOs pan-India.
+                Our programmes cover Medical Terminology, ICD-10 CM, CPT-4, and key specialties including Radiology, Surgery, E/M, Anesthesia, and Pathology — preparing students for successful US healthcare BPO careers. All Medtech Career certificates are valid and accepted by healthcare BPOs pan-India.
               </p>
             </div>
           </AnimateOnScroll>
@@ -75,7 +75,7 @@ export default function AboutPage() {
                   "Accessible education for life science graduates across Tamil Nadu",
                 ].map((v) => (
                   <li key={v} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-700 text-xs text-white">âœ“</span>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-700 text-xs text-white">✓</span>
                     <span className="text-sm text-gray-600">{v}</span>
                   </li>
                 ))}
@@ -87,7 +87,7 @@ export default function AboutPage() {
 
       {/* Stats */}
       <section className="bg-purple-700 py-14 text-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
             {[
               { label: "Online Courses",       value: "7+" },
@@ -135,7 +135,7 @@ export default function AboutPage() {
 
       {/* Team */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Leadership" title="Meet Our Management Team" />
           </AnimateOnScroll>
@@ -157,7 +157,7 @@ export default function AboutPage() {
               href="/our-team"
               className="inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-6 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
             >
-              Meet the Full Team â†’
+              Meet the Full Team →
             </Link>
           </div>
         </div>

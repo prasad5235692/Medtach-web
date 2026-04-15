@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
@@ -99,7 +99,7 @@ export default function InternshipPage() {
 
       {/* Benefits */}
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -126,7 +126,7 @@ export default function InternshipPage() {
 
       {/* Tracks */}
       <section className="bg-[#f8fafc] py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -160,7 +160,7 @@ export default function InternshipPage() {
 
       {/* Eligibility + Form */}
       <section className="bg-white py-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-2">
+        <div className="page-container grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Eligibility */}
           <AnimateOnScroll animation="fade-right">
             <SectionHeading label="Who Can Apply" title="Eligibility Criteria" />

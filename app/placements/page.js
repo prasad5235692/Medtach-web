@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 import { Briefcase, TrendingUp, Users, Award, Building2, CheckCircle } from "lucide-react";
@@ -97,7 +97,7 @@ export default function PlacementsPage() {
 
       {/* Stats */}
       <section className="bg-purple-700 py-14">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-2 gap-6 text-white sm:grid-cols-4">
             {stats.map((s, i) => {
               const Icon = s.icon;
@@ -119,7 +119,7 @@ export default function PlacementsPage() {
 
       {/* Hiring Partners */}
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -151,7 +151,7 @@ export default function PlacementsPage() {
             backgroundSize: "40px 40px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -180,7 +180,7 @@ export default function PlacementsPage() {
 
       {/* Success Stories */}
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -218,7 +218,7 @@ export default function PlacementsPage() {
 
       {/* Eligibility */}
       <section className="bg-[#faf5ff] py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <AnimateOnScroll animation="fade-right">
               <SectionHeading label="Eligibility" title="Who Can Get Placed?" />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,7 +19,6 @@ const moreLinks = [
   { label: "Placements",  href: "/placements" },
   { label: "Internship",  href: "/internship" },
   { label: "Blog",        href: "/blog" },
-  { label: "Join as Teacher", href: "/join-as-teacher" },
 ];
 
 export default function Navbar() {
@@ -31,6 +30,8 @@ export default function Navbar() {
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [businessOpen, setBusinessOpen] = useState(false);
+  const [mobileBusinessOpen, setMobileBusinessOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -41,7 +42,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100/60 bg-white/95 shadow-sm backdrop-blur-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <div className="page-container flex items-center justify-between py-3">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.png"
@@ -107,31 +108,78 @@ export default function Navbar() {
             </button>
             {moreOpen && (
               <div className="absolute left-0 top-full  w-48 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
-                {moreLinks.map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
-                    onClick={() => setMoreOpen(false)}
-                  >
-                    {l.label}
-                  </Link>
-                ))}
+                {moreLinks.map((l) =>
+                  l.href === "/join-as-teacher" ? (
+                    <Link
+                      key={l.href}
+                      href={l.href}
+                      className="flex items-center gap-2 border-t border-purple-50 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-purple-700 text-[9px] text-white">✦</span>
+                      {l.label}
+                    </Link>
+                  ) : (
+                    <Link
+                      key={l.href}
+                      href={l.href}
+                      className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      {l.label}
+                    </Link>
+                  )
+                )}
               </div>
             )}
           </div>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href="/business"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-100 hover:border-teal-300"
+         
+          <div
+            className="relative"
+            onMouseEnter={() => setBusinessOpen(true)}
+            onMouseLeave={() => setBusinessOpen(false)}
           >
-            <Building2 size={14} />
-            MedTech Businesses
-          </a>
+            <button
+              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition hover:text-purple-700"
+              onClick={() => setBusinessOpen((v) => !v)}
+              aria-expanded={businessOpen}
+              aria-haspopup="true"
+            >
+              MedTech Businesses
+              <ChevronDown size={12} className={`transition-transform duration-200 ${businessOpen ? "rotate-180" : ""}`} />
+            </button>
+            {businessOpen && (
+              <div className="absolute right-0 top-full mt-0 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+                <a
+                  href="/business/pricing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700"
+                  onClick={() => setBusinessOpen(false)}
+                >
+                  Compare Plans
+                </a>
+                <a
+                  href="/business/request-demo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
+                  onClick={() => setBusinessOpen(false)}
+                >
+                  Try MedTech Businesses
+                </a>
+              </div>
+            )}
+          </div>
+           <Link
+            href="/join-as-teacher"
+            className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
+          >
+            Join as Mentor
+          </Link>
           {session ? (
             <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
               <button
@@ -268,24 +316,88 @@ export default function Navbar() {
               </button>
               {mobileMoreOpen && (
                 <div className="border-purple-100 bg-purple-50/30 py-2">
-                  {moreLinks.map((l) => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
-                      onClick={() => {
-                        setOpen(false);
-                        setMobileCoursesOpen(false);
-                        setMobileMoreOpen(false);
-                      }}
-                    >
-                      {l.label}
-                    </Link>
-                  ))}
+                  {moreLinks.map((l) =>
+                    l.href === "/join-as-teacher" ? (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className="flex items-center gap-2 mx-2 mt-1 rounded-lg bg-purple-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-purple-800"
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileCoursesOpen(false);
+                          setMobileMoreOpen(false);
+                        }}
+                      >
+                        <span className="text-[10px]">✦</span>
+                        {l.label}
+                      </Link>
+                    ) : (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileCoursesOpen(false);
+                          setMobileMoreOpen(false);
+                        }}
+                      >
+                        {l.label}
+                      </Link>
+                    )
+                  )}
                 </div>
               )}
             </div>
 
+            <div>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between text-gray-600 text-sm font-medium"
+                onClick={() => setMobileBusinessOpen(!mobileBusinessOpen)}
+                aria-expanded={mobileBusinessOpen}
+              >
+                <span className="flex items-center gap-2">
+                  MedTech Businesses
+                </span>
+                <ChevronDown size={14} className={`transition-transform duration-200 ${mobileBusinessOpen ? "rotate-180" : ""}`} />
+              </button>
+              {mobileBusinessOpen && (
+                <div className="mt-1 overflow-hidden ">
+                  <a
+                    href="/business/pricing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700"
+                    onClick={() => { setOpen(false); setMobileBusinessOpen(false); }}
+                  >
+                    Compare Plans
+                  </a>
+                  <a
+                    href="/business/request-demo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
+                    onClick={() => { setOpen(false); setMobileBusinessOpen(false); }}
+                  >
+                    Try MedTech Businesses
+                  </a>
+                </div>
+              )}
+            </div>
+             <Link
+              href="/join-as-teacher"
+              className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
+              onClick={() => {
+                setOpen(false);
+                setMobileCoursesOpen(false);
+                setMobileMoreOpen(false);
+              }}
+            >
+              Join as Mentor
+            </Link>
+            
+           
             {session ? (
               <>
                 <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-purple-50 px-3 py-2">
@@ -324,16 +436,7 @@ export default function Navbar() {
               Login / Signup
               </Link>
             )}
-            <a
-              href="/business"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-5 py-2.5 text-sm font-semibold text-teal-700"
-              onClick={() => setOpen(false)}
-            >
-              <Building2 size={14} />
-              MedTech Businesses
-            </a>
+
             <Link
               href="/contact"
               className="rounded-lg bg-orange-500 px-5 py-2.5 text-center text-sm font-semibold text-white"

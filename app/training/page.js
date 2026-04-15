@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 import { BookOpen, Clock, Users, Award, CheckCircle, ChevronRight } from "lucide-react";
@@ -156,7 +156,7 @@ export default function TrainingPage() {
 
       {/* Program cards */}
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -228,7 +228,7 @@ export default function TrainingPage() {
           className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 opacity-[0.06]"
           style={{ backgroundImage: "radial-gradient(circle, #7E22CE 1px, transparent 1px)", backgroundSize: "20px 20px" }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -257,7 +257,7 @@ export default function TrainingPage() {
 
       {/* Stats strip */}
       <section className="bg-purple-700 py-12 text-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
             {[
               { number: "20+", label: "Years of Excellence" },

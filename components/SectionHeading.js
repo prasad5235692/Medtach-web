@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SectionHeading — reusable heading block.
  * Props:
  *   label    — small uppercase eyebrow text

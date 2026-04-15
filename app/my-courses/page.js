@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -296,7 +296,7 @@ export default function MyCoursesPage() {
     <div className="min-h-screen bg-[#f8fafc]">
       {/* ── Page Header ── */}
       <div className="border-b border-purple-100 bg-white px-4 py-8">
-        <div className="mx-auto max-w-7xl">
+        <div className="page-container">
           <h1 className="text-2xl font-bold text-gray-900">
             Welcome back{session.name ? `, ${session.name.split(" ")[0]}` : ""}! 👋
           </h1>
@@ -313,7 +313,7 @@ export default function MyCoursesPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="page-container py-8">
         {/* ── Filters ── */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Search */}

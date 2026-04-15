@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Building2, Users, TrendingUp, Award } from "lucide-react";
 
 const highlights = [
@@ -32,13 +32,13 @@ export default function BusinessAboutPage() {
   return (
     <div className="bg-white">
       {/* Header */}
-      <section className="bg-linear-to-br from-[#042a2b] to-[#0a4d4f] py-20 text-white">
+      <section className="bg-linear-to-br from-[#0d0422] to-[#0f172a] py-20 text-white">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-teal-400">About Us</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-purple-400">About Us</p>
           <h1 className="mt-3 text-4xl font-extrabold md:text-5xl">
             The Trusted Partner for Healthcare Learning
           </h1>
-          <p className="mt-5 text-base text-teal-100/80">
+          <p className="mt-5 text-base text-purple-100/80">
             MedTech Business is the enterprise arm of Medtech Career — India's
             leading healthcare education platform.
           </p>
@@ -61,7 +61,7 @@ export default function BusinessAboutPage() {
               As our individual-learner platform grew, enterprise clients began
               asking for something more structured — dedicated cohorts, custom
               curricula, and team-level reporting. That demand gave birth to
-              <strong className="text-teal-700"> MedTech Business</strong>, the
+              <strong className="text-purple-800"> MedTech Business</strong>, the
               organisation-facing arm of our platform.
             </p>
             <p className="mt-4">
@@ -79,7 +79,7 @@ export default function BusinessAboutPage() {
                 key={title}
                 className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-700">
                   <Icon size={22} />
                 </span>
                 <div>
@@ -93,7 +93,7 @@ export default function BusinessAboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-teal-50 py-16">
+      <section className="bg-purple-50 py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <h2 className="text-2xl font-extrabold text-gray-900">
             Ready to partner with us?
@@ -103,7 +103,7 @@ export default function BusinessAboutPage() {
           </p>
           <Link
             href="/business/contact"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-teal-600 px-7 py-3 text-sm font-semibold text-white transition hover:bg-teal-700"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-purple-700 px-7 py-3 text-sm font-semibold text-white transition hover:bg-purple-800"
           >
             Contact Our Team
           </Link>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -79,7 +79,7 @@ export default function AuthNavbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100 bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
+      <div className="page-container flex items-center gap-4 py-3">
 
         {/* ── LEFT: Logo + Find Courses ── */}
         <div className="flex shrink-0 items-center gap-6">

@@ -1,4 +1,4 @@
-
+﻿
 import Link from "next/link";
 import Image from "next/image";
 import {Award, Calendar} from "lucide-react";
@@ -25,7 +25,7 @@ export default function HeroSection() {
           </div>
         ))}
       </div>
-        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-6 py-28 sm:px-10 lg:py-0">
+        <div className="page-container relative z-10 flex min-h-screen flex-col justify-center py-28 lg:py-0">
         <div className="grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-2">
 
     

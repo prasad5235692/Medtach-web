@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { blogPosts, getBlogBySlug } from "@/data/blog";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }) {
 
       {/* Related posts */}
       <section className="bg-[#f8fafc] py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <h2 className="text-xl font-bold text-gray-900">More Articles</h2>
           <div className="mt-6 flex flex-wrap gap-3">
             {blogPosts

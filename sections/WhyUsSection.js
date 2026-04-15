@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import FeatureCard from "@/components/FeatureCard";
 import SectionHeading from "@/components/SectionHeading";
 import { Target, Award, Video, BadgeCheck, Briefcase, Smartphone } from "lucide-react";
@@ -60,7 +60,7 @@ export default function WhyUsSection() {
         }}
       />
 
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="page-container relative">
         <AnimateOnScroll animation="fade-up">
           <SectionHeading
             center

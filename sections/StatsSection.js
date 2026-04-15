@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { GraduationCap, Briefcase, Users, Star } from "lucide-react";
 
 const stats = [
@@ -19,7 +19,7 @@ export default function StatsSection() {
       }}
     >
 <div className="absolute inset-0 bg-black/50"></div>
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="page-container relative">
         <AnimateOnScroll animation="fade-down">
           <div className="text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">

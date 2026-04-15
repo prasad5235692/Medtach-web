@@ -1,4 +1,4 @@
-import { Star, Quote } from "lucide-react";
+﻿import { Star, Quote } from "lucide-react";
 
 export default function TestimonialCard({ testimonial }) {
   return (

@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
 import { courses } from "@/data/courses";
@@ -35,7 +35,7 @@ export default function CoursesPage() {
 
       {/* Quick path guide */}
       <section className="bg-purple-700 py-10 text-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-purple-200 uppercase tracking-widest">Recommended Learning Path</p>
@@ -52,7 +52,7 @@ export default function CoursesPage() {
       </section>
 
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading label="Healthcare Programmes" title="Medical Coding & Billing Courses" />
           </AnimateOnScroll>
@@ -68,7 +68,7 @@ export default function CoursesPage() {
 
       {/* Placement CTA strip */}
       <section className="bg-[#f8fafc] py-14">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-1 gap-6 rounded-2xl border border-purple-100 bg-white p-8 shadow-sm sm:grid-cols-3 sm:items-center">
             <div className="sm:col-span-2">
               <p className="text-sm font-semibold uppercase tracking-widest text-purple-700">Placement Assurance</p>

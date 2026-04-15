@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
 import { courses } from "@/data/courses";
@@ -21,7 +21,7 @@ export default function CoursesSection() {
           backgroundSize: "48px 48px",
         }}
       />
-      <div className="relative mx-auto max-w-7xl px-6">
+      <div className="page-container relative">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading

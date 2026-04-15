@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
@@ -67,7 +67,7 @@ export default function JoinAsTeacherPage() {
             backgroundSize: "48px 48px",
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="page-container relative">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Benefits" title="Why Teach with Us?" />
           </AnimateOnScroll>

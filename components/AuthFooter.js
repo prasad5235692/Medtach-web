@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, ExternalLink } from "lucide-react";
@@ -39,7 +39,7 @@ const branches = [
 export default function AuthFooter() {
   return (
     <footer className="border-t border-purple-100 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-12">
+      <div className="page-container py-12">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
           {/* ── Brand column ── */}
@@ -120,7 +120,7 @@ export default function AuthFooter() {
 
       {/* Bottom bar */}
       <div className="border-t border-gray-100 bg-gray-50 px-4 py-4">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 text-xs text-gray-400">
+        <div className="page-container flex flex-wrap items-center justify-between gap-3 text-xs text-gray-400">
           <span>© {new Date().getFullYear()} Medtech Career. All rights reserved.</span>
           <div className="flex gap-4">
             <Link href="/" className="hover:text-purple-600">Privacy Policy</Link>

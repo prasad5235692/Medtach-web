@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import BlogCard from "@/components/BlogCard";
 import { blogPosts } from "@/data/blog";
 
@@ -34,7 +34,7 @@ export default function BlogPage() {
 
       {/* Grid */}
       <section className="bg-[#f8fafc] py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {blogPosts.map((post, i) => (
               <AnimateOnScroll key={post.slug} animation="fade-up" delay={i * 100}>

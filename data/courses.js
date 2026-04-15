@@ -1,4 +1,4 @@
-﻿export const courses = [
+﻿﻿export const courses = [
   {
     slug: "medical-coding",
     title: "Medical Coding",
@@ -37,8 +37,8 @@
     trainingDetails: {
       duration: "6 months",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -96,8 +96,8 @@
     trainingDetails: {
       duration: "4 months",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -122,7 +122,7 @@
     badge: "1 Month",
     badgeColor: "orange",
     description:
-      "A fast-track introductory course covering Medical Terminology, anatomy basics, and the fundamentals of ICD-10 coding — ideal for fresh graduates.",
+      "A fast-track introductory course covering Medical Terminology, anatomy basics, and the fundamentals of ICD-10 coding � ideal for fresh graduates.",
     duration: "1 month",
     students: "900+",
     level: "Beginner",
@@ -150,10 +150,10 @@
       "Revenue Cycle Management overview",
     ],
     trainingDetails: {
-      duration: "66 Hours (3 Hrs/day â€” 22 classes)",
+      duration: "66 Hours (3 Hrs/day — 22 classes)",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sunday only: 6 hours, 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sunday only: 6 hours, 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates (MBBS, BDS, BHMS, Pharmacy, Nursing, Biotechnology, etc.)",
@@ -179,7 +179,7 @@
     badge: "2 Months",
     badgeColor: "purple",
     description:
-      "Deep-dive into specialty-wise coding â€” Radiology, Surgery, E/M, Anesthesia, and Pathology. Suitable for BMCT graduates and life-science professionals.",
+      "Deep-dive into specialty-wise coding — Radiology, Surgery, E/M, Anesthesia, and Pathology. Suitable for BMCT graduates and life-science professionals.",
     duration: "2 months",
     students: "700+",
     level: "Intermediate",
@@ -208,10 +208,10 @@
       "CPC, CPC-A, CCS-P Exam Training using solved question papers",
     ],
     trainingDetails: {
-      duration: "126 Hours (3 Hrs/day â€” 42 classes)",
+      duration: "126 Hours (3 Hrs/day — 42 classes)",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM; Sat: 10 AMâ€“5 PM",
-      weekend: "Sat & Sun: 6 hours, 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM; Sat: 10 AM–5 PM",
+      weekend: "Sat & Sun: 6 hours, 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -240,7 +240,7 @@
     badge: "High ROI",
     badgeColor: "blue",
     description:
-      "Comprehensive CPC prep covering all AAPC exam domains. Our students consistently pass with our methodology â€” 8 solved CPC papers included.",
+      "Comprehensive CPC prep covering all AAPC exam domains. Our students consistently pass with our methodology — 8 solved CPC papers included.",
     duration: "3 months",
     students: "1,200+",
     level: "Advanced",
@@ -269,10 +269,10 @@
       "CPC sample question papers with hundreds of coding scenarios",
     ],
     trainingDetails: {
-      duration: "126 Hours (3 Hrs/day â€” 42 classes)",
+      duration: "126 Hours (3 Hrs/day — 42 classes)",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM; Sat: 10 AMâ€“5 PM",
-      weekend: "Sat & Sun: 6 hours, 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM; Sat: 10 AM–5 PM",
+      weekend: "Sat & Sun: 6 hours, 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -329,10 +329,10 @@
       "CRC exam preparation and practice scenarios",
     ],
     trainingDetails: {
-      duration: "126 Hours (3 Hrs/day â€” 42 classes)",
+      duration: "126 Hours (3 Hrs/day — 42 classes)",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM; Sat: 10 AMâ€“5 PM",
-      weekend: "Sat & Sun: 6 hours, 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM; Sat: 10 AM–5 PM",
+      weekend: "Sat & Sun: 6 hours, 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical coders, healthcare professionals, nurses, documentation specialists",
@@ -388,8 +388,8 @@
     trainingDetails: {
       duration: "6 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Nurses, coders, and medical professionals with healthcare background",
@@ -414,7 +414,7 @@
     badge: "Inpatient",
     badgeColor: "orange",
     description:
-      "Master ICD-10-PCS procedure coding and DRG assignment for inpatient hospital settings — essential for accurate inpatient reimbursement under Medicare.",
+      "Master ICD-10-PCS procedure coding and DRG assignment for inpatient hospital settings � essential for accurate inpatient reimbursement under Medicare.",
     duration: "6 weeks",
     students: "180+",
     level: "Intermediate",
@@ -444,8 +444,8 @@
     trainingDetails: {
       duration: "6 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -472,7 +472,7 @@
     badge: "Growing Field",
     badgeColor: "green",
     description:
-      "Home Health Coding covers coding of patient care delivered at home — reviewing clinical notes, assigning ICD-10 codes, and ensuring billing compliance.",
+      "Home Health Coding covers coding of patient care delivered at home � reviewing clinical notes, assigning ICD-10 codes, and ensuring billing compliance.",
     duration: "4 weeks",
     students: "140+",
     level: "Intermediate",
@@ -501,8 +501,8 @@
     trainingDetails: {
       duration: "4 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical, Paramedical, Life Science Graduates; nurses especially suited",
@@ -527,7 +527,7 @@
     badge: "AAPC Certified",
     badgeColor: "blue",
     description:
-      "Develop proficiency in assigning accurate medical codes for outpatient settings — ER visits, same-day surgeries, diagnostic testing, and therapies.",
+      "Develop proficiency in assigning accurate medical codes for outpatient settings � ER visits, same-day surgeries, diagnostic testing, and therapies.",
     duration: "2 months",
     students: "200+",
     level: "Intermediate to Advanced",
@@ -557,8 +557,8 @@
     trainingDetails: {
       duration: "2 months",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical, Paramedical, Life Science Graduates & Post Graduates",
@@ -614,8 +614,8 @@
     trainingDetails: {
       duration: "2 months",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical, Paramedical, Life Science Graduates; prior coding knowledge preferred",
@@ -671,8 +671,8 @@
     trainingDetails: {
       duration: "4 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Medical, Paramedical, Life Science Graduates & IT professionals",
@@ -697,7 +697,7 @@
     badge: "Tech Skill",
     badgeColor: "blue",
     description:
-      "Master the use of Electronic Medical Records systems — data entry, chart management, and clinical documentation in leading EMR platforms used by US healthcare organisations.",
+      "Master the use of Electronic Medical Records systems � data entry, chart management, and clinical documentation in leading EMR platforms used by US healthcare organisations.",
     duration: "4 weeks",
     students: "300+",
     level: "Beginner",
@@ -726,8 +726,8 @@
     trainingDetails: {
       duration: "4 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Graduate; healthcare background preferred",
@@ -752,7 +752,7 @@
     badge: "Tech Skill",
     badgeColor: "purple",
     description:
-      "Get trained in Electronic Health Records systems used across hospitals and clinics — covering data management, interoperability, clinical workflows, and healthcare IT compliance.",
+      "Get trained in Electronic Health Records systems used across hospitals and clinics � covering data management, interoperability, clinical workflows, and healthcare IT compliance.",
     duration: "4 weeks",
     students: "280+",
     level: "Beginner to Intermediate",
@@ -773,7 +773,7 @@
     topics: [
       "EHR versus EMR: scope, architecture and use cases",
       "Clinical data entry, management and retrieval",
-      "EHR system workflows â€” scheduling, documentation, orders",
+      "EHR system workflows — scheduling, documentation, orders",
       "Interoperability: HL7, FHIR and data exchange protocols",
       "Patient data privacy, consent and HIPAA compliance",
       "EHR role in billing and revenue cycle",
@@ -781,8 +781,8 @@
     trainingDetails: {
       duration: "4 weeks",
       batches: "Weekdays & Weekend batches available",
-      weekdays: "Monâ€“Thu: 10 AMâ€“1 PM or 4â€“7 PM",
-      weekend: "Sat & Sun: 10 AMâ€“5 PM",
+      weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
+      weekend: "Sat & Sun: 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
       eligibility: "Any Graduate; healthcare or IT background preferred",

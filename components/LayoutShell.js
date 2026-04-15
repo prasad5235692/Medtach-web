@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useLayoutEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";

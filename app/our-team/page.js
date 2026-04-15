@@ -1,4 +1,4 @@
-import AnimateOnScroll from "@/components/AnimateOnScroll";
+﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 import { Linkedin, Mail } from "lucide-react";
@@ -102,7 +102,7 @@ export default function OurTeamPage() {
 
       {/* Management */}
       <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="page-container">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
@@ -128,7 +128,7 @@ export default function OurTeamPage() {
         { label: "Trichy Branch", team: trichyTeam, bg: "bg-[#faf5ff]" },
       ].map(({ label, team, bg }) => (
         <section key={label} className={`${bg} py-16`}>
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="page-container">
             <AnimateOnScroll animation="fade-up">
               <SectionHeading
                 label="Branch Team"
