@@ -18,6 +18,11 @@ export default function LayoutShell({ children }) {
     }
   }, [loading, pathname, router, session]);
 
+  // Business sub-site has its own layout — skip the main shell entirely
+  if (pathname.startsWith("/business")) {
+    return <>{children}</>;
+  }
+
   // Render nothing for the chrome while hydrating to prevent flash
   if (loading || (session && pathname === "/")) {
     return (

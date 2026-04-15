@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronDown, LogOut, User } from "lucide-react";
+import { ChevronDown, LogOut, User, Building2 } from "lucide-react";
 import { courses } from "@/data/courses";
 import { useAuth } from "@/context/AuthContext";
 
@@ -123,6 +123,15 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <a
+            href="/business"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-100 hover:border-teal-300"
+          >
+            <Building2 size={14} />
+            MedTech Businesses
+          </a>
           {session ? (
             <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
               <button
@@ -161,7 +170,7 @@ export default function Navbar() {
               href="/login"
               className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
             >
-              For business
+              Login / Signup
             </Link>
           )}
           <Link
@@ -312,9 +321,19 @@ export default function Navbar() {
                   setMobileMoreOpen(false);
                 }}
               >
-               For business
+              Login / Signup
               </Link>
             )}
+            <a
+              href="/business"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-5 py-2.5 text-sm font-semibold text-teal-700"
+              onClick={() => setOpen(false)}
+            >
+              <Building2 size={14} />
+              MedTech Businesses
+            </a>
             <Link
               href="/contact"
               className="rounded-lg bg-orange-500 px-5 py-2.5 text-center text-sm font-semibold text-white"
