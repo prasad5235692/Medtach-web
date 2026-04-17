@@ -2,6 +2,8 @@
 import FeatureCard from "@/components/FeatureCard";
 import SectionHeading from "@/components/SectionHeading";
 import { Target, Award, Video, BadgeCheck, Briefcase, Smartphone } from "lucide-react";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent } from "@/lib/i18n/content";
 
 const features = [
   {
@@ -36,7 +38,19 @@ const features = [
   },
 ];
 
-export default function WhyUsSection() {
+export default async function WhyUsSection() {
+  const locale = await getLocale();
+  const localizedFeatures = localizeContent(features, locale);
+  const heading = localizeContent(
+    {
+      label: "Why Medtech Career",
+      title: "Why Choose Medtech Career?",
+      subtitle:
+        "20 years of excellence — combining classroom discipline with flexible online learning for guaranteed career outcomes.",
+    },
+    locale,
+  );
+
   return (
     <section className="relative overflow-hidden bg-white py-24">
       {/* Radial dot grid — top-right */}
@@ -64,14 +78,14 @@ export default function WhyUsSection() {
         <AnimateOnScroll animation="fade-up">
           <SectionHeading
             center
-            label="Why Medtech Career"
-            title="Why Choose Medtech Career?"
-            subtitle="20 years of excellence — combining classroom discipline with flexible online learning for guaranteed career outcomes."
+            label={heading.label}
+            title={heading.title}
+            subtitle={heading.subtitle}
           />
         </AnimateOnScroll>
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f, i) => (
+          {localizedFeatures.map((f, i) => (
             <AnimateOnScroll key={f.title} animation="fade-up" delay={i * 100}>
               <FeatureCard icon={f.icon} title={f.title} description={f.desc} />
             </AnimateOnScroll>

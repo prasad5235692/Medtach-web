@@ -1,9 +1,22 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import TestimonialCard from "@/components/TestimonialCard";
 import SectionHeading from "@/components/SectionHeading";
-import { testimonials } from "@/data/testimonials";
+import { getTestimonials } from "@/data/testimonials";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent } from "@/lib/i18n/content";
 
-export default function TestimonialsSection() {
+export default async function TestimonialsSection() {
+  const locale = await getLocale();
+  const testimonials = getTestimonials(locale);
+  const heading = localizeContent(
+    {
+      label: "Student Stories",
+      title: "Real Results from Real Students",
+      subtitle: "Thousands of students have transformed their careers and cracked their exams with Medtech Career.",
+    },
+    locale,
+  );
+
   return (
     <section className="relative overflow-hidden bg-[#f8fafc] py-24">
       {/* Soft glowing blurred circles */}
@@ -19,9 +32,9 @@ export default function TestimonialsSection() {
         <AnimateOnScroll animation="fade-up">
           <SectionHeading
             center
-            label="Student Stories"
-            title="Real Results from Real Students"
-            subtitle="Thousands of students have transformed their careers and cracked their exams with Medtech Career."
+            label={heading.label}
+            title={heading.title}
+            subtitle={heading.subtitle}
           />
         </AnimateOnScroll>
 

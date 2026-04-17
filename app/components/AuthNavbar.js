@@ -7,14 +7,18 @@ import {
   ChevronDown, Search, BookOpen, Heart, ShoppingCart,
   Bell, User, LogOut, Eye, X,
 } from "lucide-react";
-import { courses } from "@/data/courses";
+import { getCourses } from "@/data/courses";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import CourseCollectionModal from "@/components/CourseCollectionModal";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { localizeNodeTree } from "@/lib/i18n/content";
 
 export default function AuthNavbar() {
   const router = useRouter();
   const { session, logout } = useAuth();
+  const { language } = useLanguage();
   const {
     cart,
     wishlist,
@@ -30,6 +34,7 @@ export default function AuthNavbar() {
   const [searchVal, setSearchVal] = useState("");
   const [searchOpen, setSearchOpen] = useState(false); // mobile search toggle
   const [collectionModal, setCollectionModal] = useState(null);
+  const courses = getCourses(language);
 
   const searchRef = useRef(null);
 
@@ -77,7 +82,7 @@ export default function AuthNavbar() {
     ? session.name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
     : "U";
 
-  return (
+  return localizeNodeTree(language, (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100 bg-white shadow-sm">
       <div className="page-container flex items-center gap-4 py-3">
 
@@ -250,7 +255,7 @@ export default function AuthNavbar() {
         onRemove={(course) => handleRemoveFromCollection(collectionModal, course)}
       />
     </header>
-  );
+  ));
 }
 
 function IconBtn({ href, label, icon, badge, onClick }) {

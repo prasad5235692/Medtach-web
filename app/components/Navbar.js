@@ -4,26 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronDown, LogOut, User, Building2 } from "lucide-react";
-import { courses } from "@/data/courses";
+import { getCourses } from "@/data/courses";
 import { useAuth } from "@/context/AuthContext";
-
-const primaryLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about-us" },
-  { label: "Branches", href: "/branches" },
-  { label: "Training", href: "/training" },
-];
-
-const moreLinks = [
-  { label: "Our Team", href: "/our-team" },
-  { label: "Placements", href: "/placements" },
-  { label: "Internship", href: "/internship" },
-  { label: "Blog", href: "/blog" },
-];
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar() {
   const router = useRouter();
   const { session, logout } = useAuth();
+  const { language, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
@@ -32,6 +21,21 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileBusinessOpen, setMobileBusinessOpen] = useState(false);
+
+  const primaryLinks = [
+    { label: t("nav.home", "Home"), href: "/" },
+    { label: t("nav.about", "About"), href: "/about-us" },
+    { label: t("nav.branches", "Branches"), href: "/branches" },
+    { label: t("nav.training", "Training"), href: "/training" },
+  ];
+
+  const moreLinks = [
+    { label: t("nav.ourTeam", "Our Team"), href: "/our-team" },
+    { label: t("nav.placements", "Placements"), href: "/placements" },
+    { label: t("nav.internship", "Internship"), href: "/internship" },
+    { label: t("nav.blog", "Blog"), href: "/blog" },
+  ];
+  const courses = getCourses(language);
 
   const handleLogout = async () => {
     await logout();
@@ -56,12 +60,12 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
             <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setCoursesOpen(true)} onClick={() => setCoursesOpen(!coursesOpen)}>
-              Courses <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
+              {t("nav.courses", "Courses")} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
             </button>
             {coursesOpen && (
               <div className="absolute left-0 top-full w-72 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link href="/courses" className="block border-b border-purple-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setCoursesOpen(false)}>
-                  View All Courses →
+                  {t("nav.viewAllCourses", "View All Courses")} →
                 </Link>
                 <div className="max-h-80 overflow-y-auto py-1">
                   {courses.map((c) => (
@@ -76,7 +80,7 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
             <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setMoreOpen(true)} onClick={() => setMoreOpen(!moreOpen)}>
-              More <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              {t("nav.more", "More")} <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
               <div className="absolute left-0 top-full  w-48 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
@@ -101,7 +105,7 @@ export default function Navbar() {
           <div className="relative" onMouseEnter={() => setBusinessOpen(true)} onMouseLeave={() => setBusinessOpen(false)}>
             {/* Main clickable link */}
             <Link href="/business" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition hover:text-purple-700">
-              MedTech Businesses
+              {t("nav.business", "MedTech Businesses")}
               <ChevronDown
                 size={12}
                 className={`transition-transform duration-200 ${businessOpen ? "rotate-180" : ""}`}
@@ -116,18 +120,18 @@ export default function Navbar() {
             {businessOpen && (
               <div className="absolute right-0 top-full mt-0 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link href="/business/pricing" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setBusinessOpen(false)}>
-                  Compare Plans
+                  {t("nav.comparePlans", "Compare Plans")}
                 </Link>
 
                 <Link href="/business/request-demo" className="flex items-center gap-2 border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setBusinessOpen(false)}>
-                  Try MedTech Businesses
+                  {t("nav.tryBusiness", "Try MedTech Businesses")}
                 </Link>
               </div>
             )}
           </div>{" "}
-          <Link href="/join-as-mentor" className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
-            Join as Mentor
-          </Link>
+          {/* <Link href="/join-as-mentor" className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
+            {t("nav.joinAsMentor", "Join as Mentor")}
+          </Link> */}
           {session ? (
             <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
               <button className="flex items-center gap-2 rounded-full border border-purple-200 py-1 pl-1 pr-3 text-sm font-medium text-purple-700 transition hover:bg-purple-50" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((v) => !v)}>
@@ -140,7 +144,7 @@ export default function Navbar() {
                     <User size={14} />
                   </span>
                 )}
-                <span className="max-w-25 truncate">{session.name || "Account"}</span>
+                <span className="max-w-25 truncate">{session.name || t("nav.account", "Account")}</span>
               </button>
               {userMenuOpen && (
                 <div className="absolute right-0 top-full mt-1 w-44 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
@@ -149,18 +153,18 @@ export default function Navbar() {
                     <p className="text-xs text-gray-400 truncate">{session.phone}</p>
                   </div>
                   <button className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-500 transition hover:bg-red-50" onClick={handleLogout}>
-                    <LogOut size={14} /> Logout
+                    <LogOut size={14} /> {t("nav.logout", "Logout")}
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/login" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
-              Login / Signup
+              {t("nav.loginSignup", "Login / Signup")}
             </Link>
           )}
           <Link href="/contact" className="rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-orange-200 transition hover:bg-orange-600">
-            Contact Us
+            {t("nav.contactUs", "Contact Us")}
           </Link>
         </div>
 
@@ -174,7 +178,7 @@ export default function Navbar() {
               setMobileMoreOpen(false);
             }
           }}
-          aria-label="Toggle menu"
+          aria-label={t("nav.toggleMenu", "Toggle menu")}
         >
           <span className={`h-0.5 w-6 bg-gray-700 transition-all ${open ? "translate-y-2 rotate-45" : ""}`} />
           <span className={`h-0.5 w-6 bg-gray-700 transition-all ${open ? "opacity-0" : ""}`} />
@@ -201,7 +205,7 @@ export default function Navbar() {
             ))}
             <div>
               <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}>
-                <span>Courses</span>
+                <span>{t("nav.courses", "Courses")}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileCoursesOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileCoursesOpen && (
@@ -215,7 +219,7 @@ export default function Navbar() {
                       setMobileMoreOpen(false);
                     }}
                   >
-                    View All Courses
+                    {t("nav.viewAllCourses", "View All Courses")}
                   </Link>
                   {courses.map((c) => (
                     <Link
@@ -236,7 +240,7 @@ export default function Navbar() {
             </div>
             <div>
               <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileMoreOpen(!mobileMoreOpen)}>
-                <span>More</span>
+                <span>{t("nav.more", "More")}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileMoreOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileMoreOpen && (
@@ -285,7 +289,7 @@ export default function Navbar() {
                     setMobileBusinessOpen(false);
                   }}
                 >
-                  MedTech Businesses
+                  {t("nav.business", "MedTech Businesses")}
                 </Link>
 
                 {/* Dropdown toggle only */}
@@ -304,7 +308,7 @@ export default function Navbar() {
                       setMobileBusinessOpen(false);
                     }}
                   >
-                    Compare Plans
+                    {t("nav.comparePlans", "Compare Plans")}
                   </Link>
 
                   <Link
@@ -315,12 +319,12 @@ export default function Navbar() {
                       setMobileBusinessOpen(false);
                     }}
                   >
-                    Try MedTech Businesses
+                    {t("nav.tryBusiness", "Try MedTech Businesses")}
                   </Link>
                 </div>
               )}
             </div>{" "}
-            <Link
+            {/* <Link
               href="/join-as-mentor"
               className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
               onClick={() => {
@@ -330,7 +334,7 @@ export default function Navbar() {
               }}
             >
               Join as Mentor
-            </Link>
+            </Link> */}
             {session ? (
               <>
                 <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-purple-50 px-3 py-2">
@@ -376,6 +380,7 @@ export default function Navbar() {
             >
               Contact Us
             </Link>
+
           </nav>
         </div>
       )}

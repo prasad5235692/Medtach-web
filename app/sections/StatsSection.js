@@ -1,5 +1,7 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { GraduationCap, Briefcase, Users, Star } from "lucide-react";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent, localizeText } from "@/lib/i18n/content";
 
 const stats = [
   { number: "4,000+", label: "Candidates Placed",   icon: GraduationCap },
@@ -8,7 +10,10 @@ const stats = [
   { number: "20+",    label: "Years of Excellence",  icon: Star },
 ];
 
-export default function StatsSection() {
+export default async function StatsSection() {
+  const locale = await getLocale();
+  const localizedStats = localizeContent(stats, locale);
+
   return (
     <section
       className="relative py-20 text-white"
@@ -23,13 +28,13 @@ export default function StatsSection() {
         <AnimateOnScroll animation="fade-down">
           <div className="text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">
-              Numbers That Speak for Themselves
+              {localizeText(locale, "Numbers That Speak for Themselves")}
             </h2>
           </div>
         </AnimateOnScroll>
 
         <div className="mt-12 grid grid-cols-2 gap-8 sm:grid-cols-4">
-          {stats.map((s, i) => {
+          {localizedStats.map((s, i) => {
             const Icon = s.icon;
 
             return (

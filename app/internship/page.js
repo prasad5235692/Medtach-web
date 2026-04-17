@@ -3,7 +3,7 @@ import { useState } from "react";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
-import { Laptop, Users, Award, TrendingUp, CheckCircle2, CheckCircle } from "lucide-react";
+import { Laptop, Users, Award, TrendingUp, CheckCircle2, CheckCircle, Filter, Clock, MonitorSmartphone, MapPin } from "lucide-react";
 
 const benefits = [
   {
@@ -38,38 +38,97 @@ const eligibility = [
 const tracks = [
   {
     name: "Medical Coding Internship",
+    category: "Medical Coding",
     duration: "4–8 Weeks",
-    mode: "Online / Hybrid",
+    durationGroup: "4–8 Weeks",
+    type: "Free",
+    mode: "Online",
     skills: ["ICD-10-CM abstraction", "CPT-4 coding", "Specialty coding (Surgery, Radiology)", "Quality check processes"],
     color: "border-purple-200 bg-purple-50",
     badgeColor: "bg-purple-700 text-white",
+    typeColor: "bg-green-100 text-green-700",
   },
   {
     name: "Medical Billing Internship",
+    category: "Medical Billing",
     duration: "4–6 Weeks",
-    mode: "Online / Hybrid",
+    durationGroup: "4–8 Weeks",
+    type: "Paid",
+    mode: "Online",
     skills: ["Claim submission workflows", "Denial management", "AR follow-up", "Insurance portal navigation"],
     color: "border-orange-200 bg-orange-50",
     badgeColor: "bg-orange-500 text-white",
+    typeColor: "bg-orange-100 text-orange-700",
   },
   {
     name: "Clinical Documentation Internship",
+    category: "Clinical Documentation",
     duration: "6 Weeks",
+    durationGroup: "4–8 Weeks",
+    type: "Free",
     mode: "Online",
     skills: ["CDI query writing", "DRG review", "Documentation audit", "EHR navigation"],
     color: "border-teal-200 bg-teal-50",
     badgeColor: "bg-teal-700 text-white",
+    typeColor: "bg-green-100 text-green-700",
+  },
+  {
+    name: "Revenue Cycle Management Internship",
+    category: "Medical Billing",
+    duration: "8–12 Weeks",
+    durationGroup: "8–12 Weeks",
+    type: "Paid",
+    mode: "Offline",
+    skills: ["End-to-end RCM workflow", "Payer contracting basics", "Denial trending", "Reporting & analytics"],
+    color: "border-indigo-200 bg-indigo-50",
+    badgeColor: "bg-indigo-700 text-white",
+    typeColor: "bg-orange-100 text-orange-700",
+  },
+  {
+    name: "CPC Exam Prep Internship",
+    category: "Medical Coding",
+    duration: "3 Months",
+    durationGroup: "3 Months",
+    type: "Paid",
+    mode: "Online",
+    skills: ["Full CPC mock exams", "Timed specialty coding", "Tabbing techniques", "Exam strategy workshops"],
+    color: "border-purple-200 bg-purple-50",
+    badgeColor: "bg-purple-700 text-white",
+    typeColor: "bg-orange-100 text-orange-700",
+  },
+  {
+    name: "HCC Risk Adjustment Internship",
+    category: "Risk Coding",
+    duration: "4 Weeks",
+    durationGroup: "4–8 Weeks",
+    type: "Free",
+    mode: "Offline",
+    skills: ["HCC mapping", "Risk score calculations", "Audit preparation", "CRC exam readiness"],
+    color: "border-pink-200 bg-pink-50",
+    badgeColor: "bg-pink-700 text-white",
+    typeColor: "bg-green-100 text-green-700",
   },
 ];
+
+const CATEGORIES = ["All", "Medical Coding", "Medical Billing", "Clinical Documentation", "Risk Coding"];
+const DURATIONS  = ["All", "4–8 Weeks", "8–12 Weeks", "3 Months"];
 
 export default function InternshipPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", qualification: "", course: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeDuration, setActiveDuration] = useState("All");
 
   function handleSubmit(e) {
     e.preventDefault();
     setSent(true);
   }
+
+  const filtered = tracks.filter((t) => {
+    const catOk = activeCategory === "All" || t.category === activeCategory;
+    const durOk = activeDuration === "All" || t.durationGroup === activeDuration;
+    return catOk && durOk;
+  });
 
   return (
     <>
@@ -124,7 +183,7 @@ export default function InternshipPage() {
         </div>
       </section>
 
-      {/* Tracks */}
+      {/* Tracks with Filters */}
       <section className="bg-[#f8fafc] py-16">
         <div className="page-container">
           <AnimateOnScroll animation="fade-up">
@@ -135,19 +194,96 @@ export default function InternshipPage() {
               subtitle="Apply for the internship track that aligns with your training and career goals."
             />
           </AnimateOnScroll>
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {tracks.map((track, i) => (
-              <AnimateOnScroll key={track.name} animation="fade-up" delay={i * 120}>
-                <div className={`flex flex-col gap-5 rounded-2xl border-2 ${track.color} p-7 transition-all duration-300 hover:shadow-lg hover:-translate-y-1`}>
-                  <span className={`inline-block self-start rounded-full px-3 py-1 text-xs font-semibold ${track.badgeColor}`}>
-                    {track.duration} · {track.mode}
-                  </span>
-                  <h3 className="text-lg font-bold text-gray-900">{track.name}</h3>
-                  <ul className="flex flex-col gap-2">
-                    {track.skills.map((skill) => (
-                      <li key={skill} className="flex items-center gap-2 text-sm text-gray-600">
-                        <CheckCircle size={14} className="shrink-0 text-purple-700" />
-                        {skill}
+
+          {/* Filters */}
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
+            <div className="flex items-center gap-2">
+              <Filter size={14} className="shrink-0 text-purple-700" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Category:</span>
+              <div className="flex flex-wrap gap-2">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setActiveCategory(c)}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                      activeCategory === c
+                        ? "bg-purple-700 text-white"
+                        : "border border-purple-200 bg-white text-purple-700 hover:bg-purple-50"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock size={14} className="shrink-0 text-orange-500" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Duration:</span>
+              <div className="flex flex-wrap gap-2">
+                {DURATIONS.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setActiveDuration(d)}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                      activeDuration === d
+                        ? "bg-orange-500 text-white"
+                        : "border border-orange-200 bg-white text-orange-600 hover:bg-orange-50"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Cards */}
+          {filtered.length === 0 ? (
+            <div className="mt-12 text-center text-sm text-gray-400">No internships match the selected filters.</div>
+          ) : (
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((track, i) => (
+                <AnimateOnScroll key={track.name} animation="fade-up" delay={i * 80}>
+                  <div className={`flex flex-col gap-5 rounded-2xl border-2 ${track.color} p-7 transition-all duration-300 hover:shadow-lg hover:-translate-y-1`}>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${track.badgeColor}`}>
+                        {track.category}
+                      </span>
+                      <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${track.typeColor}`}>
+                        {track.type}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900">{track.name}</h3>
+                    <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                      <span className="flex items-center gap-1"><Clock size={12} className="text-purple-700" />{track.duration}</span>
+                      <span className="flex items-center gap-1">
+                        {track.mode === "Online" ? <MonitorSmartphone size={12} className="text-purple-700" /> : <MapPin size={12} className="text-purple-700" />}
+                        {track.mode}
+                      </span>
+                    </div>
+                    <ul className="flex flex-col gap-2">
+                      {track.skills.map((skill) => (
+                        <li key={skill} className="flex items-center gap-2 text-sm text-gray-600">
+                          <CheckCircle size={14} className="shrink-0 text-purple-700" />
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-auto">
+                      <Link
+                        href="/contact"
+                        className="block w-full rounded-lg bg-purple-700 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-purple-800"
+                      >
+                        Apply Now →
+                      </Link>
+                    </div>
+                  </div>
+                </AnimateOnScroll>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
                       </li>
                     ))}
                   </ul>

@@ -1,10 +1,22 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import BlogCard from "@/components/BlogCard";
 import SectionHeading from "@/components/SectionHeading";
-import { blogPosts } from "@/data/blog";
+import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent } from "@/lib/i18n/content";
 
-export default function BlogSection() {
+export default async function BlogSection() {
+  const locale = await getLocale();
+  const blogPosts = getBlogPosts(locale);
+  const content = localizeContent(
+    {
+      label: "From the Blog",
+      title: "Insights, Guides & Career Tips",
+      cta: "All Articles →",
+    },
+    locale,
+  );
   const preview = blogPosts.slice(0, 3);
   return (
     <section className="relative overflow-hidden bg-white py-24">
@@ -21,8 +33,8 @@ export default function BlogSection() {
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
-              label="From the Blog"
-              title="Insights, Guides & Career Tips"
+              label={content.label}
+              title={content.title}
             />
           </AnimateOnScroll>
           <AnimateOnScroll animation="fade-up" delay={200}>
@@ -30,7 +42,7 @@ export default function BlogSection() {
               href="/blog"
               className="shrink-0 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-600 shadow-sm transition hover:border-purple-300 hover:text-purple-700"
             >
-              All Articles →
+              {content.cta}
             </Link>
           </AnimateOnScroll>
         </div>

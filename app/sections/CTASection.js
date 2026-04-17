@@ -1,7 +1,23 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import Link from "next/link";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent } from "@/lib/i18n/content";
 
-export default function CTASection() {
+export default async function CTASection() {
+  const locale = await getLocale();
+  const content = localizeContent(
+    {
+      label: "Get Started Today",
+      title: "Your Career Breakthrough Starts Here",
+      accent: "Starts Here",
+      description:
+        "Join over 4,000 graduates who are now working in leading healthcare BPOs and MNCs across India.\n            Enrol in a course, attend a free demo class, or just talk to a counsellor — we're here to help.",
+      primaryCta: "Browse Courses",
+      secondaryCta: "Talk to a Counsellor",
+    },
+    locale,
+  );
+
   return (
     <section className="relative overflow-hidden bg-gray-900 py-24 text-white mb-20">
       <div
@@ -24,28 +40,27 @@ export default function CTASection() {
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <AnimateOnScroll animation="fade-down">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-orange-400">
-            Get Started Today
+            {content.label}
           </p>
           <h2 className="text-3xl font-bold sm:text-5xl">
-            Your Career Breakthrough{" "}
-            <span className="text-orange-400">Starts Here</span>
+            {content.title.replace(content.accent, "")}{" "}
+            <span className="text-orange-400">{content.accent}</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base text-gray-300">
-            Join over 4,000 graduates who are now working in leading healthcare BPOs and MNCs across India.
-            Enrol in a course, attend a free demo class, or just talk to a counsellor — we're here to help.
+            {content.description}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href="/courses"
               className="rounded-lg bg-orange-500 px-8 py-3.5 text-sm font-semibold transition hover:bg-orange-600"
             >
-              Browse Courses
+              {content.primaryCta}
             </Link>
             <Link
               href="/contact"
               className="rounded-lg border border-white/30 px-8 py-3.5 text-sm font-semibold transition hover:border-white/50 hover:bg-white/10"
             >
-              Talk to a Counsellor
+              {content.secondaryCta}
             </Link>
           </div>
         </AnimateOnScroll>

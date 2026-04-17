@@ -9,6 +9,8 @@ BookMarked,
  Layers, 
 } from "lucide-react";
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageContext";
+import { localizeNodeTree } from "@/lib/i18n/content";
 
 // ─── NAV DATA ────────────────────────────────────────────────────────────────
 const NAV = [
@@ -410,6 +412,7 @@ function DropdownPanel({ nav, onClose }) {
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 export default function BusinessNavbar() {
+  const { language } = useLanguage();
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [activeNav, setActiveNav]           = useState(null);
   const [activeSubMenu, setActiveSubMenu]   = useState(null);
@@ -460,7 +463,7 @@ export default function BusinessNavbar() {
     setMobileOpen(false);
   };
 
-  return (
+  return localizeNodeTree(language, (
     <header
       className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur-md transition-shadow duration-200 ${
         scrolled ? "shadow-md" : "shadow-sm border-b border-gray-100"
@@ -792,5 +795,5 @@ export default function BusinessNavbar() {
         </div>
       )}
     </header>
-  );
+  ));
 }

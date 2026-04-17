@@ -2,6 +2,7 @@
 import "./globals.css";
 import Providers from "@/components/Providers";
 import LayoutShell from "@/components/LayoutShell";
+import { getRequestDictionary, getLocale } from "@/lib/i18n/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,25 +14,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Medtech Career — Healthcare & Academic Coaching",
-  description:
-    "Expert online courses in Medical Coding, Medical Billing, JEE, NEET, KCET, and School Board coaching.",
-  icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-  },
-};
+export async function generateMetadata() {
+  const dictionary = await getRequestDictionary();
 
-export default function RootLayout({ children }) {
+  return {
+    title: dictionary.metadata.title,
+    description: dictionary.metadata.description,
+    icons: {
+      icon: "/logo.png",
+      shortcut: "/logo.png",
+      apple: "/logo.png",
+    },
+  };
+}
+
+export default async function RootLayout({ children }) {
+  const locale = await getLocale();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#f8fafc] text-gray-900`}
       >
-        <Providers>
+        <Providers initialLanguage={locale}>
           <LayoutShell>{children}</LayoutShell>
         </Providers>
       </body>

@@ -1,4 +1,29 @@
-﻿﻿export const courses = [
+﻿﻿import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n/config";
+import { mergeLocalizedContent } from "@/lib/i18n/content";
+import { generatedCourseTranslationsOne } from "@/data/generated-course-translations-1";
+import { generatedCourseTranslationsTwo } from "@/data/generated-course-translations-2";
+
+const batchTwoTranslations = Object.keys(generatedCourseTranslationsTwo).reduce(
+  (accumulator, slug) => {
+    accumulator.hi[slug] = generatedCourseTranslationsTwo[slug].hi;
+    accumulator.ml[slug] = generatedCourseTranslationsTwo[slug].ml;
+    return accumulator;
+  },
+  { hi: {}, ml: {} },
+);
+
+const courseTranslations = {
+  hi: {
+    ...generatedCourseTranslationsOne.hi,
+    ...batchTwoTranslations.hi,
+  },
+  ml: {
+    ...generatedCourseTranslationsOne.ml,
+    ...batchTwoTranslations.ml,
+  },
+};
+
+export const courses = [
   {
     slug: "medical-coding",
     title: "Medical Coding",
@@ -802,5 +827,22 @@
   },
 ];
 
-export const getCourseBySlug = (slug) =>
-  courses.find((c) => c.slug === slug) ?? null;
+export function getCourses(locale = DEFAULT_LOCALE) {
+  const resolvedLocale = resolveLocale(locale);
+
+  if (resolvedLocale === DEFAULT_LOCALE) {
+    return courses;
+  }
+
+  return courses.map((course) => {
+    const localizedCourse = mergeLocalizedContent(course, courseTranslations[resolvedLocale]?.[course.slug]);
+
+    return {
+      ...localizedCourse,
+      category: course.category,
+    };
+  });
+}
+
+export const getCourseBySlug = (slug, locale = DEFAULT_LOCALE) =>
+  getCourses(locale).find((course) => course.slug === slug) ?? null;

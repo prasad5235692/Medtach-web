@@ -1,7 +1,7 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
-import { Briefcase, TrendingUp, Users, Award, Building2, CheckCircle } from "lucide-react";
+import { Briefcase, TrendingUp, Users, Award, Building2, CheckCircle, ArrowRight, BookOpen, MessageSquare, Handshake } from "lucide-react";
 
 export const metadata = {
   title: "Placements — Medtech Career",
@@ -12,6 +12,36 @@ const stats = [
   { number: "50+",    label: "Top MNC Partners",   icon: Building2 },
   { number: "95%",    label: "Placement Rate",      icon: TrendingUp },
   { number: "₹3–12L", label: "Avg. Annual Package", icon: Briefcase },
+];
+
+const placementSteps = [
+  {
+    icon: BookOpen,
+    step: "01",
+    title: "Training",
+    desc: "Complete industry-focused medical coding & billing courses — BMCT, AMCT, CPC, CRC, or CDM.",
+    color: "bg-purple-700",
+    lightColor: "bg-purple-50",
+    textColor: "text-purple-700",
+  },
+  {
+    icon: MessageSquare,
+    step: "02",
+    title: "Mock Interviews",
+    desc: "Face realistic interview simulations with certified faculty. Get detailed feedback on technical & HR rounds.",
+    color: "bg-orange-500",
+    lightColor: "bg-orange-50",
+    textColor: "text-orange-600",
+  },
+  {
+    icon: Handshake,
+    step: "03",
+    title: "Placement",
+    desc: "Our placement cell directly connects you to 50+ hiring partners. We support you until you receive your offer letter.",
+    color: "bg-teal-600",
+    lightColor: "bg-teal-50",
+    textColor: "text-teal-700",
+  },
 ];
 
 const companies = [
@@ -72,7 +102,7 @@ export default function PlacementsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#faf5ff] pb-16 pt-36">
+      <section className="relative overflow-hidden bg-[#faf5ff] pb-20 pt-36">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -82,16 +112,66 @@ export default function PlacementsPage() {
           }}
         />
         <div aria-hidden="true" className="pointer-events-none absolute -right-20 top-0 h-72 w-72 rounded-full bg-orange-200/20 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-purple-200/20 blur-3xl" />
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <AnimateOnScroll animation="fade-down">
             <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-purple-700">Career Success</p>
-            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-              Our <span className="text-purple-700">Placements</span>
+            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl lg:text-6xl">
+              Get Placed in{" "}
+              <span className="text-purple-700">Top Companies</span>
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base text-gray-500">
-              Medtech Career is a leader in Medical Coding placements with a high success rate — placing over 4,000 candidates across 50+ top MNCs and healthcare BPOs across India.
+            <p className="mx-auto mt-5 max-w-xl text-base text-gray-500">
+              Medtech Career has placed 4,000+ graduates in top healthcare MNCs &amp; BPOs across India — with a 95% placement rate and packages up to ₹12 LPA.
             </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/contact"
+                className="rounded-lg bg-purple-700 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-800 hover:-translate-y-0.5"
+              >
+                Apply for Placement →
+              </Link>
+              <Link
+                href="/courses"
+                className="rounded-lg border border-purple-200 bg-white px-8 py-3.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+              >
+                Explore Courses
+              </Link>
+            </div>
           </AnimateOnScroll>
+        </div>
+      </section>
+
+      {/* Placement Journey Steps */}
+      <section className="bg-white py-16">
+        <div className="page-container">
+          <AnimateOnScroll animation="fade-up">
+            <SectionHeading
+              center
+              label="Our Process"
+              title="Your Placement Journey"
+              subtitle="A clear three-step path from training to your first pay cheque."
+            />
+          </AnimateOnScroll>
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {placementSteps.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <AnimateOnScroll key={s.step} animation="fade-up" delay={i * 120}>
+                  <div className="relative flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${s.color} text-white`}>
+                      <Icon size={26} strokeWidth={1.8} />
+                    </div>
+                    <span className={`mt-4 text-xs font-black uppercase tracking-widest ${s.textColor}`}>Step {s.step}</span>
+                    <h3 className="mt-2 text-lg font-bold text-gray-900">{s.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-500">{s.desc}</p>
+                    {i < placementSteps.length - 1 && (
+                      <ArrowRight size={20} className="absolute -right-3.5 top-1/2 hidden -translate-y-1/2 text-gray-300 sm:block" />
+                    )}
+                  </div>
+                </AnimateOnScroll>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -155,7 +235,7 @@ export default function PlacementsPage() {
           <AnimateOnScroll animation="fade-up">
             <SectionHeading
               center
-              label="Our Process"
+              label="Support System"
               title="How Placement Support Works"
               subtitle="We don't just teach — we prepare you entirely for employment, from CV to offer letter."
             />
@@ -265,11 +345,11 @@ export default function PlacementsPage() {
             Join thousands of Medtech Career graduates now working at top healthcare companies. Your placement journey begins with enrolling.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/courses" className="rounded-lg bg-orange-500 px-8 py-3.5 text-sm font-semibold transition hover:bg-orange-600">
-              Enrol in a Course
+            <Link href="/contact" className="rounded-lg bg-orange-500 px-8 py-3.5 text-sm font-semibold transition hover:bg-orange-600">
+              Apply for Placement
             </Link>
-            <Link href="/contact" className="rounded-lg border border-white/30 px-8 py-3.5 text-sm font-semibold transition hover:bg-white/10">
-              Speak to a Counsellor
+            <Link href="/courses" className="rounded-lg border border-white/30 px-8 py-3.5 text-sm font-semibold transition hover:bg-white/10">
+              Enrol in a Course
             </Link>
           </div>
         </AnimateOnScroll>

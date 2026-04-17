@@ -1,14 +1,17 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
-import { courses } from "@/data/courses";
+import { getCourses } from "@/data/courses";
 import Link from "next/link";
+import { getLocale } from "@/lib/i18n/server";
 
 export const metadata = {
   title: "All Courses — Medtech Career",
 };
 
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const locale = await getLocale();
+  const courses = getCourses(locale);
   const healthcare = courses.filter((c) => c.category === "Healthcare");
 
   return (
@@ -59,7 +62,7 @@ export default function CoursesPage() {
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {healthcare.map((c, i) => (
               <AnimateOnScroll key={c.slug} animation="fade-up" delay={i * 80}>
-                <CourseCard course={c} />
+                <CourseCard course={c} locale={locale} />
               </AnimateOnScroll>
             ))}
           </div>

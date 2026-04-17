@@ -1,6 +1,8 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
 import { Award, Calendar } from "lucide-react";
+import { getLocale } from "@/lib/i18n/server";
+import { localizeContent } from "@/lib/i18n/content";
 
 const STRIPS = [
   { delay: "0.70s", offset: "0vw" },
@@ -10,7 +12,29 @@ const STRIPS = [
   { delay: "0.70s", offset: "-80vw" },
 ];
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const locale = await getLocale();
+  const content = localizeContent(
+    {
+      titleTop: "Launch Your Career",
+      titleAccent: "in Healthcare Coding",
+      description:
+        "Medtech Career provides job-oriented Medical Coding, Medical Billing, and CPC Certification training — placing graduates in leading healthcare BPOs and MNCs across India.",
+      primaryCta: "Explore Courses",
+      secondaryCta: "Join 1-1 career Counseling",
+      stats: [
+        { value: "500+", label: "Courses" },
+        { value: "12k+", label: "Graduates" },
+        { value: "95%", label: "Placement" },
+      ],
+      certificationLabel: "Certification",
+      certificationValue: "CPC / CCS Ready",
+      classesLabel: "Live Classes",
+      classesValue: "Daily Sessions",
+    },
+    locale,
+  );
+
   return (
     <section className="relative h-screen w-full overflow-hidden bg-[#eef5ff] text-gray-900">
       <div className="absolute inset-0 flex">
@@ -39,31 +63,27 @@ export default function HeroSection() {
             />
 
             <h1 className="animate-textUp text-4xl text-white font-black leading-tight tracking-tight sm:text-5xl xl:text-6xl" style={{ animationDelay: "1.2s" }}>
-              Launch Your Career
+              {content.titleTop}
               <br />
-              <span className="text-orange-400">in Healthcare Coding</span>
+              <span className="text-orange-400">{content.titleAccent}</span>
             </h1>
 
             <p className="animate-textUp max-w-lg text-base leading-relaxed text-white/55" style={{ animationDelay: "1.4s" }}>
-              Medtech Career provides job-oriented Medical Coding, Medical Billing, and CPC Certification training — placing graduates in leading healthcare BPOs and MNCs across India.
+              {content.description}
             </p>
 
             <div className="animate-textUp flex flex-wrap gap-4" style={{ animationDelay: "1.6s" }}>
               <Link href="/courses" className="group inline-flex items-center gap-2 rounded-lg bg-purple-700 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition hover:bg-purple-600">
-                Explore Courses
+                {content.primaryCta}
                 <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </Link>
               <Link href="/contact" className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10">
-                Join 1-1 career Counseling
+                {content.secondaryCta}
               </Link>
             </div>
 
             <div className="animate-fadeIn flex items-center gap-8 border-t border-white/10 pt-6" style={{ animationDelay: "1.8s" }}>
-              {[
-                { value: "500+", label: "Courses" },
-                { value: "12k+", label: "Graduates" },
-                { value: "95%", label: "Placement" },
-              ].map((stat) => (
+              {content.stats.map((stat) => (
                 <div key={stat.label}>
                   <p className="text-xl font-black text-white">{stat.value}</p>
                   <p className="text-xs text-white/35">{stat.label}</p>
@@ -78,16 +98,16 @@ export default function HeroSection() {
               <div className="absolute -bottom-5 -left-5 z-10 flex items-center gap-3 rounded-xl border border-white/10 bg-[#07071a] px-4 py-3 shadow-xl">
                 <Award size={20} className="text-white/60" />
                 <div>
-                  <p className="text-xs text-white/40">Certification</p>
-                  <p className="text-sm font-bold text-white">CPC / CCS Ready</p>
+                  <p className="text-xs text-white/40">{content.certificationLabel}</p>
+                  <p className="text-sm font-bold text-white">{content.certificationValue}</p>
                 </div>
               </div>
 
               <div className="absolute -right-5 -top-5 z-10 flex items-center gap-3 rounded-xl border border-purple-500/20 bg-purple-600/10 px-4 py-3 shadow-xl backdrop-blur-sm">
                 <Calendar size={20} className="text-purple-300/60" />
                 <div>
-                  <p className="text-xs text-purple-300/60">Live Classes</p>
-                  <p className="text-sm font-bold text-purple-200">Daily Sessions</p>
+                  <p className="text-xs text-purple-300/60">{content.classesLabel}</p>
+                  <p className="text-sm font-bold text-purple-200">{content.classesValue}</p>
                 </div>
               </div>
 

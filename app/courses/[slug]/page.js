@@ -1,9 +1,10 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseActions from "@/components/CourseActions";
-import { courses, getCourseBySlug } from "@/data/courses";
+import { courses, getCourses, getCourseBySlug } from "@/data/courses";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Clock, Users, BarChart2, Stethoscope, BookOpen, Trophy, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { getLocale } from "@/lib/i18n/server";
 
 const categoryIcon = {
   Healthcare:  Stethoscope,
@@ -23,9 +24,11 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function CourseDetailPage({ params }) {
+  const locale = await getLocale();
   const { slug } = await params;
-  const course = getCourseBySlug(slug);
+  const course = getCourseBySlug(slug, locale);
   if (!course) notFound();
+  const localizedCourses = getCourses(locale);
   const CourseIcon = categoryIcon[course.category] ?? BookOpen;
 
   const faqs = [
@@ -265,7 +268,7 @@ export default async function CourseDetailPage({ params }) {
         <div className="page-container">
           <h2 className="text-xl font-bold text-gray-900">Explore Other Courses</h2>
           <div className="mt-6 flex flex-wrap gap-3">
-            {courses
+            {localizedCourses
               .filter((c) => c.slug !== course.slug)
               .map((c) => (
                 <Link

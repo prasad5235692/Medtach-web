@@ -1,5 +1,6 @@
 ﻿import Link from "next/link";
 import { Stethoscope, BookOpen, Trophy, Clock, Users, BarChart2 } from "lucide-react";
+import { localizeText } from "@/lib/i18n/content";
 
 const badgeClasses = {
   blue:   "bg-purple-50  text-purple-700  border-purple-200",
@@ -14,7 +15,7 @@ const categoryIcon = {
   Competitive: Trophy,
 };
 
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, locale = "en" }) {
   const badge = badgeClasses[course.badgeColor] ?? badgeClasses.blue;
   const Icon = categoryIcon[course.category] ?? BookOpen;
 
@@ -50,7 +51,7 @@ export default function CourseCard({ course }) {
           href={`/course/${course.slug}`}
           className="mt-4 block rounded-lg bg-purple-700 px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-purple-800"
         >
-          View Course →
+          {localizeText(locale, "View Course →")}
         </Link>
       </div>
     </div>

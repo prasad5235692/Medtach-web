@@ -1,6 +1,10 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
+import { localizeContent, localizeText } from "@/lib/i18n/content";
+import { useLanguage } from "@/context/LanguageContext";
 
 const footerLinks = {
   Courses: [
@@ -32,6 +36,9 @@ const socials = [
 ];
 
 export default function Footer() {
+  const { language } = useLanguage();
+  const localizedFooterLinks = localizeContent(footerLinks, language);
+
   return (
     <footer className="relative overflow-hidden bg-[#0d0422] text-white">
       <div
@@ -56,8 +63,10 @@ export default function Footer() {
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-gray-400">
-              Empowering students and professionals with world-class online
-              education in healthcare coding, billing, and competitive exam coaching.
+              {localizeText(
+                language,
+                "Empowering students and professionals with world-class online education in healthcare coding, billing, and competitive exam coaching.",
+              )}
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <a href="tel:+919876543210" className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-purple-300">
@@ -94,7 +103,7 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([section, links]) => (
+          {Object.entries(localizedFooterLinks).map(([section, links]) => (
             <div key={section}>
               <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-purple-300/60">
                 {section}
@@ -118,12 +127,12 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-900/50 pt-8 sm:flex-row">
           <p className="text-xs text-gray-600">
-            © {new Date().getFullYear()} Medtech Career. All rights reserved.
+            {localizeText(language, "© {year} Medtech Career. All rights reserved.").replace("{year}", String(new Date().getFullYear()))}
           </p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Use", "Refund Policy"].map((t) => (
               <a key={t} href="#" className="text-xs text-gray-500 transition hover:text-purple-300">
-                {t}
+                {localizeText(language, t)}
               </a>
             ))}
           </div>
