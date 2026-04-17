@@ -27,12 +27,13 @@ export default function Navbar() {
     { label: t("nav.about", "About"), href: "/about-us" },
     { label: t("nav.branches", "Branches"), href: "/branches" },
     { label: t("nav.training", "Training"), href: "/training" },
+    { label: t("nav.placements", "Placements"), href: "/placements" },
+    { label: t("nav.internship", "Internship"), href: "/internship" },
   ];
 
   const moreLinks = [
     { label: t("nav.ourTeam", "Our Team"), href: "/our-team" },
-    { label: t("nav.placements", "Placements"), href: "/placements" },
-    { label: t("nav.internship", "Internship"), href: "/internship" },
+
     { label: t("nav.blog", "Blog"), href: "/blog" },
   ];
   const courses = getCourses(language);

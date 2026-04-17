@@ -284,15 +284,6 @@ export default function InternshipPage() {
           )}
         </div>
       </section>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Eligibility + Form */}
       <section className="bg-white py-16">
