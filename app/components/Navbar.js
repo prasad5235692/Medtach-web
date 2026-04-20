@@ -33,7 +33,8 @@ export default function Navbar() {
 
   const moreLinks = [
     { label: t("nav.ourTeam", "Our Team"), href: "/our-team" },
-
+    { label: t("nav.collegeTraining", "College Training"), href: "/college-training" },
+    { label: t("nav.counseling", "1:1 Counseling"), href: "/counseling" },
     { label: t("nav.blog", "Blog"), href: "/blog" },
   ];
   const courses = getCourses(language);
