@@ -1,14 +1,20 @@
 ﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, Heart, Check, CheckCircle, X, LogIn } from "lucide-react";
+import { ShoppingCart, Heart, Check, CheckCircle, X } from "lucide-react";
+import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CourseActions({ slug, title }) {
   const { session } = useAuth();
   const { addToCart, isInCart, toggleWishlist, isInWishlist } = useCart();
+  const { language } = useLanguage();
   const [toast, setToast] = useState(null);
+  const content = getClientPageContent("courseActions", language);
+
+  const formatToast = (template) => template.replaceAll("{title}", title);
 
   const showToast = (message, type = "success") => {
     setToast({ message, type });
@@ -17,18 +23,18 @@ export default function CourseActions({ slug, title }) {
 
   const handleAddToCart = async () => {
     if (isInCart(slug)) {
-      showToast("Already in your cart", "info");
+      showToast(content.alreadyInCart, "info");
       return;
     }
 
     const payload = await addToCart(slug);
 
     if (!payload?.success) {
-      showToast(payload?.message || "Unable to update cart", "info");
+      showToast(payload?.message || content.cartUpdateError, "info");
       return;
     }
 
-    showToast(`"${title}" added to cart!`);
+    showToast(formatToast(content.addedToCartTemplate));
   };
 
   const handleToggleWishlist = async () => {
@@ -36,11 +42,11 @@ export default function CourseActions({ slug, title }) {
     const payload = await toggleWishlist(slug);
 
     if (!payload?.success) {
-      showToast(payload?.message || "Unable to update wishlist", "info");
+      showToast(payload?.message || content.wishlistUpdateError, "info");
       return;
     }
 
-    showToast(wasIn ? "Removed from wishlist" : "Added to wishlist!", wasIn ? "remove" : "success");
+    showToast(wasIn ? content.removedFromWishlist : content.addedToWishlist, wasIn ? "remove" : "success");
   };
 
   // Not logged in — show a prompt instead of the buttons
@@ -49,9 +55,9 @@ export default function CourseActions({ slug, title }) {
       <div className="mt-5 rounded-xl border border-purple-100 bg-purple-50 p-4 text-center">
         <p className="text-sm text-gray-600">
           <Link href="/login" className="font-semibold text-purple-700 hover:underline">
-            Login or Sign Up
+            {content.loginPromptActionLabel}
           </Link>{" "}
-          to add this course to your cart or wishlist.
+          {content.loginPromptSuffix}
         </p>
       </div>
     );
@@ -72,7 +78,7 @@ export default function CourseActions({ slug, title }) {
               : "bg-purple-700 text-white hover:bg-purple-800 active:scale-[0.98]"
           }`}
         >
-          {inCart ? <><Check size={15} /> Added to Cart</> : <><ShoppingCart size={15} /> Add to Cart</>}
+          {inCart ? <><Check size={15} /> {content.addedToCartLabel}</> : <><ShoppingCart size={15} /> {content.addToCartLabel}</>}
         </button>
 
         {/* Wishlist */}
@@ -85,7 +91,7 @@ export default function CourseActions({ slug, title }) {
           }`}
         >
           <Heart size={15} className={inWishlist ? "fill-current" : ""} />
-          {inWishlist ? "Saved to Wishlist" : "Add to Wishlist"}
+          {inWishlist ? content.savedToWishlistLabel : content.addToWishlistLabel}
         </button>
 
         {/* View Cart shortcut */}
@@ -94,7 +100,7 @@ export default function CourseActions({ slug, title }) {
             href="/my-courses?tab=cart"
             className="text-center text-xs font-medium text-purple-600 hover:underline"
           >
-            View Cart →
+            {content.viewCartLabel} →
           </Link>
         )}
       </div>

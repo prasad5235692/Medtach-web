@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { getClientPageContent } from "@/data/clientPageContent";
 import { fetchStudentCourses } from "@/lib/websiteStudentClient";
 
 const STATUS_COLORS = {
@@ -33,7 +35,7 @@ function normalizeCategoryList(category) {
 }
 
 function normalizeCourse(course) {
-  const title = course?.title || course?.name || "Untitled Course";
+  const title = course?.title || course?.name || "";
   const categoryList = normalizeCategoryList(course?.category);
   const branches = Array.isArray(course?.branches)
     ? course.branches.filter(Boolean)
@@ -80,37 +82,55 @@ function getCourseIdentifier(course) {
 
 function normalizeCourseError(message) {
   if (!message) {
-    return "Unable to load the course catalog.";
+    return "catalogLoad";
   }
 
   if (/branch/i.test(message)) {
-    return "No courses are available right now.";
+    return "noCourses";
   }
 
   return message;
 }
 
-function getCourseDurationLabel(course) {
+function getLocaleTag(language) {
+  if (language === "hi") {
+    return "hi-IN";
+  }
+
+  if (language === "ml") {
+    return "ml-IN";
+  }
+
+  return "en-IN";
+}
+
+function getCourseDurationLabel(course, content) {
   if (typeof course?.durationWeeks === "number" && course.durationWeeks > 0) {
-    return `${course.durationWeeks} week${course.durationWeeks === 1 ? "" : "s"}`;
+    const unit = course.durationWeeks === 1 ? content.defaults.weekSingular : content.defaults.weekPlural;
+    return `${course.durationWeeks} ${unit}`;
   }
 
   if (typeof course?.totalHours === "number" && course.totalHours > 0) {
-    return `${course.totalHours} hour${course.totalHours === 1 ? "" : "s"}`;
+    const unit = course.totalHours === 1 ? content.defaults.hourSingular : content.defaults.hourPlural;
+    return `${course.totalHours} ${unit}`;
   }
 
-  return "Self paced";
+  return content.defaults.selfPaced;
 }
 
-function getCoursePriceLabel(course) {
+function getCoursePriceLabel(course, localeTag, content) {
   if (typeof course?.price === "number" && course.price > 0) {
-    return `₹${course.price.toLocaleString("en-IN")}`;
+    return new Intl.NumberFormat(localeTag, {
+      style: "currency",
+      currency: course?.currency || "INR",
+      maximumFractionDigits: 0,
+    }).format(course.price);
   }
 
-  return "Free";
+  return content.defaults.free;
 }
 
-function getCoursePlacementLabel(course) {
+function getCoursePlacementLabel(course, content) {
   const hospitalNames = Array.isArray(course?.hospitals)
     ? course.hospitals.map((hospital) => hospital?.name).filter(Boolean)
     : [];
@@ -131,7 +151,45 @@ function getCoursePlacementLabel(course) {
       : branchNames.join(", ");
   }
 
-  return course?.scopeType === "hospital" ? "Hospital catalog" : "General catalog";
+  return course?.scopeType === "hospital" ? content.defaults.hospitalCatalog : content.defaults.generalCatalog;
+}
+
+function getCourseErrorMessage(errorKey, content) {
+  if (!errorKey) {
+    return "";
+  }
+
+  if (errorKey === "catalogLoad") {
+    return content.errors.catalogLoad;
+  }
+
+  if (errorKey === "noCourses") {
+    return content.errors.noCourses;
+  }
+
+  return errorKey;
+}
+
+function translateCourseCategory(course, content) {
+  if (Array.isArray(course?.categoryList) && course.categoryList.length > 0) {
+    return course.categoryList.map((item) => content.categoryLabels[item] ?? item).join(", ");
+  }
+
+  return content.categoryLabels[course?.category] ?? course?.category ?? "";
+}
+
+function translateCourseType(value, content) {
+  const key = String(value || content.defaults.courseType).toLowerCase();
+  return content.typeLabels[key] ?? value ?? content.defaults.courseType;
+}
+
+function translateCourseStatus(value, content) {
+  const key = String(value || "active").toLowerCase();
+  return content.statusLabels[key] ?? String(value || "active").toUpperCase();
+}
+
+function formatToast(template, title) {
+  return template.replaceAll("{title}", title);
 }
 
 export default function MyCoursesPage() {
@@ -139,13 +197,16 @@ export default function MyCoursesPage() {
   const params = useSearchParams();
   const { session, loading } = useAuth();
   const { addToCart, removeFromCart, isInCart, toggleWishlist, isInWishlist, cartCount, wishlistCount, ready } = useCart();
+  const { language } = useLanguage();
+  const content = getClientPageContent("myCourses", language);
+  const localeTag = getLocaleTag(language);
 
   const [courses, setCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(true);
   const [coursesError, setCoursesError] = useState("");
 
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState(content.filters.allCategoryValue);
   const [toast, setToast] = useState(null); // { message, type }
   const urlTab = params.get("tab");
   const activeTab = urlTab === "wishlist" || urlTab === "cart" ? urlTab : "all";
@@ -199,6 +260,10 @@ export default function MyCoursesPage() {
     };
   }, [loading, session, router]);
 
+  useEffect(() => {
+    setCategory(content.filters.allCategoryValue);
+  }, [content.filters.allCategoryValue]);
+
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 2500);
@@ -206,49 +271,52 @@ export default function MyCoursesPage() {
 
   const handleAddToCart = async (course) => {
     const identifier = course.courseSlug || getCourseIdentifier(course);
+    const courseTitle = course.title || content.defaults.untitledCourse;
 
     if (isInCart(identifier)) {
       const payload = await removeFromCart(identifier);
 
       if (!payload?.success) {
-        showToast(payload?.message || "Unable to update your cart", "remove");
+        showToast(content.errors.cartUpdate, "remove");
         return;
       }
 
-      showToast(`Removed "${course.title}" from cart`, "remove");
+      showToast(formatToast(content.toastTemplates.removedCart, courseTitle), "remove");
       return;
     }
 
     const payload = await addToCart(identifier);
 
     if (!payload?.success) {
-      showToast(payload?.message || "Unable to update your cart", "remove");
+      showToast(content.errors.cartUpdate, "remove");
       return;
     }
 
-    showToast(`"${course.title}" added to cart!`);
+    showToast(formatToast(content.toastTemplates.addedCart, courseTitle));
   };
 
   const handleToggleWishlist = async (course) => {
     const identifier = course.courseSlug || getCourseIdentifier(course);
     const wasInWishlist = isInWishlist(identifier);
+    const courseTitle = course.title || content.defaults.untitledCourse;
     const payload = await toggleWishlist(identifier);
 
     if (!payload?.success) {
-      showToast(payload?.message || "Unable to update your wishlist", "remove");
+      showToast(content.errors.wishlistUpdate, "remove");
       return;
     }
 
     showToast(
       wasInWishlist
-        ? `Removed "${course.title}" from wishlist`
-        : `"${course.title}" added to wishlist!`,
+        ? formatToast(content.toastTemplates.removedWishlist, courseTitle)
+        : formatToast(content.toastTemplates.addedWishlist, courseTitle),
       wasInWishlist ? "remove" : "success"
     );
   };
 
   const handleBuyNow = async (course) => {
     const identifier = course.courseSlug || getCourseIdentifier(course);
+    const courseTitle = course.title || content.defaults.untitledCourse;
 
     if (isInCart(identifier)) {
       router.push("/my-courses?tab=cart");
@@ -258,18 +326,18 @@ export default function MyCoursesPage() {
     const payload = await addToCart(identifier);
 
     if (!payload?.success) {
-      showToast(payload?.message || "Unable to update your cart", "remove");
+      showToast(content.errors.cartUpdate, "remove");
       return;
     }
 
-    showToast(`"${course.title}" added to cart!`);
+    showToast(formatToast(content.toastTemplates.addedCart, courseTitle));
     router.push("/my-courses?tab=cart");
   };
 
   if (loading || !ready || (session && coursesLoading)) return null;
   if (!session) return null;
 
-  const categories = ["All", ...Array.from(new Set(courses.map((course) => course.category).filter(Boolean)))];
+  const categories = [content.filters.allCategoryValue, ...Array.from(new Set(courses.map((course) => course.category).filter(Boolean)))];
 
   const filtered = courses.filter((c) => {
     const searchTarget = [c.title, c.description, c.courseSlug, c.category, c.type]
@@ -277,7 +345,7 @@ export default function MyCoursesPage() {
       .join(" ")
       .toLowerCase();
     const matchesQuery = searchTarget.includes(query.toLowerCase());
-    const matchesCategory = category === "All" || c.category === category;
+    const matchesCategory = category === content.filters.allCategoryValue || c.category === category;
     const identifier = c.courseSlug || getCourseIdentifier(c);
     const matchesTab =
       activeTab === "all"      ? true :
@@ -286,11 +354,11 @@ export default function MyCoursesPage() {
     return matchesQuery && matchesCategory && matchesTab;
   });
 
-  const emptyMessage = coursesError || (activeTab === "wishlist"
-    ? "No courses in your wishlist yet."
+  const emptyMessage = getCourseErrorMessage(coursesError, content) || (activeTab === "wishlist"
+    ? content.empty.wishlist
     : activeTab === "cart"
-      ? "No courses in your cart yet."
-      : "No courses found");
+      ? content.empty.cart
+      : content.empty.generic);
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
@@ -298,17 +366,15 @@ export default function MyCoursesPage() {
       <div className="border-b border-purple-100 bg-white px-4 py-8">
         <div className="page-container">
           <h1 className="text-2xl font-bold text-gray-900">
-            Welcome back{session.name ? `, ${session.name.split(" ")[0]}` : ""}! 👋
+            {content.header.welcome}{session.name ? `, ${session.name.split(" ")[0]}` : ""}! 👋
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Browse the full course catalog created by admin, save favorites, and buy when you&apos;re ready.
-          </p>
+          <p className="mt-1 text-sm text-gray-500">{content.header.subtitle}</p>
 
           {/* Stats row */}
           <div className="mt-4 flex flex-wrap gap-4">
-            <Stat icon={<BookOpen size={16} />} label="Courses" value={courses.length} />
-            <Stat icon={<Heart size={16} className="text-red-500" />} label="Wishlist" value={wishlistCount} />
-            <Stat icon={<ShoppingCart size={16} className="text-purple-600" />} label="In Cart" value={cartCount} />
+            <Stat icon={<BookOpen size={16} />} label={content.header.coursesLabel} value={courses.length} />
+            <Stat icon={<Heart size={16} className="text-red-500" />} label={content.header.wishlistLabel} value={wishlistCount} />
+            <Stat icon={<ShoppingCart size={16} className="text-purple-600" />} label={content.header.cartLabel} value={cartCount} />
           </div>
         </div>
       </div>
@@ -323,7 +389,7 @@ export default function MyCoursesPage() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search courses…"
+              placeholder={content.filters.searchPlaceholder}
               className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
             />
           </div>
@@ -340,7 +406,7 @@ export default function MyCoursesPage() {
                     : "bg-white text-gray-600 border border-gray-200 hover:border-purple-400 hover:text-purple-700"
                 }`}
               >
-                {cat}
+                {cat === content.filters.allCategoryValue ? content.filters.allCategoryLabel : (content.categoryLabels[cat] ?? cat)}
               </button>
             ))}
           </div>
@@ -349,9 +415,9 @@ export default function MyCoursesPage() {
         {/* ── Tabs: All / Wishlist / Cart ── */}
         <div className="mb-6 flex gap-1 rounded-xl bg-gray-100 p-1 w-fit">
           {[
-            { key: "all",      label: "All Courses",           href: "/my-courses" },
-            { key: "wishlist", label: `Wishlist (${wishlistCount})`, href: "/my-courses?tab=wishlist" },
-            { key: "cart",     label: `Cart (${cartCount})`,        href: "/my-courses?tab=cart" },
+            { key: "all",      label: content.tabs.all, href: "/my-courses" },
+            { key: "wishlist", label: `${content.tabs.wishlist} (${wishlistCount})`, href: "/my-courses?tab=wishlist" },
+            { key: "cart",     label: `${content.tabs.cart} (${cartCount})`, href: "/my-courses?tab=cart" },
           ].map((tab) => (
             <Link
               key={tab.key}
@@ -376,14 +442,14 @@ export default function MyCoursesPage() {
               className="text-sm text-purple-600 hover:underline"
               onClick={() => {
                 setQuery("");
-                setCategory("All");
+                setCategory(content.filters.allCategoryValue);
 
                 if (activeTab !== "all") {
                   router.replace("/my-courses");
                 }
               }}
             >
-              Clear filters
+              {content.filters.clearLabel}
             </button>
           </div>
         ) : (
@@ -392,6 +458,8 @@ export default function MyCoursesPage() {
               <CourseCard
                 key={getCourseIdentifier(course)}
                 course={course}
+                content={content}
+                localeTag={localeTag}
                 inCart={isInCart(course.courseSlug || getCourseIdentifier(course))}
                 inWishlist={isInWishlist(course.courseSlug || getCourseIdentifier(course))}
                 onAddToCart={() => handleAddToCart(course)}
@@ -434,24 +502,28 @@ function Stat({ icon, label, value }) {
   );
 }
 
-function CourseCard({ course, inCart, inWishlist, onAddToCart, onToggleWishlist, onBuyNow }) {
+function CourseCard({ course, content, localeTag, inCart, inWishlist, onAddToCart, onToggleWishlist, onBuyNow }) {
   const statusColor = STATUS_COLORS[course.status] || STATUS_COLORS.default;
-  const durationLabel = getCourseDurationLabel(course);
-  const priceLabel = getCoursePriceLabel(course);
-  const placementLabel = getCoursePlacementLabel(course);
-  const typeLabel = course?.type || course?.scopeType || "Course";
+  const durationLabel = getCourseDurationLabel(course, content);
+  const priceLabel = getCoursePriceLabel(course, localeTag, content);
+  const placementLabel = getCoursePlacementLabel(course, content);
+  const typeLabel = translateCourseType(course?.type || course?.scopeType || content.defaults.courseType, content);
+  const courseTitle = course.title || content.defaults.untitledCourse;
+  const courseDescription = course.description || content.defaults.description;
+  const categoryLabel = translateCourseCategory(course, content);
+  const statusLabel = translateCourseStatus(course.status, content);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
       <div className="h-1.5 w-full" style={{ backgroundColor: course.color || "#7c3aed" }} />
       <div className="relative flex h-36 items-center justify-center bg-linear-to-br from-purple-100 to-purple-50">
         {course.thumbnail ? (
-          <Image src={course.thumbnail} alt={course.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover" />
+          <Image src={course.thumbnail} alt={courseTitle} fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover" />
         ) : (
           <BookOpen size={40} className="text-purple-300" />
         )}
         <span className={`absolute left-3 top-3 rounded-full px-2 py-0.5 text-[10px] font-bold ${statusColor}`}>
-          {(course.status || "active").toUpperCase()}
+          {statusLabel}
         </span>
         <button
           onClick={onToggleWishlist}
@@ -460,19 +532,19 @@ function CourseCard({ course, inCart, inWishlist, onAddToCart, onToggleWishlist,
               ? "border-red-300 bg-red-50 text-red-500 hover:bg-red-100"
               : "border-gray-200 bg-white text-gray-400 hover:border-red-300 hover:text-red-500"
           }`}
-          aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={inWishlist ? content.actions.removeFromWishlist : content.actions.addToWishlist}
         >
           <Heart size={14} className={inWishlist ? "fill-current" : ""} />
         </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-purple-500">{course.category}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-purple-500">{categoryLabel}</p>
 
-        <h3 className="line-clamp-2 text-sm font-bold leading-snug text-gray-800">{course.title}</h3>
+        <h3 className="line-clamp-2 text-sm font-bold leading-snug text-gray-800">{courseTitle}</h3>
 
         <p className="line-clamp-2 text-xs text-gray-500">
-          {course.description || "Course details will be available after the admin assigns and publishes the course."}
+          {courseDescription}
         </p>
 
         <div className="mt-auto flex flex-wrap gap-2 pt-2 text-[11px] text-gray-400">
@@ -482,7 +554,7 @@ function CourseCard({ course, inCart, inWishlist, onAddToCart, onToggleWishlist,
         </div>
 
         <div className="rounded-xl bg-violet-50/60 px-3 py-2 text-[11px] text-violet-700">
-          <span className="font-semibold uppercase tracking-wide text-violet-500">Course ID</span>
+          <span className="font-semibold uppercase tracking-wide text-violet-500">{content.defaults.courseIdLabel}</span>
           <p className="mt-1 break-all font-bold text-violet-900">{course.courseId || getCourseIdentifier(course)}</p>
         </div>
 
@@ -503,9 +575,9 @@ function CourseCard({ course, inCart, inWishlist, onAddToCart, onToggleWishlist,
             }`}
           >
             {inCart ? (
-              <><X size={14} /> Remove from Cart</>
+              <><X size={14} /> {content.actions.removeFromCart}</>
             ) : (
-              <><ShoppingCart size={14} /> Add to Cart</>
+              <><ShoppingCart size={14} /> {content.actions.addToCart}</>
             )}
           </button>
 
@@ -513,7 +585,7 @@ function CourseCard({ course, inCart, inWishlist, onAddToCart, onToggleWishlist,
             onClick={onBuyNow}
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 py-2 text-sm font-semibold text-purple-700 transition hover:border-purple-300 hover:bg-purple-100"
           >
-            Buy <ArrowRight size={14} />
+            {content.actions.buy} <ArrowRight size={14} />
           </button>
         </div>
       </div>

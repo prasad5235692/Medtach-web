@@ -1,14 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, startTransition } from "react";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useState } from "react";
 import { getDictionary, translate } from "@/lib/i18n/dictionaries";
 import { LOCALE_OPTIONS, resolveLocale } from "@/lib/i18n/config";
 
 const LanguageContext = createContext(null);
 
 export function LanguageProvider({ children, initialLanguage }) {
-  const router = useRouter();
   const [language, setLanguage] = useState(resolveLocale(initialLanguage));
 
   const dictionary = getDictionary(language);
@@ -33,9 +31,7 @@ export function LanguageProvider({ children, initialLanguage }) {
     }
 
     setLanguage(locale);
-    startTransition(() => {
-      router.refresh();
-    });
+    window.location.reload();
   };
 
   return (

@@ -1,35 +1,22 @@
-﻿import Link from "next/link";
-import { Building2, Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
-import Image from "next/image";
+"use client";
 
-const footerLinks = {
-  Solutions: [
-    { label: "Team Training",      href: "/business/solutions" },
-    { label: "Corporate Courses",  href: "/business/solutions" },
-    { label: "Skill Assessment",   href: "/business/solutions" },
-    { label: "Certification Prep", href: "/business/solutions" },
-  ],
-  Company: [
-    { label: "About",    href: "/business/about" },
-    { label: "Pricing",  href: "/business/pricing" },
-    { label: "Contact",  href: "/business/contact" },
-  ],
-  "Main Site": [
-    { label: "Medtech Career",  href: "/" },
-    { label: "All Courses",     href: "/courses" },
-    { label: "Blog",            href: "/blog" },
-    { label: "Join as Teacher", href: "/join-as-teacher" },
-  ],
+import Link from "next/link";
+import { Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
+import Image from "next/image";
+import { getClientPageContent } from "@/data/clientPageContent";
+import { useLanguage } from "@/context/LanguageContext";
+
+const socialIcons = {
+  linkedin: Linkedin,
+  twitter: Twitter,
+  youtube: Youtube,
+  instagram: Instagram,
 };
 
-const socials = [
-  { label: "LinkedIn",  href: "#", Icon: Linkedin },
-  { label: "Twitter",   href: "#", Icon: Twitter },
-  { label: "YouTube",   href: "#", Icon: Youtube },
-  { label: "Instagram", href: "#", Icon: Instagram },
-];
-
 export default function BusinessFooter() {
+  const { language } = useLanguage();
+  const content = getClientPageContent("businessFooter", language);
+
   return (
     <footer className="relative overflow-hidden bg-[#0d0422] text-white">
       <div
@@ -43,78 +30,75 @@ export default function BusinessFooter() {
 
       <div className="page-container relative py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
-          {/* Brand column */}
           <div className="md:col-span-1">
             <Link href="/business" className="inline-flex items-center gap-2.5">
-           
-          <Image
-            src="/bnusiness logo.png"
-            alt="Medtech Career"
-            width={260}
-             height={92}
-             className="h-26 w-auto "
-          />
-        </Link>
+              <Image
+                src="/bnusiness logo.png"
+                alt={content.logoAlt}
+                width={260}
+                height={92}
+                className="h-26 w-auto "
+              />
+            </Link>
 
-
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-gray-400">
-              Empowering healthcare organizations with targeted upskilling
-              solutions for medical coding, billing, and compliance teams.
-            </p>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-gray-400">{content.description}</p>
             <div className="mt-6 flex flex-col gap-3">
               <a
-                href="tel:+919876543210"
+                href={`tel:${content.contact.phone}`}
                 className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-purple-300"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5">
                   <Phone size={14} />
                 </span>
-                +91 98765 43210
+                {content.contact.phone}
               </a>
               <a
-                href="mailto:business@medtechcareer.com"
+                href={`mailto:${content.contact.email}`}
                 className="flex items-center gap-3 text-sm text-gray-400 transition hover:text-purple-300"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5">
                   <Mail size={14} />
                 </span>
-                business@medtechcareer.com
+                {content.contact.email}
               </a>
               <span className="flex items-start gap-3 text-sm text-gray-400">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5">
                   <MapPin size={14} />
                 </span>
-                12 Innovation Park, Bengaluru, KA 560001
+                {content.contact.address}
               </span>
             </div>
             <div className="mt-6 flex gap-3">
-              {socials.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-purple-400/50 hover:bg-purple-400/10 hover:text-purple-300"
-                >
-                  <Icon size={15} />
-                </a>
-              ))}
+              {content.socials.map(({ label, icon, href }) => {
+                const Icon = socialIcons[icon];
+
+                return (
+                  <a
+                    key={icon}
+                    href={href}
+                    aria-label={label}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-purple-400/50 hover:bg-purple-400/10 hover:text-purple-300"
+                  >
+                    <Icon size={15} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([section, links]) => (
-            <div key={section}>
+          {content.sections.map((section) => (
+            <div key={section.title}>
               <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-purple-300/60">
-                {section}
+                {section.title}
               </h3>
               <ul className="flex flex-col gap-3">
-                {links.map((l) => (
-                  <li key={l.label}>
+                {section.links.map((link) => (
+                  <li key={link.label}>
                     <Link
-                      href={l.href}
+                      href={link.href}
                       className="text-sm text-gray-400 transition hover:text-purple-300"
                     >
-                      {l.label}
+                      {link.label}
                     </Link>
                   </li>
                 ))}
@@ -123,15 +107,14 @@ export default function BusinessFooter() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-purple-950/50 pt-8 sm:flex-row">
           <p className="text-xs text-gray-600">
-            © {new Date().getFullYear()} Medtech Career Business. All rights reserved.
+            {content.copyrightTemplate.replace("{year}", String(new Date().getFullYear()))}
           </p>
           <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Use", "Enterprise Agreement"].map((t) => (
-              <a key={t} href="#" className="text-xs text-gray-500 transition hover:text-purple-300">
-                {t}
+            {content.policies.map((policy) => (
+              <a key={policy} href="#" className="text-xs text-gray-500 transition hover:text-purple-300">
+                {policy}
               </a>
             ))}
           </div>

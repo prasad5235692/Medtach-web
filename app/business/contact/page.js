@@ -1,6 +1,14 @@
 ﻿"use client";
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import { getClientPageContent } from "@/data/clientPageContent";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
+
+const detailIcons = {
+  phone: Phone,
+  mail: Mail,
+  "map-pin": MapPin,
+};
 
 export default function BusinessContactPage() {
   const [form, setForm] = useState({
@@ -12,6 +20,8 @@ export default function BusinessContactPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const { language } = useLanguage();
+  const content = getClientPageContent("businessContact", language);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -28,14 +38,11 @@ export default function BusinessContactPage() {
       {/* Header */}
       <section className="bg-linear-to-br from-[#0d0422] to-[#0f172a] py-20 text-white">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-purple-400">Get in Touch</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-purple-400">{content.hero.label}</p>
           <h1 className="mt-3 text-4xl font-extrabold md:text-5xl">
-            Let&#39;s Build Your Training Plan
+            {content.hero.title}
           </h1>
-          <p className="mt-5 text-base text-purple-100/80">
-            Tell us about your team and we&#39;ll get back within one business day
-            with a tailored proposal.
-          </p>
+          <p className="mt-5 text-base text-purple-100/80">{content.hero.description}</p>
         </div>
       </section>
 
@@ -45,46 +52,41 @@ export default function BusinessContactPage() {
           <div className="grid gap-12 md:grid-cols-2">
             {/* Contact details */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Contact Details</h2>
-              <p className="mt-2 text-sm text-gray-500">
-                Prefer to speak directly? Reach us through any of these channels.
-              </p>
+              <h2 className="text-xl font-bold text-gray-900">{content.detailsSection.title}</h2>
+              <p className="mt-2 text-sm text-gray-500">{content.detailsSection.description}</p>
               <div className="mt-8 flex flex-col gap-5">
-                <a
-                  href="tel:+919876543210"
-                  className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition hover:border-purple-200"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-                    <Phone size={18} />
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Call Us</p>
-                    <p className="text-sm font-medium text-gray-800">+91 98765 43210</p>
-                  </div>
-                </a>
-                <a
-                  href="mailto:business@medtechcareer.com"
-                  className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition hover:border-purple-200"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-                    <Mail size={18} />
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email Us</p>
-                    <p className="text-sm font-medium text-gray-800">business@medtechcareer.com</p>
-                  </div>
-                </a>
-                <div className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-                    <MapPin size={18} />
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Office</p>
-                    <p className="text-sm font-medium text-gray-800">
-                      12 Innovation Park, Bengaluru, KA 560001
-                    </p>
-                  </div>
-                </div>
+                {content.detailsSection.items.map((item) => {
+                  const Icon = detailIcons[item.icon] ?? Phone;
+                  const cardContent = (
+                    <>
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
+                        <Icon size={18} />
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{item.label}</p>
+                        <p className="text-sm font-medium text-gray-800">{item.value}</p>
+                      </div>
+                    </>
+                  );
+
+                  if (item.href) {
+                    return (
+                      <a
+                        key={item.id}
+                        href={item.href}
+                        className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition hover:border-purple-200"
+                      >
+                        {cardContent}
+                      </a>
+                    );
+                  }
+
+                  return (
+                    <div key={item.id} className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                      {cardContent}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -93,79 +95,36 @@ export default function BusinessContactPage() {
               {submitted ? (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-200 bg-purple-50 p-10 text-center">
                   <Send size={36} className="text-purple-700" />
-                  <h3 className="mt-4 text-lg font-bold text-gray-900">Message Sent!</h3>
-                  <p className="mt-2 text-sm text-gray-500">
-                    Thank you. Our enterprise team will reach out within one business day.
-                  </p>
+                  <h3 className="mt-4 text-lg font-bold text-gray-900">{content.form.successTitle}</h3>
+                  <p className="mt-2 text-sm text-gray-500">{content.form.successDescription}</p>
                 </div>
               ) : (
                 <form
                   onSubmit={handleSubmit}
                   className="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm"
                 >
-                  <h2 className="text-lg font-bold text-gray-900">Request a Demo</h2>
+                  <h2 className="text-lg font-bold text-gray-900">{content.form.title}</h2>
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-600" htmlFor="name">
-                        Full Name *
-                      </label>
-                      <input
-                        id="name"
-                        name="name"
-                        required
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Dr. Kavitha R."
-                        className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-600" htmlFor="email">
-                        Work Email *
-                      </label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="you@hospital.com"
-                        className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-600" htmlFor="phone">
-                        Phone *
-                      </label>
-                      <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        required
-                        value={form.phone}
-                        onChange={handleChange}
-                        placeholder="+91 9876543210"
-                        className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-gray-600" htmlFor="organisation">
-                        Organisation *
-                      </label>
-                      <input
-                        id="organisation"
-                        name="organisation"
-                        required
-                        value={form.organisation}
-                        onChange={handleChange}
-                        placeholder="Apollo Hospitals"
-                        className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
-                      />
-                    </div>
+                    {content.form.fields.map((field) => (
+                      <div key={field.id} className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-gray-600" htmlFor={field.id}>
+                          {field.label}
+                        </label>
+                        <input
+                          id={field.id}
+                          name={field.id}
+                          type={field.type}
+                          required
+                          value={form[field.id]}
+                          onChange={handleChange}
+                          placeholder={field.placeholder}
+                          className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                        />
+                      </div>
+                    ))}
                     <div className="flex flex-col gap-1.5 sm:col-span-2">
                       <label className="text-xs font-semibold text-gray-600" htmlFor="teamSize">
-                        Team Size
+                        {content.form.teamSizeLabel}
                       </label>
                       <select
                         id="teamSize"
@@ -174,16 +133,13 @@ export default function BusinessContactPage() {
                         onChange={handleChange}
                         className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
                       >
-                        <option value="">Select team size</option>
-                        <option value="1-10">1 – 10 employees</option>
-                        <option value="11-50">11 – 50 employees</option>
-                        <option value="51-200">51 – 200 employees</option>
-                        <option value="200+">200+ employees</option>
+                        <option value="">{content.form.teamSizePlaceholder}</option>
+                        {content.form.teamSizes.map((size) => <option key={size.id} value={size.id}>{size.label}</option>)}
                       </select>
                     </div>
                     <div className="flex flex-col gap-1.5 sm:col-span-2">
                       <label className="text-xs font-semibold text-gray-600" htmlFor="message">
-                        How can we help?
+                        {content.form.messageLabel}
                       </label>
                       <textarea
                         id="message"
@@ -191,7 +147,7 @@ export default function BusinessContactPage() {
                         rows={4}
                         value={form.message}
                         onChange={handleChange}
-                        placeholder="Tell us about your training goals..."
+                        placeholder={content.form.messagePlaceholder}
                         className="rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 outline-none transition focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
                       />
                     </div>
@@ -200,7 +156,7 @@ export default function BusinessContactPage() {
                     type="submit"
                     className="mt-6 w-full rounded-xl bg-purple-700 py-3 text-sm font-semibold text-white transition hover:bg-purple-800"
                   >
-                    Send Request
+                    {content.form.submitLabel}
                   </button>
                 </form>
               )}

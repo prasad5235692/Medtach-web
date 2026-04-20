@@ -1,18 +1,17 @@
-﻿"use client";
+"use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { ChevronDown, LogOut, User, Building2 } from "lucide-react";
+import { ChevronDown, LogOut, User } from "lucide-react";
 import { getCourses } from "@/data/courses";
+import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar() {
-  const router = useRouter();
   const { session, logout } = useAuth();
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
@@ -21,22 +20,10 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileBusinessOpen, setMobileBusinessOpen] = useState(false);
+  const content = getClientPageContent("siteNavbar", language);
 
-  const primaryLinks = [
-    { label: t("nav.home", "Home"), href: "/" },
-    { label: t("nav.about", "About"), href: "/about-us" },
-    { label: t("nav.branches", "Branches"), href: "/branches" },
-    { label: t("nav.training", "Training"), href: "/training" },
-    { label: t("nav.placements", "Placements"), href: "/placements" },
-    { label: t("nav.internship", "Internship"), href: "/internship" },
-  ];
-
-  const moreLinks = [
-    { label: t("nav.ourTeam", "Our Team"), href: "/our-team" },
-    { label: t("nav.collegeTraining", "College Training"), href: "/college-training" },
-    { label: t("nav.counseling", "1:1 Counseling"), href: "/counseling" },
-    { label: t("nav.blog", "Blog"), href: "/blog" },
-  ];
+  const primaryLinks = content.primaryLinks;
+  const moreLinks = content.moreLinks;
   const courses = getCourses(language);
 
   const handleLogout = async () => {
@@ -50,29 +37,29 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100/60 bg-white/95 shadow-sm backdrop-blur-sm">
       <div className="page-container flex items-center justify-between py-3">
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="Medtech Career" width={180} height={62} className="h-16 w-auto object-contain" priority />
+          <Image src="/logo.png" alt={content.logoAlt} width={180} height={62} className="h-16 w-auto object-contain" priority />
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">
-          {primaryLinks.map((l) => (
-            <Link key={l.href} href={l.href} className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
-              {l.label}
+          {primaryLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
+              {link.label}
             </Link>
           ))}
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
             <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setCoursesOpen(true)} onClick={() => setCoursesOpen(!coursesOpen)}>
-              {t("nav.courses", "Courses")} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
+              {content.coursesLabel} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
             </button>
             {coursesOpen && (
               <div className="absolute left-0 top-full w-72 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link href="/courses" className="block border-b border-purple-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setCoursesOpen(false)}>
-                  {t("nav.viewAllCourses", "View All Courses")} →
+                  {content.viewAllCoursesLabel} →
                 </Link>
                 <div className="max-h-80 overflow-y-auto py-1">
-                  {courses.map((c) => (
-                    <Link key={c.slug} href={`/courses/${c.slug}`} className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setCoursesOpen(false)}>
-                      <span className="leading-tight">{c.title}</span>
+                  {courses.map((course) => (
+                    <Link key={course.slug} href={`/courses/${course.slug}`} className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setCoursesOpen(false)}>
+                      <span className="leading-tight">{course.title}</span>
                     </Link>
                   ))}
                 </div>
@@ -82,19 +69,19 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
             <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setMoreOpen(true)} onClick={() => setMoreOpen(!moreOpen)}>
-              {t("nav.more", "More")} <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              {content.moreLabel} <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
-              <div className="absolute left-0 top-full  w-48 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
-                {moreLinks.map((l) =>
-                  l.href === "/join-as-teacher" ? (
-                    <Link key={l.href} href={l.href} className="flex items-center gap-2 border-t border-purple-50 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setMoreOpen(false)}>
+              <div className="absolute left-0 top-full w-48 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
+                {moreLinks.map((link) =>
+                  link.href === "/join-as-teacher" ? (
+                    <Link key={link.href} href={link.href} className="flex items-center gap-2 border-t border-purple-50 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setMoreOpen(false)}>
                       <span className="flex h-4 w-4 items-center justify-center rounded-full bg-purple-700 text-[9px] text-white">✦</span>
-                      {l.label}
+                      {link.label}
                     </Link>
                   ) : (
-                    <Link key={l.href} href={l.href} className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setMoreOpen(false)}>
-                      {l.label}
+                    <Link key={link.href} href={link.href} className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setMoreOpen(false)}>
+                      {link.label}
                     </Link>
                   ),
                 )}
@@ -105,16 +92,15 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
           <div className="relative" onMouseEnter={() => setBusinessOpen(true)} onMouseLeave={() => setBusinessOpen(false)}>
-            {/* Main clickable link */}
             <Link href="/business" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition hover:text-purple-700">
-              {t("nav.business", "MedTech Businesses")}
+              {content.business.label}
               <ChevronDown
                 size={12}
                 className={`transition-transform duration-200 ${businessOpen ? "rotate-180" : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setBusinessOpen((v) => !v);
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setBusinessOpen((value) => !value);
                 }}
               />
             </Link>
@@ -122,21 +108,18 @@ export default function Navbar() {
             {businessOpen && (
               <div className="absolute right-0 top-full mt-0 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link href="/business/pricing" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setBusinessOpen(false)}>
-                  {t("nav.comparePlans", "Compare Plans")}
+                  {content.business.comparePlansLabel}
                 </Link>
 
                 <Link href="/business/request-demo" className="flex items-center gap-2 border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setBusinessOpen(false)}>
-                  {t("nav.tryBusiness", "Try MedTech Businesses")}
+                  {content.business.tryLabel}
                 </Link>
               </div>
             )}
-          </div>{" "}
-          {/* <Link href="/join-as-mentor" className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
-            {t("nav.joinAsMentor", "Join as Mentor")}
-          </Link> */}
+          </div>
           {session ? (
             <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
-              <button className="flex items-center gap-2 rounded-full border border-purple-200 py-1 pl-1 pr-3 text-sm font-medium text-purple-700 transition hover:bg-purple-50" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((v) => !v)}>
+              <button className="flex items-center gap-2 rounded-full border border-purple-200 py-1 pl-1 pr-3 text-sm font-medium text-purple-700 transition hover:bg-purple-50" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((value) => !value)}>
                 {session.photo ? (
                   <span className="relative block h-7 w-7 overflow-hidden rounded-full">
                     <Image src={session.photo} alt={session.name} fill sizes="28px" unoptimized className="object-cover" />
@@ -146,27 +129,27 @@ export default function Navbar() {
                     <User size={14} />
                   </span>
                 )}
-                <span className="max-w-25 truncate">{session.name || t("nav.account", "Account")}</span>
+                <span className="max-w-25 truncate">{session.name || content.accountFallback}</span>
               </button>
               {userMenuOpen && (
                 <div className="absolute right-0 top-full mt-1 w-44 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
                   <div className="border-b border-gray-100 px-4 py-3">
-                    <p className="text-xs font-semibold text-gray-800 truncate">{session.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{session.phone}</p>
+                    <p className="truncate text-xs font-semibold text-gray-800">{session.name}</p>
+                    <p className="truncate text-xs text-gray-400">{session.phone}</p>
                   </div>
                   <button className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-500 transition hover:bg-red-50" onClick={handleLogout}>
-                    <LogOut size={14} /> {t("nav.logout", "Logout")}
+                    <LogOut size={14} /> {content.logoutLabel}
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/login" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
-              {t("nav.loginSignup", "Login / Signup")}
+              {content.loginSignupLabel}
             </Link>
           )}
           <Link href="/contact" className="rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-orange-200 transition hover:bg-orange-600">
-            {t("nav.contactUs", "Contact Us")}
+            {content.contactUsLabel}
           </Link>
         </div>
 
@@ -180,7 +163,7 @@ export default function Navbar() {
               setMobileMoreOpen(false);
             }
           }}
-          aria-label={t("nav.toggleMenu", "Toggle menu")}
+          aria-label={content.toggleMenuLabel}
         >
           <span className={`h-0.5 w-6 bg-gray-700 transition-all ${open ? "translate-y-2 rotate-45" : ""}`} />
           <span className={`h-0.5 w-6 bg-gray-700 transition-all ${open ? "opacity-0" : ""}`} />
@@ -191,10 +174,10 @@ export default function Navbar() {
       {open && (
         <div className="max-h-[calc(100vh-92px)] overflow-y-auto border-t border-purple-100/60 bg-white px-6 py-4 shadow-lg md:hidden">
           <nav className="flex flex-col gap-4">
-            {primaryLinks.map((l) => (
+            {primaryLinks.map((link) => (
               <Link
-                key={l.href}
-                href={l.href}
+                key={link.href}
+                href={link.href}
                 className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
                 onClick={() => {
                   setOpen(false);
@@ -202,12 +185,12 @@ export default function Navbar() {
                   setMobileMoreOpen(false);
                 }}
               >
-                {l.label}
+                {link.label}
               </Link>
             ))}
             <div>
               <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}>
-                <span>{t("nav.courses", "Courses")}</span>
+                <span>{content.coursesLabel}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileCoursesOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileCoursesOpen && (
@@ -221,12 +204,12 @@ export default function Navbar() {
                       setMobileMoreOpen(false);
                     }}
                   >
-                    {t("nav.viewAllCourses", "View All Courses")}
+                    {content.viewAllCoursesLabel}
                   </Link>
-                  {courses.map((c) => (
+                  {courses.map((course) => (
                     <Link
-                      key={c.slug}
-                      href={`/courses/${c.slug}`}
+                      key={course.slug}
+                      href={`/courses/${course.slug}`}
                       className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
                       onClick={() => {
                         setOpen(false);
@@ -234,7 +217,7 @@ export default function Navbar() {
                         setMobileMoreOpen(false);
                       }}
                     >
-                      {c.title}
+                      {course.title}
                     </Link>
                   ))}
                 </div>
@@ -242,17 +225,17 @@ export default function Navbar() {
             </div>
             <div>
               <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileMoreOpen(!mobileMoreOpen)}>
-                <span>{t("nav.more", "More")}</span>
+                <span>{content.moreLabel}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileMoreOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileMoreOpen && (
                 <div className="border-purple-100 bg-purple-50/30 py-2">
-                  {moreLinks.map((l) =>
-                    l.href === "/join-as-Mentor" ? (
+                  {moreLinks.map((link) =>
+                    link.href === "/join-as-Mentor" ? (
                       <Link
-                        key={l.href}
-                        href={l.href}
-                        className="flex items-center gap-2 mx-2 mt-1 rounded-lg bg-purple-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-purple-800"
+                        key={link.href}
+                        href={link.href}
+                        className="mx-2 mt-1 flex items-center gap-2 rounded-lg bg-purple-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-purple-800"
                         onClick={() => {
                           setOpen(false);
                           setMobileCoursesOpen(false);
@@ -260,12 +243,12 @@ export default function Navbar() {
                         }}
                       >
                         <span className="text-[10px]">✦</span>
-                        {l.label}
+                        {link.label}
                       </Link>
                     ) : (
                       <Link
-                        key={l.href}
-                        href={l.href}
+                        key={link.href}
+                        href={link.href}
                         className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
                         onClick={() => {
                           setOpen(false);
@@ -273,7 +256,7 @@ export default function Navbar() {
                           setMobileMoreOpen(false);
                         }}
                       >
-                        {l.label}
+                        {link.label}
                       </Link>
                     ),
                   )}
@@ -282,19 +265,17 @@ export default function Navbar() {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                {/* Main clickable page link */}
                 <Link
                   href="/business"
-                  className="text-gray-600 text-sm font-medium"
+                  className="text-sm font-medium text-gray-600"
                   onClick={() => {
                     setOpen(false);
                     setMobileBusinessOpen(false);
                   }}
                 >
-                  {t("nav.business", "MedTech Businesses")}
+                  {content.business.label}
                 </Link>
 
-                {/* Dropdown toggle only */}
                 <button type="button" className="p-1" onClick={() => setMobileBusinessOpen(!mobileBusinessOpen)} aria-expanded={mobileBusinessOpen}>
                   <ChevronDown size={14} className={`transition-transform duration-200 ${mobileBusinessOpen ? "rotate-180" : ""}`} />
                 </button>
@@ -310,7 +291,7 @@ export default function Navbar() {
                       setMobileBusinessOpen(false);
                     }}
                   >
-                    {t("nav.comparePlans", "Compare Plans")}
+                    {content.business.comparePlansLabel}
                   </Link>
 
                   <Link
@@ -321,22 +302,11 @@ export default function Navbar() {
                       setMobileBusinessOpen(false);
                     }}
                   >
-                    {t("nav.tryBusiness", "Try MedTech Businesses")}
+                    {content.business.tryLabel}
                   </Link>
                 </div>
               )}
-            </div>{" "}
-            {/* <Link
-              href="/join-as-mentor"
-              className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
-              onClick={() => {
-                setOpen(false);
-                setMobileCoursesOpen(false);
-                setMobileMoreOpen(false);
-              }}
-            >
-              Join as Mentor
-            </Link> */}
+            </div>
             {session ? (
               <>
                 <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-purple-50 px-3 py-2">
@@ -350,12 +320,12 @@ export default function Navbar() {
                     </span>
                   )}
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{session.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{session.phone}</p>
+                    <p className="truncate text-sm font-semibold text-gray-800">{session.name}</p>
+                    <p className="truncate text-xs text-gray-400">{session.phone}</p>
                   </div>
                 </div>
                 <button type="button" className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 py-2.5 text-sm font-semibold text-red-500 transition hover:bg-red-50" onClick={handleLogout}>
-                  <LogOut size={14} /> Logout
+                  <LogOut size={14} /> {content.logoutLabel}
                 </button>
               </>
             ) : (
@@ -368,7 +338,7 @@ export default function Navbar() {
                   setMobileMoreOpen(false);
                 }}
               >
-                Login / Signup
+                {content.loginSignupLabel}
               </Link>
             )}
             <Link
@@ -380,9 +350,8 @@ export default function Navbar() {
                 setMobileMoreOpen(false);
               }}
             >
-              Contact Us
+              {content.contactUsLabel}
             </Link>
-
           </nav>
         </div>
       )}

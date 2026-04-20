@@ -1,56 +1,26 @@
 ﻿"use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+import { getClientPageContent } from "@/data/clientPageContent";
 import {
   Check, Building2, Users, Globe, BarChart3,
   Puzzle, ArrowRight, Phone, Mail, ChevronLeft,
 } from "lucide-react";
 
-const benefits = [
-  { icon: Building2, text: "Train your entire workforce with 14,000+ certified healthcare courses" },
-  { icon: Check,     text: "Prep employees for 200+ industry-recognised certification exams (CPC, CRC, CCS, RHIT & more)" },
-  { icon: Users,     text: "Develop skilled coding & billing teams with hands-on practice environments" },
-  { icon: BarChart3, text: "Identify skills gaps, learning trends, and team performance benchmarks" },
-  { icon: Puzzle,    text: "Integrate seamlessly with your existing LMS, HRIS, and HR systems" },
-  { icon: Globe,     text: "Deliver training in 16 languages across multi-branch or remote teams" },
-];
+const benefitIcons = {
+  "building-2": Building2,
+  check: Check,
+  users: Users,
+  "bar-chart-3": BarChart3,
+  puzzle: Puzzle,
+  globe: Globe,
+};
 
-const companySizes = [
-  "1–10 employees",
-  "11–50 employees",
-  "51–200 employees",
-  "201–500 employees",
-  "501–1,000 employees",
-  "1,001–5,000 employees",
-  "5,001+ employees",
-];
-
-const learnersOptions = [
-  "2–10",
-  "11–25",
-  "26–50",
-  "51–100",
-  "101–500",
-  "500+",
-];
-
-const jobLevels = [
-  "Individual Contributor",
-  "Manager",
-  "Director",
-  "VP / Head of Department",
-  "C-Suite / Executive",
-  "Owner / Founder",
-];
-
-const trustedBy = [
-  "Apollo Hospitals",
-  "Fortis Healthcare",
-  "Manipal Health",
-  "Max Healthcare",
-  "Narayana Health",
-  "Aster DM Healthcare",
-];
+const contactIcons = {
+  phone: Phone,
+  mail: Mail,
+};
 
 export default function RequestDemoPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -59,6 +29,8 @@ export default function RequestDemoPage() {
     location: "", company: "", companySize: "",
     learners: "", jobTitle: "", jobLevel: "", needs: "",
   });
+  const { language } = useLanguage();
+  const content = getClientPageContent("businessRequestDemo", language);
 
   const set = (field) => (e) => setForm((p) => ({ ...p, [field]: e.target.value }));
 
@@ -83,17 +55,17 @@ export default function RequestDemoPage() {
             className="mb-6 inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-white/5 px-3 py-1.5 text-xs font-semibold text-purple-200 transition hover:bg-white/10 hover:text-white"
           >
             <ChevronLeft size={14} />
-            Back to MedTech Career
+            {content.hero.backLabel}
           </Link>
           <div className="flex flex-col items-center">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-orange-400">
-            Free Demo
+            {content.hero.badge}
           </p>
           <h1 className="text-4xl font-extrabold leading-tight sm:text-4xl">
-            Get your <span className="text-orange-400">personalised demo</span>
+            {content.hero.titleLeading} <span className="text-orange-400">{content.hero.titleHighlight}</span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-purple-100/80">
-            Tell us your needs and we'll build a custom plan to drive results for your healthcare team.
+            {content.hero.description}
           </p>
           </div>
         </div>
@@ -106,25 +78,29 @@ export default function RequestDemoPage() {
           {/* ── Left: benefits + trusted ── */}
           <div>
             <h2 className="text-xl font-extrabold text-gray-900">
-              With MedTech Business as your learning partner, you can:
+              {content.benefitsTitle}
             </h2>
 
             <ul className="mt-8 flex flex-col gap-5">
-              {benefits.map(({ icon: Icon, text }) => (
+              {content.benefits.map(({ id, icon, text }) => {
+                const Icon = benefitIcons[icon] ?? Building2;
+
+                return (
                 <li key={text} className="flex items-start gap-4">
                   <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
                     <Icon size={17} />
                   </span>
                   <p className="text-sm leading-relaxed text-gray-600">{text}</p>
                 </li>
-              ))}
+                );
+              })}
             </ul>
 
             {/* Trusted by */}
             <div className="mt-12">
-              <p className="mb-5 text-xs font-bold uppercase tracking-widest text-gray-400">Trusted by India&apos;s leading healthcare organisations</p>
+              <p className="mb-5 text-xs font-bold uppercase tracking-widest text-gray-400">{content.trustedByTitle}</p>
               <div className="grid grid-cols-3 gap-3">
-                {trustedBy.map((name) => (
+                {content.trustedBy.map((name) => (
                   <div
                     key={name}
                     className="flex items-center justify-center rounded-xl border border-gray-100 bg-white px-3 py-3 text-center text-xs font-semibold text-gray-500 shadow-sm"
@@ -137,13 +113,9 @@ export default function RequestDemoPage() {
 
             {/* Social proof */}
             <div className="mt-8 flex flex-wrap gap-6">
-              {[
-                { stat: "500+",   label: "Healthcare clients" },
-                { stat: "12,000+",label: "Staff upskilled" },
-                { stat: "95%",    label: "Certification pass rate" },
-              ].map(({ stat, label }) => (
+              {content.stats.map(({ value, label }) => (
                 <div key={label} className="text-center">
-                  <p className="text-2xl font-extrabold text-purple-700">{stat}</p>
+                  <p className="text-2xl font-extrabold text-purple-700">{value}</p>
                   <p className="text-xs text-gray-500">{label}</p>
                 </div>
               ))}
@@ -151,13 +123,16 @@ export default function RequestDemoPage() {
 
             {/* Contact details */}
             <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <p className="text-xs font-bold uppercase tracking-widest text-purple-600">Prefer to talk?</p>
-              <a href="tel:+919876543210" className="flex items-center gap-3 text-sm text-gray-600 transition hover:text-purple-700">
-                <Phone size={15} className="text-purple-500" /> +91 98765 43210
-              </a>
-              <a href="mailto:business@medtechcareer.com" className="flex items-center gap-3 text-sm text-gray-600 transition hover:text-purple-700">
-                <Mail size={15} className="text-purple-500" /> business@medtechcareer.com
-              </a>
+              <p className="text-xs font-bold uppercase tracking-widest text-purple-600">{content.contactTitle}</p>
+              {content.contactMethods.map((method) => {
+                const Icon = contactIcons[method.icon] ?? Phone;
+
+                return (
+                  <a key={method.id} href={method.href} className="flex items-center gap-3 text-sm text-gray-600 transition hover:text-purple-700">
+                    <Icon size={15} className="text-purple-500" /> {method.value}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -168,15 +143,13 @@ export default function RequestDemoPage() {
                 <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-purple-700 text-white">
                   <Check size={26} />
                 </span>
-                <h2 className="text-xl font-extrabold text-gray-900">Thank you!</h2>
-                <p className="mt-3 text-sm text-gray-500">
-                  We've received your request. A MedTech Business specialist will contact you within 1 business day.
-                </p>
+                <h2 className="text-xl font-extrabold text-gray-900">{content.form.successTitle}</h2>
+                <p className="mt-3 text-sm text-gray-500">{content.form.successDescription}</p>
                 <Link
                   href="/business"
                   className="mt-7 inline-flex items-center gap-2 rounded-xl bg-purple-700 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800"
                 >
-                  Explore Platform <ArrowRight size={14} />
+                  {content.form.successLinkLabel} <ArrowRight size={14} />
                 </Link>
               </div>
             ) : (
@@ -184,58 +157,58 @@ export default function RequestDemoPage() {
                 onSubmit={handleSubmit}
                 className="rounded-2xl border border-gray-100 bg-white p-8 shadow-md"
               >
-                <h3 className="mb-6 text-lg font-bold text-gray-900">Tell us about your organisation</h3>
+                <h3 className="mb-6 text-lg font-bold text-gray-900">{content.form.title}</h3>
 
                 {/* Name row */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                   <div>
-                    <label className={labelCls}>First Name *</label>
-                    <input required className={inputCls} placeholder="Arjun" value={form.firstName} onChange={set("firstName")} />
+                    <label className={labelCls}>{content.form.fields.firstName.label}</label>
+                    <input required className={inputCls} placeholder={content.form.fields.firstName.placeholder} value={form.firstName} onChange={set("firstName")} />
                   </div>
                   <div>
-                    <label className={labelCls}>Last Name *</label>
-                    <input required className={inputCls} placeholder="Sharma" value={form.lastName} onChange={set("lastName")} />
+                    <label className={labelCls}>{content.form.fields.lastName.label}</label>
+                    <input required className={inputCls} placeholder={content.form.fields.lastName.placeholder} value={form.lastName} onChange={set("lastName")} />
                   </div>
                 </div>
 
                 {/* Email + Phone */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                   <div>
-                    <label className={labelCls}>Work Email *</label>
-                    <input required type="email" className={inputCls} placeholder="arjun@hospital.com" value={form.email} onChange={set("email")} />
+                    <label className={labelCls}>{content.form.fields.email.label}</label>
+                    <input required type="email" className={inputCls} placeholder={content.form.fields.email.placeholder} value={form.email} onChange={set("email")} />
                   </div>
                   <div>
-                    <label className={labelCls}>Phone Number *</label>
-                    <input required type="tel" className={inputCls} placeholder="+91 98765 43210" value={form.phone} onChange={set("phone")} />
+                    <label className={labelCls}>{content.form.fields.phone.label}</label>
+                    <input required type="tel" className={inputCls} placeholder={content.form.fields.phone.placeholder} value={form.phone} onChange={set("phone")} />
                   </div>
                 </div>
 
                 {/* Location */}
                 <div className="mb-4">
-                  <label className={labelCls}>Where are you located? *</label>
-                  <input required className={inputCls} placeholder="e.g. Bengaluru, Karnataka" value={form.location} onChange={set("location")} />
+                  <label className={labelCls}>{content.form.fields.location.label}</label>
+                  <input required className={inputCls} placeholder={content.form.fields.location.placeholder} value={form.location} onChange={set("location")} />
                 </div>
 
                 {/* Company */}
                 <div className="mb-4">
-                  <label className={labelCls}>Company / Organisation Name *</label>
-                  <input required className={inputCls} placeholder="Apollo Hospitals" value={form.company} onChange={set("company")} />
+                  <label className={labelCls}>{content.form.fields.company.label}</label>
+                  <input required className={inputCls} placeholder={content.form.fields.company.placeholder} value={form.company} onChange={set("company")} />
                 </div>
 
                 {/* Company size + Learners */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                   <div>
-                    <label className={labelCls}>Company Size *</label>
+                    <label className={labelCls}>{content.form.fields.companySize.label}</label>
                     <select required className={inputCls} value={form.companySize} onChange={set("companySize")}>
-                      <option value="">Select…</option>
-                      {companySizes.map((s) => <option key={s}>{s}</option>)}
+                      <option value="">{content.form.fields.companySize.placeholder}</option>
+                      {content.form.fields.companySize.options.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className={labelCls}>Number of people to train *</label>
+                    <label className={labelCls}>{content.form.fields.learners.label}</label>
                     <select required className={inputCls} value={form.learners} onChange={set("learners")}>
-                      <option value="">Select…</option>
-                      {learnersOptions.map((o) => <option key={o}>{o}</option>)}
+                      <option value="">{content.form.fields.learners.placeholder}</option>
+                      {content.form.fields.learners.options.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
                     </select>
                   </div>
                 </div>
@@ -243,25 +216,25 @@ export default function RequestDemoPage() {
                 {/* Job title + level */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                   <div>
-                    <label className={labelCls}>Job Title *</label>
-                    <input required className={inputCls} placeholder="HIM Director" value={form.jobTitle} onChange={set("jobTitle")} />
+                    <label className={labelCls}>{content.form.fields.jobTitle.label}</label>
+                    <input required className={inputCls} placeholder={content.form.fields.jobTitle.placeholder} value={form.jobTitle} onChange={set("jobTitle")} />
                   </div>
                   <div>
-                    <label className={labelCls}>Job Level *</label>
+                    <label className={labelCls}>{content.form.fields.jobLevel.label}</label>
                     <select required className={inputCls} value={form.jobLevel} onChange={set("jobLevel")}>
-                      <option value="">Select…</option>
-                      {jobLevels.map((l) => <option key={l}>{l}</option>)}
+                      <option value="">{content.form.fields.jobLevel.placeholder}</option>
+                      {content.form.fields.jobLevel.options.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
                     </select>
                   </div>
                 </div>
 
                 {/* Training needs */}
                 <div className="mb-6">
-                  <label className={labelCls}>What are your organisation's training needs?</label>
+                  <label className={labelCls}>{content.form.fields.needs.label}</label>
                   <textarea
                     rows={3}
                     className={`${inputCls} resize-none`}
-                    placeholder="e.g. CPC certification for 20 coders, ICD-10 refresher, HIPAA compliance..."
+                    placeholder={content.form.fields.needs.placeholder}
                     value={form.needs}
                     onChange={set("needs")}
                   />
@@ -271,15 +244,15 @@ export default function RequestDemoPage() {
                   type="submit"
                   className="w-full rounded-xl bg-purple-700 py-3 text-sm font-semibold text-white shadow-sm shadow-purple-200 transition hover:bg-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
                 >
-                  Submit Request
+                  {content.form.submitLabel}
                 </button>
 
                 <p className="mt-4 text-center text-xs leading-relaxed text-gray-400">
-                  By submitting, you agree to our{" "}
-                  <Link href="/business/contact" className="text-purple-600 hover:underline">Terms of Use</Link>{" "}
-                  and{" "}
-                  <Link href="/business/contact" className="text-purple-600 hover:underline">Privacy Policy</Link>.
-                  We may contact you about MedTech Business services.
+                  {content.form.termsPrefix}{" "}
+                  <Link href="/business/contact" className="text-purple-600 hover:underline">{content.form.termsLabel}</Link>{" "}
+                  {content.form.conjunctionLabel}{" "}
+                  <Link href="/business/contact" className="text-purple-600 hover:underline">{content.form.privacyLabel}</Link>.
+                  {" "}{content.form.termsSuffix}
                 </p>
               </form>
             )}
