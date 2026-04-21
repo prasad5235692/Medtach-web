@@ -145,7 +145,7 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/courses" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
+              <Link href="/login" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
                 {content.loginSignupLabel}
               </Link>
               <a
