@@ -144,9 +144,19 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <Link href="/login" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
-              {content.loginSignupLabel}
-            </Link>
+            <>
+              <Link href="/courses" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
+                {content.loginSignupLabel}
+              </Link>
+              <a
+                href="https://medtech-frontend-v4.vercel.app/"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+              >
+                {content.loginLabel}
+              </a>
+            </>
           )}
           <Link href="/contact" className="rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-orange-200 transition hover:bg-orange-600">
             {content.contactUsLabel}
@@ -329,17 +339,32 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              <Link
-                href="/login"
-                className="mt-2 block w-full rounded-lg border border-purple-200 px-5 py-2.5 text-center text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
-                onClick={() => {
-                  setOpen(false);
-                  setMobileCoursesOpen(false);
-                  setMobileMoreOpen(false);
-                }}
-              >
-                {content.loginSignupLabel}
-              </Link>
+              <>
+                <Link
+                  href="/courses"
+                  className="mt-2 block w-full rounded-lg border border-purple-200 px-5 py-2.5 text-center text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileCoursesOpen(false);
+                    setMobileMoreOpen(false);
+                  }}
+                >
+                  {content.loginSignupLabel}
+                </Link>
+                <a
+                  href="https://medtech-frontend-v4.vercel.app/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block w-full rounded-lg border border-purple-200 px-5 py-2.5 text-center text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileCoursesOpen(false);
+                    setMobileMoreOpen(false);
+                  }}
+                >
+                  {content.loginLabel}
+                </a>
+              </>
             )}
             <Link
               href="/contact"
