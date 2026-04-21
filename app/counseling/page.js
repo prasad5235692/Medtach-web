@@ -4,8 +4,8 @@ import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { getClientPageContent } from "@/data/clientPageContent";
-import { CheckCircle, Star, Clock, Video, Shield, ChevronDown } from "lucide-react";
+import { getCounselingPageContent } from "@/counseling/data/content";
+import { CheckCircle, Clock, Video, Shield } from "lucide-react";
 const whyCardIcons = {
   video: Video,
   shield: Shield,
@@ -50,7 +50,7 @@ function formatTimeSlot(localeTag, timeSlot) {
 
 export default function CounselingPage() {
   const { language } = useLanguage();
-  const content = getClientPageContent("counseling", language);
+  const content = getCounselingPageContent(language);
   const localeTag = getLocaleTag(language);
   const dates = getDates(localeTag);
   const [selectedMentorId, setSelectedMentorId] = useState(null);
@@ -144,7 +144,7 @@ export default function CounselingPage() {
           </AnimateOnScroll>
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {content.mentors.map((mentor, i) => (
-              <AnimateOnScroll key={m.name} animation="fade-up" delay={i * 100}>
+              <AnimateOnScroll key={mentor.id} animation="fade-up" delay={i * 100}>
                 <div
                   onClick={() => setSelectedMentorId(mentor.id)}
                   className={`group flex cursor-pointer flex-col items-center gap-4 rounded-2xl border-2 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
@@ -270,7 +270,7 @@ export default function CounselingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="relative overflow-hidden bg-[#f8fafc] py-16">
+      {/* <section id="pricing" className="relative overflow-hidden bg-[#f8fafc] py-16">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -322,7 +322,7 @@ export default function CounselingPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="bg-gray-900 py-20 text-center text-white">

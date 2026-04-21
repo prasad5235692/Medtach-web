@@ -1,12 +1,16 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import BlogCard from "@/components/BlogCard";
-import { blogPosts } from "@/data/blog";
+import { getBlogPosts } from "@/data/blog";
+import { getLocale } from "@/lib/i18n/server";
 
 export const metadata = {
   title: "Blog — Medtech Career",
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const locale = await getLocale();
+  const blogPosts = getBlogPosts(locale);
+
   return (
     <>
       {/* Hero */}

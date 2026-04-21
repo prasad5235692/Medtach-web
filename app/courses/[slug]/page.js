@@ -1,9 +1,11 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseActions from "@/components/CourseActions";
+import { getCourseDetailPageContent, getCourseTrainingDetailRows } from "@/courses/data";
 import { courses, getCourses, getCourseBySlug } from "@/data/courses";
+import { localizeText } from "@/lib/i18n/content";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Clock, Users, BarChart2, Stethoscope, BookOpen, Trophy, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, Users, BarChart2, Stethoscope, BookOpen, Trophy, CheckCircle2, ChevronDown } from "lucide-react";
 import { getLocale } from "@/lib/i18n/server";
 
 const categoryIcon = {
@@ -17,10 +19,16 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
+  const locale = await getLocale();
   const { slug } = await params;
-  const course = getCourseBySlug(slug);
+  const course = getCourseBySlug(slug, locale);
   if (!course) return {};
-  return { title: `${course.title} — Medtech Career` };
+  const content = getCourseDetailPageContent(locale, course);
+
+  return {
+    title: content.metadataTitle,
+    description: course.description,
+  };
 }
 
 export default async function CourseDetailPage({ params }) {
@@ -30,25 +38,9 @@ export default async function CourseDetailPage({ params }) {
   if (!course) notFound();
   const localizedCourses = getCourses(locale);
   const CourseIcon = categoryIcon[course.category] ?? BookOpen;
-
-  const faqs = [
-    {
-      q: "Who can take these courses?",
-      a: "Anyone with a Medical, Paramedical, or Life Science background can enrol. These courses are suitable for fresh graduates, working professionals, and anyone looking to start a career in healthcare coding.",
-    },
-    {
-      q: "What jobs can I get after completing this course?",
-      a: "Graduates are placed in leading healthcare BPOs and MNCs as Medical Coders, Medical Billers, Risk Adjustment Coders, CDI Specialists, and Healthcare IT professionals.",
-    },
-    {
-      q: "Are these courses recognised internationally?",
-      a: "Yes. Medtech Career certificates are accepted by healthcare BPOs across India. Our CPC and CRC programmes prepare you for globally recognised AAPC certifications.",
-    },
-    {
-      q: "How long does it take to complete the course?",
-      a: `The ${course.title} course duration is ${course.duration}. Both weekday and weekend batches are available to suit your schedule.`,
-    },
-  ];
+  const content = getCourseDetailPageContent(locale, course);
+  const categoryLabel = localizeText(locale, course.category);
+  const trainingDetailRows = getCourseTrainingDetailRows(course, content);
 
   return (
     <>
@@ -69,22 +61,22 @@ export default async function CourseDetailPage({ params }) {
             <div className="lg:col-span-2">
               <AnimateOnScroll animation="fade-up">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-purple-700">
-                  {course.category}
+                  {categoryLabel}
                 </p>
                 <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">{course.title}</h1>
                 <p className="mt-5 text-base leading-relaxed text-gray-500">
                   {course.description}
                 </p>
                 <div className="mt-7 flex flex-wrap gap-6 text-sm text-gray-400">
-                  <span className="flex items-center gap-1.5"><Clock size={14} /> Duration: <strong className="text-gray-700 ml-0.5">{course.duration}</strong></span>
-                  <span className="flex items-center gap-1.5"><Users size={14} /> Students: <strong className="text-gray-700 ml-0.5">{course.students}</strong></span>
-                  <span className="flex items-center gap-1.5"><BarChart2 size={14} /> Level: <strong className="text-gray-700 ml-0.5">{course.level}</strong></span>
+                  <span className="flex items-center gap-1.5"><Clock size={14} /> {content.stats.durationLabel}: <strong className="text-gray-700 ml-0.5">{course.duration}</strong></span>
+                  <span className="flex items-center gap-1.5"><Users size={14} /> {content.stats.studentsLabel}: <strong className="text-gray-700 ml-0.5">{course.students}</strong></span>
+                  <span className="flex items-center gap-1.5"><BarChart2 size={14} /> {content.stats.levelLabel}: <strong className="text-gray-700 ml-0.5">{course.level}</strong></span>
                 </div>
               </AnimateOnScroll>
 
               <AnimateOnScroll animation="fade-up" delay={200}>
                 <div className="mt-12">
-                  <h2 className="text-xl font-bold text-gray-900">Curriculum Overview</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{content.sections.curriculumTitle}</h2>
                   <ol className="mt-5 flex flex-col gap-3">
                     {course.modules.map((m, i) => (
                       <li key={m} className="flex items-start gap-4 rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm">
@@ -105,7 +97,7 @@ export default async function CourseDetailPage({ params }) {
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-50 text-purple-700">
                   <CourseIcon size={26} strokeWidth={1.6} />
                 </div>
-                <h3 className="mt-4 text-lg font-bold text-gray-900">Course Highlights</h3>
+                <h3 className="mt-4 text-lg font-bold text-gray-900">{content.sections.highlightsTitle}</h3>
                 <ul className="mt-4 flex flex-col gap-3">
                   {course.highlights.map((h) => (
                     <li key={h} className="flex items-start gap-3">
@@ -118,13 +110,13 @@ export default async function CourseDetailPage({ params }) {
                   href="/contact"
                   className="mt-7 block rounded-lg bg-purple-700 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-purple-800"
                 >
-                  Enroll Now
+                  {content.sidebar.primaryCtaLabel}
                 </Link>
                 <Link
                   href="/contact"
                   className="mt-3 block rounded-lg border border-gray-200 px-6 py-3 text-center text-sm font-semibold text-gray-600 transition hover:border-purple-300 hover:text-purple-700"
                 >
-                  Talk to a Counsellor
+                  {content.sidebar.secondaryCtaLabel}
                 </Link>
                 <CourseActions slug={course.slug} title={course.title} />
               </div>
@@ -138,7 +130,7 @@ export default async function CourseDetailPage({ params }) {
         <section className="bg-white py-16">
           <div className="page-container">
             <AnimateOnScroll animation="fade-up">
-              <h2 className="text-2xl font-bold text-gray-900">Topics Covered</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{content.sections.topicsTitle}</h2>
               <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {course.topics.map((t) => (
                   <li key={t} className="flex items-start gap-3 rounded-xl border border-purple-100 bg-purple-50/50 px-4 py-3">
@@ -153,20 +145,20 @@ export default async function CourseDetailPage({ params }) {
       )}
 
       {/* Training Details */}
-      {course.trainingDetails && (
+      {trainingDetailRows.length > 0 && (
         <section className="bg-[#f8fafc] py-16">
           <div className="page-container">
             <AnimateOnScroll animation="fade-up">
-              <h2 className="text-2xl font-bold text-gray-900">Training Programme Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{content.sections.trainingDetailsTitle}</h2>
               <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
                 <table className="w-full text-sm">
                   <tbody>
-                    {Object.entries(course.trainingDetails).map(([key, value], i) => (
-                      <tr key={key} className={i % 2 === 0 ? "bg-white" : "bg-purple-50/40"}>
+                    {trainingDetailRows.map((row, i) => (
+                      <tr key={row.key} className={i % 2 === 0 ? "bg-white" : "bg-purple-50/40"}>
                         <td className="border-b border-gray-100 px-6 py-4 font-semibold capitalize text-gray-700 w-48">
-                          {key.replace(/([A-Z])/g, " $1").trim()}
+                          {row.label}
                         </td>
-                        <td className="border-b border-gray-100 px-6 py-4 text-gray-500">{value}</td>
+                        <td className="border-b border-gray-100 px-6 py-4 text-gray-500">{row.value}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -182,7 +174,7 @@ export default async function CourseDetailPage({ params }) {
         <section className="bg-white py-16">
           <div className="page-container">
             <AnimateOnScroll animation="fade-up">
-              <h2 className="text-2xl font-bold text-gray-900">Salient Features</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{content.sections.featuresTitle}</h2>
               <ul className="mt-6 flex flex-col gap-3">
                 {course.features.map((f, i) => (
                   <AnimateOnScroll key={f} animation="fade-up" delay={i * 60}>
@@ -205,7 +197,7 @@ export default async function CourseDetailPage({ params }) {
         <section className="bg-[#f8fafc] py-16">
           <div className="page-container">
             <AnimateOnScroll animation="fade-up">
-              <h2 className="text-2xl font-bold text-gray-900">Study Materials Included</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{content.sections.studyMaterialsTitle}</h2>
               <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {course.studyMaterials.map((m) => (
                   <li key={m} className="flex items-center gap-3 rounded-xl border border-green-100 bg-green-50/50 px-4 py-3">
@@ -223,15 +215,15 @@ export default async function CourseDetailPage({ params }) {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-3xl px-6">
           <AnimateOnScroll animation="fade-up">
-            <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{content.sections.faqTitle}</h2>
             <div className="mt-6 flex flex-col gap-4">
-              {faqs.map((faq) => (
-                <details key={faq.q} className="group rounded-xl border border-gray-100 bg-[#f8fafc] px-5 py-4">
+              {content.faqs.map((faq) => (
+                <details key={faq.question} className="group rounded-xl border border-gray-100 bg-[#f8fafc] px-5 py-4">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-2 font-semibold text-gray-800">
-                    {faq.q}
+                    {faq.question}
                     <ChevronDown size={16} className="shrink-0 text-purple-700 transition-transform group-open:rotate-180" />
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-gray-500">{faq.a}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-500">{faq.answer}</p>
                 </details>
               ))}
             </div>
@@ -242,22 +234,22 @@ export default async function CourseDetailPage({ params }) {
       {/* Enroll CTA */}
       <section className="relative overflow-hidden bg-purple-700 py-14 text-white text-center">
         <AnimateOnScroll animation="fade-up">
-          <h2 className="text-2xl font-bold sm:text-3xl">Ready to Start — {course.title}?</h2>
+          <h2 className="text-2xl font-bold sm:text-3xl">{content.cta.title}</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-purple-200">
-            2,500+ students trained and placed. Join Medtech Career and launch your healthcare coding career today.
+            {content.cta.description}
           </p>
           <div className="mt-6 flex justify-center gap-4 flex-wrap">
             <Link
               href="/contact"
               className="rounded-lg bg-white px-7 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
             >
-              Enroll Now
+              {content.cta.primaryLabel}
             </Link>
             <Link
               href="/courses"
               className="rounded-lg border border-white/30 px-7 py-3 text-sm font-semibold transition hover:bg-white/10"
             >
-              All Courses
+              {content.cta.secondaryLabel}
             </Link>
           </div>
         </AnimateOnScroll>
@@ -266,7 +258,7 @@ export default async function CourseDetailPage({ params }) {
       {/* Other courses */}
       <section className="bg-[#f8fafc] py-16">
         <div className="page-container">
-          <h2 className="text-xl font-bold text-gray-900">Explore Other Courses</h2>
+          <h2 className="text-xl font-bold text-gray-900">{content.sections.relatedCoursesTitle}</h2>
           <div className="mt-6 flex flex-wrap gap-3">
             {localizedCourses
               .filter((c) => c.slug !== course.slug)

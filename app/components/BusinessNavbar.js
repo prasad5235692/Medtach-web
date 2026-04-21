@@ -3,10 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   ChevronDown, ChevronRight,  Phone, Menu, X,
-  BookOpen, Users,  Monitor, 
-BookMarked, 
-   Globe, Target, 
- Layers, 
+  Users, Monitor,
 } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
@@ -17,103 +14,63 @@ const NAV = [
   {
     id: "what-we-do",
     label: "What We Do",
-    type: "mega-columns",
-    width: "w-[820px]",
-    columns: [
+    type: "dropdown",
+    width: "w-80",
+    items: [
+      // {
+      //   label: "Certification Prep",
+      //   href: "/business/what-we-do/certification-prep",
+      //   desc: "Exam-focused training programs for clinical teams",
+      // },
       {
-        heading: "By Need",
-        headingIcon: Target,
-        items: [
-          { label: "Enterprise-Wide Training",    href: "/business/what-we-do/on-demand-learning" },
-          { label: "Team-Wide Training",          href: "/business/what-we-do/cohort-learning" },
-          { label: "Tech Team Training",          href: "/business/how-we-do-it/platform" },
-          { label: "Leadership Development",      href: "/business/what-we-do/professional-services" },
-          { label: "Customer Success Team",       href: "/business/how-we-do-it/customer-success" },
-          { label: "Remote & Hybrid Training",    href: "/business/what-we-do/cohort-learning" },
-          { label: "Certification Prep & Badges", href: "/business/what-we-do/certification-prep" },
-          { label: "AI Upskilling",               href: "/business/ai-transformation" },
-          { label: "Compliance Training",         href: "/business/what-we-do/on-demand-learning", badge: "NEW" },
-        ],
+        label: "On-Demand Learning",
+        href: "/business/what-we-do/on-demand-learning",
+        desc: "Self-paced learning for distributed healthcare teams",
       },
-      {
-        heading: "By Team",
-        headingIcon: Users,
-        items: [
-          { label: "Leaders & Executives",  href: "/business/what-we-do/professional-services" },
-          { label: "Learning & Development",href: "/business/what-we-do/on-demand-learning" },
-          { label: "Human Resources",       href: "/business/how-we-do-it/customer-success" },
-          { label: "Engineering",           href: "/business/how-we-do-it/platform" },
-          { label: "IT Operations",         href: "/business/how-we-do-it/integrations" },
-          { label: "Data Science",          href: "/business/how-we-do-it/analytics" },
-        ],
-      },
-      {
-        heading: "By Industry",
-        headingIcon: Globe,
-        items: [
-          { label: "Technology",             href: "/business/what-we-do/on-demand-learning" },
-          { label: "Professional Services",  href: "/business/what-we-do/professional-services" },
-          { label: "Financial Services",     href: "/business/what-we-do/on-demand-learning" },
-          { label: "Manufacturing",          href: "/business/what-we-do/on-demand-learning" },
-          { label: "Government",             href: "/business/what-we-do/on-demand-learning" },
-          { label: "Higher Education",       href: "/business/what-we-do/certification-prep" },
-        ],
-      },
+      // {
+      //   label: "Cohort Learning",
+      //   href: "/business/what-we-do/cohort-learning",
+      //   desc: "Instructor-led programs for group enablement",
+      // },
+      // {
+      //   label: "Professional Services",
+      //   href: "/business/what-we-do/professional-services",
+      //   desc: "Advisory and rollout support for business initiatives",
+      // },
     ],
   },
+ 
   {
     id: "how-we-do-it",
     label: "How We Do It",
     type: "mega-sections",
     width: "w-[680px]",
-    defaultSubMenu: "on-demand",
+    defaultSubMenu: "platform",
     groups: [
       {
-        id: "learning-ecosystem",
-        heading: "Learning Ecosystem",
+        id: "delivery",
+        heading: "Delivery",
         subMenus: [
           {
-            id: "on-demand",
-            label: "On-Demand Learning",
-            icon: BookOpen,
+            id: "platform",
+            label: "Platform",
+            icon: Monitor,
             items: [
-              { label: "On-Demand Learning for Everyone", href: "/business/what-we-do/on-demand-learning" },
-              { label: "AI Starter Paths",                href: "/business/ai-transformation",              badge: "NEW" },
-              { label: "Real-World Instructors",          href: "/business/how-we-do-it/platform" },
-              { label: "Multi-Language Collection",       href: "/business/how-we-do-it/platform" },
-              { label: "Analytics & Insights",            href: "/business/how-we-do-it/analytics" },
-              { label: "Flexible User Management",        href: "/business/how-we-do-it/platform" },
+              { label: "Platform Overview", href: "/business/how-we-do-it/platform" },
+              { label: "Analytics",         href: "/business/how-we-do-it/analytics" },
+              { label: "Integrations",      href: "/business/how-we-do-it/integrations" },
+              { label: "Customer Success",  href: "/business/how-we-do-it/customer-success" },
             ],
           },
           {
-            id: "courses",
-            label: "Courses",
-            icon: BookMarked,
-            items: [
-              { label: "Clinical Documentation",     href: "/business/what-we-do/certification-prep" },
-              { label: "Medical Coding & Billing",   href: "/business/what-we-do/certification-prep" },
-              { label: "Leadership & Management",    href: "/business/what-we-do/professional-services" },
-              { label: "Compliance & Regulations",   href: "/business/what-we-do/on-demand-learning" },
-              { label: "View Full Course Collection", href: "/courses", highlight: true },
-            ],
-          },
-        ],
-      },
-      {
-        id: "immersive",
-        heading: "Immersive Learning",
-        subMenus: [
-          {
-            id: "cohort",
-            label: "Cohort Learning",
+            id: "programs",
+            label: "Learning Formats",
             icon: Users,
             items: [
-              { label: "MedTech Leadership Academy",    href: "/business/what-we-do/cohort-learning" },
-              { label: "Leading GenAI in Healthcare",   href: "/business/ai-transformation" },
-              { label: "Invested Leader Programme",     href: "/business/what-we-do/professional-services" },
-              { label: "AI Opportunities with AWS",     href: "/business/ai-transformation" },
-              { label: "About Cohort Learning",         href: "/business/what-we-do/cohort-learning" },
-              { label: "Cohort AI & Analytics",         href: "/business/how-we-do-it/analytics" },
+              { label: "On-Demand Learning", href: "/business/what-we-do/on-demand-learning" },
+              { label: "Cohort Learning",    href: "/business/what-we-do/cohort-learning" },
+              { label: "Certification Prep", href: "/business/what-we-do/certification-prep" },
+              { label: "Professional Services", href: "/business/what-we-do/professional-services", highlight: true },
             ],
           },
         ],
@@ -122,69 +79,14 @@ const NAV = [
         id: "direct",
         heading: null,
         directLinks: [
-          { label: "Professional Services",      href: "/business/what-we-do/professional-services" },
-          { label: "AI-Enabled Learning",   href: "/business/ai-transformation" },
-          { label: "Case Studies",          href: "/business/resources/case-studies" },
+          { label: "Solutions",    href: "/business/solutions" },
+          { label: "Case Studies", href: "/business/resources/case-studies" },
+          { label: "About",        href: "/business/about" },
         ],
       },
     ],
   },
-  {
-    id: "resources",
-    label: "Resources",
-    type: "mega-sections",
-    width: "w-[680px]",
-    defaultSubMenu: "our-product",
-    topLink: { label: "All Resources", href: "/business/resources/guides" },
-    groups: [
-      {
-        id: "browse",
-        heading: "Browse",
-        subMenus: [
-          {
-            id: "our-product",
-            label: "Our Product",
-            icon: Monitor,
-            items: [
-              { label: "Interactive Product Tour",      href: "/business/how-we-do-it/platform",          badge: "NEW" },
-              { label: "GenAI Features Overview",       href: "/business/ai-transformation",              badge: "NEW" },
-              { label: "On-Demand Course Collection",   href: "/business/what-we-do/on-demand-learning" },
-              { label: "Leadership Academy Collection", href: "/business/what-we-do/cohort-learning" },
-            ],
-          },
-          {
-            id: "by-topic",
-            label: "Resources by Topic",
-            icon: Layers,
-            items: [
-              { label: "AI Transformation",    href: "/business/ai-transformation" },
-              { label: "Cohort Learning",      href: "/business/what-we-do/cohort-learning" },
-              { label: "Immersive Learning",   href: "/business/how-we-do-it/platform" },
-              { label: "Integrated Learning",  href: "/business/how-we-do-it/integrations" },
-              { label: "L&D Best Practices",   href: "/business/resources/guides" },
-              { label: "Leadership Dev.",      href: "/business/what-we-do/professional-services" },
-              { label: "Learning Culture",     href: "/business/resources/guides" },
-              { label: "Learning Insights",    href: "/business/how-we-do-it/analytics" },
-              { label: "On-Demand Learning",   href: "/business/what-we-do/on-demand-learning" },
-              { label: "Technical Upskilling", href: "/business/resources/guides" },
-            ],
-          },
-        ],
-      },
-      {
-        id: "other",
-        heading: "Other",
-        directLinks: [
-          { label: "Podcast: MedTech Insights",  href: "/business/resources/guides" },
-          { label: "Small Business Hub",         href: "/business/pricing" },
-          { label: "Events",                     href: "/business/resources/events" },
-          { label: "Partners & Integrations",    href: "/business/how-we-do-it/integrations" },
-          { label: "Partner with Us",            href: "/business/contact" },
-          { label: "Blog",                       href: "/business/resources/guides" },
-        ],
-      },
-    ],
-  },
+ 
   {
     id: "plans",
     label: "Plans",
@@ -195,24 +97,9 @@ const NAV = [
       { label: "Compare Plans",          href: "/business/pricing",           desc: "Side-by-side plan comparison" },
       { label: "Team (2–50 learners)",   href: "/business/pricing#team",      desc: "Perfect for growing teams" },
       { label: "Enterprise (21+)",       href: "/business/pricing#enterprise", desc: "Full-scale deployment & support" },
-      { label: "AI Upskilling",          href: "/business/ai-transformation", desc: "AI-focused training packages", badge: "NEW" },
     ],
   },
-  {
-    id: "ai-transformation",
-    label: "AI Transformation",
-    type: "dropdown",
-    width: "w-72",
-    align: "right",
-    badge: "New",
-    items: [
-      { label: "AI Upskilling",          href: "/business/ai-transformation", desc: "Hands-on AI skill-building" },
-      { label: "AI Starter Paths",       href: "/business/ai-transformation", desc: "Guided pathways for all levels", badge: "NEW" },
-      { label: "AI-Enabled Learning",    href: "/business/ai-transformation", desc: "Intelligent personalised learning" },
-      { label: "AI for Business Leaders",href: "/business/ai-transformation", desc: "Strategic AI decision-making" },
-      { label: "AI Resources",           href: "/business/resources/guides",  desc: "Guides, reports & case studies" },
-    ],
-  },
+ 
 ];
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────

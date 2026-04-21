@@ -1,5 +1,4 @@
-﻿import BusinessNavbar from "@/components/BusinessNavbar";
-import BusinessFooter from "@/components/BusinessFooter";
+﻿import BusinessLayoutShell from "@/components/BusinessLayoutShell";
 
 export const metadata = {
   title: "MedTech Business — Upskill Your Healthcare Team",
@@ -13,11 +12,5 @@ export const metadata = {
 };
 
 export default function BusinessLayout({ children }) {
-  return (
-    <>
-      <BusinessNavbar />
-      <main className="pt-18">{children}</main>
-      <BusinessFooter />
-    </>
-  );
+  return <BusinessLayoutShell>{children}</BusinessLayoutShell>;
 }

@@ -18,6 +18,8 @@ const categoryIcon = {
 export default function CourseCard({ course, locale = "en" }) {
   const badge = badgeClasses[course.badgeColor] ?? badgeClasses.blue;
   const Icon = categoryIcon[course.category] ?? BookOpen;
+  const badgeLabel = course.badge ? localizeText(locale, course.badge) : null;
+  const categoryLabel = localizeText(locale, course.category);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1.5">
@@ -25,16 +27,16 @@ export default function CourseCard({ course, locale = "en" }) {
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm text-purple-700">
           <Icon size={22} strokeWidth={1.8} />
         </div>
-        {course.badge && (
+        {badgeLabel && (
           <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${badge}`}>
-            {course.badge}
+            {badgeLabel}
           </span>
         )}
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-6">
         <p className="text-xs font-medium uppercase tracking-widest text-gray-400">
-          {course.category}
+          {categoryLabel}
         </p>
         <h3 className="text-lg font-bold text-gray-900 leading-snug group-hover:text-purple-700 transition-colors">
           {course.title}

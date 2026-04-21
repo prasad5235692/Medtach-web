@@ -84,7 +84,13 @@ export default function Footer() {
               <h3 className="mb-5 text-xs font-semibold uppercase tracking-widest text-purple-300/60">
                 {section.title}
               </h3>
-              <ul className="flex flex-col gap-3">
+              <ul
+                className={
+                  section.links.length > 8
+                    ? "flex flex-col gap-3 md:block md:columns-2 md:[&>li]:mb-3"
+                    : "flex flex-col gap-3"
+                }
+              >
                 {section.links.map((link) => (
                   <li key={link.href}>
                     <Link

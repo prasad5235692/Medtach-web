@@ -1,5 +1,6 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { blogPosts, getBlogBySlug } from "@/data/blog";
+import { getLocale } from "@/lib/i18n/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PenLine, Calendar, Clock } from "lucide-react";
@@ -10,15 +11,19 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = getBlogBySlug(slug);
+  const locale = await getLocale();
+  const post = getBlogBySlug(slug, locale);
   if (!post) return {};
   return { title: `${post.title} — Medtech Career Blog` };
 }
 
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const post = getBlogBySlug(slug);
+  const locale = await getLocale();
+  const post = getBlogBySlug(slug, locale);
   if (!post) notFound();
+
+  const posts = blogPosts.map(({ slug: blogSlug }) => getBlogBySlug(blogSlug, locale)).filter(Boolean);
 
   return (
     <>
@@ -71,7 +76,7 @@ export default async function BlogPostPage({ params }) {
         <div className="page-container">
           <h2 className="text-xl font-bold text-gray-900">More Articles</h2>
           <div className="mt-6 flex flex-wrap gap-3">
-            {blogPosts
+            {posts
               .filter((b) => b.slug !== post.slug)
               .map((b) => (
                 <Link
