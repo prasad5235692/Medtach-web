@@ -9,8 +9,6 @@ export default function LanguageSwitcher({ className = "", dropUp = false }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  const current = languages.find((l) => l.value === language) ?? languages[0];
-
   useEffect(() => {
     function handleClickOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -36,7 +34,7 @@ export default function LanguageSwitcher({ className = "", dropUp = false }) {
         }`}
       >
         <Globe size={14} className="shrink-0" />
-        <span className="tracking-wide">{language.toUpperCase()}</span>
+        <span className="tracking-wide">{languages.find((l) => l.value === language)?.label ?? language.toUpperCase()}</span>
         <ChevronDown
           size={12}
           className={`shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -78,7 +76,7 @@ export default function LanguageSwitcher({ className = "", dropUp = false }) {
                   <span className="inline-flex h-6 w-7 items-center justify-center rounded-md bg-purple-100 text-[10px] font-bold text-purple-700">
                     {option.value.toUpperCase()}
                   </span>
-                  <span>{t(`common.languages.${option.value}`, option.label)}</span>
+                  <span>{option.label}</span>
                 </div>
                 {isActive && <Check size={13} className="shrink-0 text-purple-600" />}
               </button>
