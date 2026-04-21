@@ -15,6 +15,7 @@ const businessAboutContent = {
   },
   storySection: {
     title: "Our Story",
+    highlightText: "MedTech Business",
     paragraphs: [
       "Medtech Career was founded in 2015 by a group of healthcare professionals who saw a critical gap: skilled medical coders and billers were in short supply while hospitals struggled with revenue leakage and compliance penalties. We set out to close that gap with industry-grade education.",
       "As our individual-learner platform grew, enterprise clients began asking for something more structured — dedicated cohorts, custom curricula, and team-level reporting. That demand gave birth to MedTech Business, the organisation-facing arm of our platform.",

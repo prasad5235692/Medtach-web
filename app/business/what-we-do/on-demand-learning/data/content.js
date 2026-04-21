@@ -120,14 +120,14 @@ const onDemandLearningPageTranslations = {
   },
 };
 
+const onDemandLearningLocalizedContent = {
+  [DEFAULT_LOCALE]: onDemandLearningPageContent,
+  hi: mergeLocalizedContent(localizeContent(onDemandLearningPageContent, "hi"), onDemandLearningPageTranslations.hi),
+  ml: mergeLocalizedContent(localizeContent(onDemandLearningPageContent, "ml"), onDemandLearningPageTranslations.ml),
+};
+
 export function getOnDemandLearningContent(locale = DEFAULT_LOCALE) {
   const resolvedLocale = resolveLocale(locale);
 
-  if (resolvedLocale === DEFAULT_LOCALE) {
-    return onDemandLearningPageContent;
-  }
-
-  const localizedBase = localizeContent(onDemandLearningPageContent, resolvedLocale);
-
-  return mergeLocalizedContent(localizedBase, onDemandLearningPageTranslations[resolvedLocale]);
+  return onDemandLearningLocalizedContent[resolvedLocale] ?? onDemandLearningLocalizedContent[DEFAULT_LOCALE];
 }

@@ -147,14 +147,14 @@ const certificationPrepPageTranslations = {
   },
 };
 
+const certificationPrepLocalizedContent = {
+  [DEFAULT_LOCALE]: certificationPrepPageContent,
+  hi: mergeLocalizedContent(localizeContent(certificationPrepPageContent, "hi"), certificationPrepPageTranslations.hi),
+  ml: mergeLocalizedContent(localizeContent(certificationPrepPageContent, "ml"), certificationPrepPageTranslations.ml),
+};
+
 export function getCertificationPrepContent(locale = DEFAULT_LOCALE) {
   const resolvedLocale = resolveLocale(locale);
 
-  if (resolvedLocale === DEFAULT_LOCALE) {
-    return certificationPrepPageContent;
-  }
-
-  const localizedBase = localizeContent(certificationPrepPageContent, resolvedLocale);
-
-  return mergeLocalizedContent(localizedBase, certificationPrepPageTranslations[resolvedLocale]);
+  return certificationPrepLocalizedContent[resolvedLocale] ?? certificationPrepLocalizedContent[DEFAULT_LOCALE];
 }

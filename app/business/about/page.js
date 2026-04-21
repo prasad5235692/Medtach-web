@@ -48,11 +48,11 @@ export default async function BusinessAboutPage() {
             <h2 className="text-2xl font-bold text-gray-900">{content.storySection.title}</h2>
             {content.storySection.paragraphs.map((paragraph, index) => (
               <p key={index} className={index === 0 ? undefined : "mt-4"}>
-                {index === 1 ? (
+                {paragraph.includes(content.storySection.highlightText) ? (
                   <>
-                    {paragraph.split("MedTech Business")[0]}
-                    <strong className="text-purple-800"> MedTech Business</strong>
-                    {paragraph.split("MedTech Business")[1]}
+                    {paragraph.split(content.storySection.highlightText)[0]}
+                    <strong className="text-purple-800"> {content.storySection.highlightText}</strong>
+                    {paragraph.split(content.storySection.highlightText)[1]}
                   </>
                 ) : (
                   paragraph

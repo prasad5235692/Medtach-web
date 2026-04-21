@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { getClientPageContent } from "@/data/clientPageContent";
+import { getBusinessContactContent } from "@/business/contact/data/content";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 
 const detailIcons = {
@@ -21,7 +21,7 @@ export default function BusinessContactPage() {
   });
   const [submitted, setSubmitted] = useState(false);
   const { language } = useLanguage();
-  const content = getClientPageContent("businessContact", language);
+  const content = getBusinessContactContent(language);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

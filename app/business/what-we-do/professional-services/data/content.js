@@ -137,14 +137,14 @@ const professionalServicesPageTranslations = {
   },
 };
 
+const professionalServicesLocalizedContent = {
+  [DEFAULT_LOCALE]: professionalServicesPageContent,
+  hi: mergeLocalizedContent(localizeContent(professionalServicesPageContent, "hi"), professionalServicesPageTranslations.hi),
+  ml: mergeLocalizedContent(localizeContent(professionalServicesPageContent, "ml"), professionalServicesPageTranslations.ml),
+};
+
 export function getProfessionalServicesContent(locale = DEFAULT_LOCALE) {
   const resolvedLocale = resolveLocale(locale);
 
-  if (resolvedLocale === DEFAULT_LOCALE) {
-    return professionalServicesPageContent;
-  }
-
-  const localizedBase = localizeContent(professionalServicesPageContent, resolvedLocale);
-
-  return mergeLocalizedContent(localizedBase, professionalServicesPageTranslations[resolvedLocale]);
+  return professionalServicesLocalizedContent[resolvedLocale] ?? professionalServicesLocalizedContent[DEFAULT_LOCALE];
 }
