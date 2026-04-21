@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getOnDemandLearningContent } from "@/business/data/whatWeDo";
+import { getOnDemandLearningContent } from "@/business/what-we-do/on-demand-learning/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { BookOpen, CheckCircle2, ArrowRight, Clock, Globe, Users, BarChart3 } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const featureIcons = {
   "bar-chart-3": BarChart3,
@@ -32,8 +34,12 @@ export default async function OnDemandLearningPage() {
             <BookOpen size={13} /> {content.hero.badge}
           </span>
           <h1 className="mt-6 text-4xl font-extrabold leading-tight md:text-5xl">
-            {content.hero.titleLeading}{" "}
-            <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-purple-100/80">
             {content.hero.description}

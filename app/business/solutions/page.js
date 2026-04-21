@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getBusinessSolutionsContent } from "@/business/data/company";
+import { getBusinessSolutionsContent } from "@/business/solutions/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { BookOpen, ShieldCheck, Award, TrendingUp, Users, BarChart3, ArrowRight } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const solutionIcons = {
   award: Award,

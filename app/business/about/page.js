@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getBusinessAboutContent } from "@/business/data/company";
+import { getBusinessAboutContent } from "@/business/about/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { Building2, Users, TrendingUp, Award } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const highlightIcons = {
   award: Award,

@@ -1,6 +1,7 @@
-import { localizeContent } from "@/lib/i18n/content";
+import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n/config";
+import { localizeContent, mergeLocalizedContent } from "@/lib/i18n/content";
 
-const aiTransformationContent = {
+const aiTransformationPageContent = {
   metadata: {
     title: "AI Transformation — MedTech Business",
     description: "Scale AI fluency across your healthcare organisation with MedTech Business AI programmes.",
@@ -8,8 +9,10 @@ const aiTransformationContent = {
   hero: {
     badge: "AI Transformation",
     newLabel: "New",
-    titleLeading: "Scale AI Fluency Across",
-    titleHighlight: "Your Healthcare Organisation",
+    titleSegments: [
+      { id: "lead", text: "Scale AI Fluency Across", highlight: false },
+      { id: "accent", text: "Your Healthcare Organisation", highlight: true },
+    ],
     description:
       "Our AI Packages help employees at all levels — from front-line coders to C-suite leaders — understand, communicate about, and implement AI solutions with confidence and ethical awareness.",
     primaryCtaLabel: "Contact Us for AI Upskilling",
@@ -151,6 +154,40 @@ const aiTransformationContent = {
   },
 };
 
-export function getAiTransformationContent(locale) {
-  return localizeContent(aiTransformationContent, locale);
+const aiTransformationTranslations = {
+  hi: {
+    metadata: {
+      title: "AI ट्रांसफॉर्मेशन — MedTech Business",
+      description: "MedTech Business AI प्रोग्राम्स के साथ अपने हेल्थकेयर संगठन में AI दक्षता बढ़ाएं।",
+    },
+    hero: {
+      titleSegments: [
+        { id: "lead", text: "AI दक्षता बढ़ाएं", highlight: false },
+        { id: "accent", text: "अपने हेल्थकेयर संगठन में", highlight: true },
+      ],
+    },
+  },
+  ml: {
+    metadata: {
+      title: "AI ട്രാൻസ്ഫോർമേഷൻ — MedTech Business",
+      description: "MedTech Business AI പ്രോഗ്രാമുകൾ ഉപയോഗിച്ച് നിങ്ങളുടെ ഹെൽത്കെയർ സ്ഥാപനത്തിലുടനീളം AI പ്രാവീണ്യം വർദ്ധിപ്പിക്കുക।",
+    },
+    hero: {
+      titleSegments: [
+        { id: "lead", text: "AI പ്രാവീണ്യം വർദ്ധിപ്പിക്കുക", highlight: false },
+        { id: "accent", text: "നിങ്ങളുടെ ഹെൽത്കെയർ സ്ഥാപനത്തിലുടനീളം", highlight: true },
+      ],
+    },
+  },
+};
+
+export function getAiTransformationContent(locale = DEFAULT_LOCALE) {
+  const resolvedLocale = resolveLocale(locale);
+
+  if (resolvedLocale === DEFAULT_LOCALE) {
+    return aiTransformationPageContent;
+  }
+
+  const localizedBase = localizeContent(aiTransformationPageContent, resolvedLocale);
+  return mergeLocalizedContent(localizedBase, aiTransformationTranslations[resolvedLocale]);
 }

@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getCaseStudiesContent } from "@/business/data/resources";
+import { getCaseStudiesContent } from "@/business/resources/case-studies/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { FileText, ArrowRight, Building2, TrendingUp, Award } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const caseStudyIcons = {
   award: Award,
@@ -31,8 +33,12 @@ export default async function CaseStudiesPage() {
             <FileText size={13} /> {content.hero.badge}
           </span>
           <h1 className="mt-6 text-4xl font-extrabold leading-tight md:text-5xl">
-            {content.hero.titleLeading}{" "}
-            <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-purple-100/80">
             {content.hero.description}

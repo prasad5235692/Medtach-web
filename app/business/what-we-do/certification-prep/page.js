@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getCertificationPrepContent } from "@/business/data/whatWeDo";
+import { getCertificationPrepContent } from "@/business/what-we-do/certification-prep/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { Award, CheckCircle2, ArrowRight, BookOpen, Users } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const processIcons = {
   award: Award,
@@ -31,8 +33,12 @@ export default async function CertificationPrepPage() {
             <Award size={13} /> {content.hero.badge}
           </span>
           <h1 className="mt-6 text-4xl font-extrabold leading-tight md:text-5xl">
-            {content.hero.titleLeading}{" "}
-            <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-purple-100/80">
             {content.hero.description}

@@ -7,100 +7,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { localizeNodeTree } from "@/lib/i18n/content";
+import { getBusinessNavbarContent } from "@/components/data/businessNavbarContent";
 
-// ─── NAV DATA ────────────────────────────────────────────────────────────────
-const NAV = [
-  {
-    id: "what-we-do",
-    label: "What We Do",
-    type: "dropdown",
-    width: "w-80",
-    items: [
-      // {
-      //   label: "Certification Prep",
-      //   href: "/business/what-we-do/certification-prep",
-      //   desc: "Exam-focused training programs for clinical teams",
-      // },
-      {
-        label: "On-Demand Learning",
-        href: "/business/what-we-do/on-demand-learning",
-        desc: "Self-paced learning for distributed healthcare teams",
-      },
-      // {
-      //   label: "Cohort Learning",
-      //   href: "/business/what-we-do/cohort-learning",
-      //   desc: "Instructor-led programs for group enablement",
-      // },
-      // {
-      //   label: "Professional Services",
-      //   href: "/business/what-we-do/professional-services",
-      //   desc: "Advisory and rollout support for business initiatives",
-      // },
-    ],
-  },
- 
-  {
-    id: "how-we-do-it",
-    label: "How We Do It",
-    type: "mega-sections",
-    width: "w-[680px]",
-    defaultSubMenu: "platform",
-    groups: [
-      {
-        id: "delivery",
-        heading: "Delivery",
-        subMenus: [
-          {
-            id: "platform",
-            label: "Platform",
-            icon: Monitor,
-            items: [
-              { label: "Platform Overview", href: "/business/how-we-do-it/platform" },
-              { label: "Analytics",         href: "/business/how-we-do-it/analytics" },
-              { label: "Integrations",      href: "/business/how-we-do-it/integrations" },
-              { label: "Customer Success",  href: "/business/how-we-do-it/customer-success" },
-            ],
-          },
-          {
-            id: "programs",
-            label: "Learning Formats",
-            icon: Users,
-            items: [
-              { label: "On-Demand Learning", href: "/business/what-we-do/on-demand-learning" },
-              { label: "Cohort Learning",    href: "/business/what-we-do/cohort-learning" },
-              { label: "Certification Prep", href: "/business/what-we-do/certification-prep" },
-              { label: "Professional Services", href: "/business/what-we-do/professional-services", highlight: true },
-            ],
-          },
-        ],
-      },
-      {
-        id: "direct",
-        heading: null,
-        directLinks: [
-          { label: "Solutions",    href: "/business/solutions" },
-          { label: "Case Studies", href: "/business/resources/case-studies" },
-          { label: "About",        href: "/business/about" },
-        ],
-      },
-    ],
-  },
- 
-  {
-    id: "plans",
-    label: "Plans",
-    type: "dropdown",
-    width: "w-72",
-    align: "right",
-    items: [
-      { label: "Compare Plans",          href: "/business/pricing",           desc: "Side-by-side plan comparison" },
-      { label: "Team (2–50 learners)",   href: "/business/pricing#team",      desc: "Perfect for growing teams" },
-      { label: "Enterprise (21+)",       href: "/business/pricing#enterprise", desc: "Full-scale deployment & support" },
-    ],
-  },
- 
-];
+const navIconMap = {
+  monitor: Monitor,
+  users: Users,
+};
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function Badge({ label }) {
@@ -151,7 +63,7 @@ function MegaColumnsPanel({ nav, onClose }) {
 }
 
 // Mega-sections panel (How We Do It / Resources) — left nav + right sub-panel
-function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose }) {
+function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, emptyStateLabel }) {
   // flatten all subMenus from all groups
   const allSubMenus = nav.groups.flatMap((g) => g.subMenus ?? []);
   const activeSub = allSubMenus.find((s) => s.id === activeSubMenu);
@@ -183,7 +95,7 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose }) {
               )}
               {/* Sub-menu triggers */}
               {group.subMenus?.map((sub) => {
-                const Icon = sub.icon;
+                const Icon = navIconMap[sub.icon] ?? Users;
                 const isActive = activeSubMenu === sub.id;
                 return (
                   <button
@@ -252,7 +164,7 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose }) {
             </div>
           ) : (
             <div className="flex h-full items-center justify-center">
-              <p className="text-sm text-gray-400">Hover an item to explore</p>
+              <p className="text-sm text-gray-400">{emptyStateLabel}</p>
             </div>
           )}
         </div>
@@ -300,6 +212,8 @@ function DropdownPanel({ nav, onClose }) {
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 export default function BusinessNavbar() {
   const { language } = useLanguage();
+  const content = getBusinessNavbarContent(language);
+  const navItems = content.navItems;
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [activeNav, setActiveNav]           = useState(null);
   const [activeSubMenu, setActiveSubMenu]   = useState(null);
@@ -318,13 +232,13 @@ export default function BusinessNavbar() {
 
   // Auto-select default sub-menu when nav opens
   useEffect(() => {
-    const found = NAV.find((n) => n.id === activeNav);
+    const found = navItems.find((n) => n.id === activeNav);
     if (found?.defaultSubMenu) {
       setActiveSubMenu(found.defaultSubMenu);
     } else {
       setActiveSubMenu(null);
     }
-  }, [activeNav]);
+  }, [activeNav, navItems]);
 
   // Close on Escape key
   useEffect(() => {
@@ -350,7 +264,7 @@ export default function BusinessNavbar() {
     setMobileOpen(false);
   };
 
-  return localizeNodeTree(language, (
+  return (
     <header
       className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur-md transition-shadow duration-200 ${
         scrolled ? "shadow-md" : "shadow-sm border-b border-gray-100"
@@ -362,7 +276,7 @@ export default function BusinessNavbar() {
         <Link href="/business" className="flex shrink-0 items-center gap-2.5 py-3">
             <Image
                       src="/bnusiness logo.png"
-                      alt="Medtech Career"
+                alt={content.brandAlt}
                       width={180}
                       height={62}
                       className="h-16 w-auto object-contain"
@@ -374,9 +288,9 @@ export default function BusinessNavbar() {
         <nav
           className="hidden items-center gap-0.5 lg:flex"
           role="menubar"
-          aria-label="Main navigation"
+          aria-label={content.accessibility.mainNavigationLabel}
         >
-          {NAV.map((nav) => {
+          {navItems.map((nav) => {
             const isOpen = activeNav === nav.id;
             return (
               <div
@@ -430,6 +344,7 @@ export default function BusinessNavbar() {
                         activeSubMenu={activeSubMenu}
                         setActiveSubMenu={setActiveSubMenu}
                         onClose={closeAll}
+                        emptyStateLabel={content.emptyStateLabel}
                       />
                     )}
                     {nav.type === "dropdown" && (
@@ -449,13 +364,13 @@ export default function BusinessNavbar() {
             className="flex items-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-purple-800"
           >
             <Phone size={14} />
-            <span className="hidden xl:inline">+91 98765 43210</span>
+            <span className="hidden xl:inline">{content.ctas.phoneLabel}</span>
           </a>
           <Link
             href="/business/contact"
             className="rounded-lg bg-purple-700 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-purple-200 transition-colors hover:bg-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
           >
-            Get a Demo
+            {content.ctas.demoLabel}
           </Link>
         </div>
 
@@ -463,7 +378,7 @@ export default function BusinessNavbar() {
         <button
           className="flex items-center justify-center rounded-lg p-2 text-gray-600 transition-colors hover:bg-purple-50 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? content.accessibility.closeMenuLabel : content.accessibility.openMenuLabel}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
         >
@@ -477,11 +392,11 @@ export default function BusinessNavbar() {
           id="mobile-menu"
           className="animate-mobile-menu border-t border-gray-100 bg-white lg:hidden"
           role="navigation"
-          aria-label="Mobile navigation"
+          aria-label={content.accessibility.mobileNavigationLabel}
         >
           <div className="max-h-[80vh] overflow-y-auto px-4 pb-6 pt-3">
             <nav className="flex flex-col gap-0.5">
-              {NAV.map((nav) => {
+              {navItems.map((nav) => {
                 const isL1Open = mobileL1 === nav.id;
 
                 // Flatten all sub-menus for l2 mobile use
@@ -566,7 +481,7 @@ export default function BusinessNavbar() {
                                 )}
                                 {/* Level 2: sub-menu triggers */}
                                 {group.subMenus?.map((sub) => {
-                                  const SubIcon = sub.icon;
+                                  const SubIcon = navIconMap[sub.icon] ?? Users;
                                   const isL2Open = mobileL2 === sub.id;
                                   return (
                                     <div key={sub.id}>
@@ -668,19 +583,19 @@ export default function BusinessNavbar() {
                 className="flex items-center justify-center gap-2 rounded-xl border border-purple-200 bg-purple-50 py-2.5 text-sm font-medium text-purple-800"
               >
                 <Phone size={15} />
-                +91 98765 43210
+                {content.ctas.phoneLabel}
               </a>
               <Link
                 href="/business/contact"
                 onClick={closeAll}
                 className="rounded-xl bg-purple-700 py-3 text-center text-sm font-semibold text-white shadow-sm shadow-purple-200 transition-colors hover:bg-purple-800"
               >
-                Get a Demo
+                {content.ctas.demoLabel}
               </Link>
             </div>
           </div>
         </div>
       )}
     </header>
-  ));
+  );
 }

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { getClientPageContent } from "@/data/clientPageContent";
+import { getBusinessRequestDemoContent } from "@/business/request-demo/data/content";
 import {
   Check, Building2, Users, Globe, BarChart3,
   Puzzle, ArrowRight, Phone, Mail, ChevronLeft,
@@ -30,7 +30,7 @@ export default function RequestDemoPage() {
     learners: "", jobTitle: "", jobLevel: "", needs: "",
   });
   const { language } = useLanguage();
-  const content = getClientPageContent("businessRequestDemo", language);
+  const content = getBusinessRequestDemoContent(language);
 
   const set = (field) => (e) => setForm((p) => ({ ...p, [field]: e.target.value }));
 
@@ -62,7 +62,12 @@ export default function RequestDemoPage() {
             {content.hero.badge}
           </p>
           <h1 className="text-4xl font-extrabold leading-tight sm:text-4xl">
-            {content.hero.titleLeading} <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-purple-100/80">
             {content.hero.description}

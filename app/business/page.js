@@ -16,6 +16,8 @@ import {
   ChevronLeft,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 const solutionIcons = {
   "award": Award,
   "bar-chart-3": BarChart3,
@@ -78,11 +80,12 @@ export default async function BusinessHome() {
           </div>
 
           <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
-            {content.hero.titleLeading}{" "}
-            <span className="text-orange-400">
-              {content.hero.titleHighlight}
-            </span>{" "}
-            {content.hero.titleTrailing}
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-purple-100/80">

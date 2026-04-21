@@ -1,57 +1,5 @@
-import { localizeContent } from "@/lib/i18n/content";
-
-const businessAboutContent = {
-  metadata: {
-    title: "About — MedTech Business",
-    description:
-      "Learn how MedTech Business helps healthcare organisations build high-performing coding, billing, and compliance teams.",
-  },
-  hero: {
-    label: "About Us",
-    title: "The Trusted Partner for Healthcare Learning",
-    description:
-      "MedTech Business is the enterprise arm of Medtech Career — India's leading healthcare education platform.",
-  },
-  storySection: {
-    title: "Our Story",
-    paragraphs: [
-      "Medtech Career was founded in 2015 by a group of healthcare professionals who saw a critical gap: skilled medical coders and billers were in short supply while hospitals struggled with revenue leakage and compliance penalties. We set out to close that gap with industry-grade education.",
-      "As our individual-learner platform grew, enterprise clients began asking for something more structured — dedicated cohorts, custom curricula, and team-level reporting. That demand gave birth to MedTech Business, the organisation-facing arm of our platform.",
-      "Today we partner with 500+ healthcare organisations, from independent clinics to multi-city hospital groups, delivering programmes that measurably improve coding accuracy, reduce claim denials, and accelerate certification timelines.",
-    ],
-  },
-  highlights: [
-    {
-      id: "founded",
-      icon: "building-2",
-      title: "Founded 2015",
-      description: "A decade of delivering certified healthcare education across India.",
-    },
-    {
-      id: "partners",
-      icon: "users",
-      title: "500+ Partners",
-      description: "Hospitals, clinics, and healthcare BPOs trust us for team training.",
-    },
-    {
-      id: "pass-rate",
-      icon: "trending-up",
-      title: "95% Pass Rate",
-      description: "Our certification prep programmes consistently outperform national averages.",
-    },
-    {
-      id: "aligned",
-      icon: "award",
-      title: "AAPC & AHIMA Aligned",
-      description: "Curriculum developed in partnership with credentialling bodies.",
-    },
-  ],
-  ctaSection: {
-    title: "Ready to partner with us?",
-    description: "Let's build a customised learning programme for your organisation.",
-    primaryCtaLabel: "Contact Our Team",
-  },
-};
+import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n/config";
+import { localizeContent, mergeLocalizedContent } from "@/lib/i18n/content";
 
 const businessSolutionsContent = {
   metadata: {
@@ -123,10 +71,34 @@ const businessSolutionsContent = {
   },
 };
 
-export function getBusinessAboutContent(locale) {
-  return localizeContent(businessAboutContent, locale);
-}
+const businessSolutionsTranslations = {
+  hi: {
+    metadata: {
+      title: "सॉल्यूशन्स — MedTech Business",
+      description: "कोडर्स, बिलर्स, कंप्लायंस टीमों और हेल्थकेयर रेवेन्यू साइकिल लीडर्स के लिए प्रशिक्षण समाधान देखें।",
+    },
+    hero: {
+      title: "हर हेल्थकेयर भूमिका के लिए प्रशिक्षण समाधान",
+    },
+  },
+  ml: {
+    metadata: {
+      title: "സൊല്യൂഷനുകൾ — MedTech Business",
+      description: "കോഡർമാർ, ബില്ലർമാർ, കോംപ്ലയൻസ് ടീമുകൾ, ഹെൽത്കെയർ റവന്യൂ സൈക്കിൾ നേതാക്കൾ എന്നിവർക്കായുള്ള പരിശീലന പരിഹാരങ്ങൾ പരിശോധിക്കൂ.",
+    },
+    hero: {
+      title: "ഓരോ ഹെൽത്കെയർ റോളിനും പരിശീലന പരിഹാരങ്ങൾ",
+    },
+  },
+};
 
-export function getBusinessSolutionsContent(locale) {
-  return localizeContent(businessSolutionsContent, locale);
+export function getBusinessSolutionsContent(locale = DEFAULT_LOCALE) {
+  const resolvedLocale = resolveLocale(locale);
+
+  if (resolvedLocale === DEFAULT_LOCALE) {
+    return businessSolutionsContent;
+  }
+
+  const localizedBase = localizeContent(businessSolutionsContent, resolvedLocale);
+  return mergeLocalizedContent(localizedBase, businessSolutionsTranslations[resolvedLocale]);
 }

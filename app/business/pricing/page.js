@@ -1,11 +1,13 @@
 ﻿import Link from "next/link";
-import { getPricingContent } from "@/business/data/pricing";
+import { getPricingContent } from "@/business/pricing/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import {
   Check, Minus, Users, Building2, Brain, GraduationCap,
   Zap, Shield, Globe, Puzzle, HeartHandshake,
   Star, ArrowRight, ChevronLeft,
 } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const pricingIcons = {
   "building-2": Building2,
@@ -68,8 +70,12 @@ export default async function PricingPage() {
             {content.hero.eyebrow}
           </p>
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-            {content.hero.titleLine1}<br />
-            <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleLines.map((line, index) => (
+              <span key={line.id} className={line.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? <br /> : null}
+                {line.text}
+              </span>
+            ))}
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-purple-100/80">
             {content.hero.description}
@@ -271,7 +277,12 @@ export default async function PricingPage() {
         <div className="mx-auto max-w-4xl px-6 text-center">
           <Globe size={36} className="mx-auto mb-4 text-orange-400" />
           <h2 className="text-2xl font-extrabold sm:text-3xl">
-            {content.languageSection.titleLeading} <span className="text-orange-400">{content.languageSection.titleHighlight}</span>
+            {content.languageSection.titleLines.map((line, index) => (
+              <span key={line.id} className={line.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {line.text}
+              </span>
+            ))}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-purple-100/80">
             {content.languageSection.description}

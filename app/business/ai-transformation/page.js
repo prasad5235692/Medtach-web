@@ -1,7 +1,9 @@
 ﻿import Link from "next/link";
-import { getAiTransformationContent } from "@/business/data/aiTransformation";
+import { getAiTransformationContent } from "@/business/ai-transformation/data/content";
 import { getLocale } from "@/lib/i18n/server";
 import { Sparkles, CheckCircle2, ArrowRight, Brain, Zap, Shield, TrendingUp, Users, BookOpen } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const useCaseIcons = {
   brain: Brain,
@@ -43,8 +45,12 @@ export default async function AITransformationPage() {
           </span>
           <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-purple-400">{content.hero.newLabel}</p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl lg:text-6xl">
-            {content.hero.titleLeading}{" "}
-            <span className="text-orange-400">{content.hero.titleHighlight}</span>
+            {content.hero.titleSegments.map((segment, index) => (
+              <span key={segment.id} className={segment.highlight ? "text-orange-400" : undefined}>
+                {index > 0 ? " " : null}
+                {segment.text}
+              </span>
+            ))}
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-purple-100/80">
             {content.hero.description}

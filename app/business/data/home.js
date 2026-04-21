@@ -1,4 +1,5 @@
-import { localizeContent } from "@/lib/i18n/content";
+import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n/config";
+import { localizeContent, mergeLocalizedContent } from "@/lib/i18n/content";
 
 const businessHomeContent = {
   metadata: {
@@ -9,9 +10,11 @@ const businessHomeContent = {
   hero: {
     backLabel: "Back to MedTech Career",
     badge: "Enterprise Healthcare Training",
-    titleLeading: "Upskill Your",
-    titleHighlight: "Healthcare Team",
-    titleTrailing: "at Scale",
+    titleSegments: [
+      { id: "lead", text: "Upskill Your", highlight: false },
+      { id: "accent", text: "Healthcare Team", highlight: true },
+      { id: "trail", text: "at Scale", highlight: false },
+    ],
     description:
       "Medtech Business provides hospitals, clinics, and healthcare organisations with certified, flexible, and results-driven training in medical coding, billing, and compliance.",
     primaryCtaLabel: "Get a Free Demo",
@@ -152,6 +155,44 @@ const businessHomeContent = {
   },
 };
 
-export function getBusinessHomeContent(locale) {
-  return localizeContent(businessHomeContent, locale);
+const businessHomeTranslations = {
+  hi: {
+    metadata: {
+      title: "MedTech Business — अपनी हेल्थकेयर टीम को बड़े पैमाने पर अपस्किल करें",
+      description:
+        "हेल्थकेयर संगठनों के लिए एंटरप्राइज़ प्रशिक्षण समाधान। मेडिकल कोडिंग, बिलिंग और अनुपालन पाठ्यक्रम बड़े पैमाने पर।",
+    },
+    hero: {
+      titleSegments: [
+        { id: "lead", text: "अपनी", highlight: false },
+        { id: "accent", text: "हेल्थकेयर टीम", highlight: true },
+        { id: "trail", text: "को बड़े पैमाने पर अपस्किल करें", highlight: false },
+      ],
+    },
+  },
+  ml: {
+    metadata: {
+      title: "MedTech Business — നിങ്ങളുടെ ഹെൽത്കെയർ ടീമിനെ വ്യാപകമായി അപ്‌സ്‌കിൽ ചെയ്യൂ",
+      description:
+        "ഹെൽത്കെയർ സ്ഥാപനങ്ങൾക്കായുള്ള എന്റർപ്രൈസ് പരിശീലന പരിഹാരങ്ങൾ. മെഡിക്കൽ കോഡിംഗ്, ബില്ലിംഗ്, അനുസരണ കോഴ്സുകൾ വ്യാപകമായി.",
+    },
+    hero: {
+      titleSegments: [
+        { id: "lead", text: "നിങ്ങളുടെ", highlight: false },
+        { id: "accent", text: "ഹെൽത്കെയർ ടീമിനെ", highlight: true },
+        { id: "trail", text: "വ്യാപകമായി അപ്‌സ്‌കിൽ ചെയ്യൂ", highlight: false },
+      ],
+    },
+  },
+};
+
+export function getBusinessHomeContent(locale = DEFAULT_LOCALE) {
+  const resolvedLocale = resolveLocale(locale);
+
+  if (resolvedLocale === DEFAULT_LOCALE) {
+    return businessHomeContent;
+  }
+
+  const localizedBase = localizeContent(businessHomeContent, resolvedLocale);
+  return mergeLocalizedContent(localizedBase, businessHomeTranslations[resolvedLocale]);
 }
