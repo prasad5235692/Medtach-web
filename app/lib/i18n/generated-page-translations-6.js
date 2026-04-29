@@ -192,8 +192,8 @@ export const generatedPageTranslationsSix = {
     
     // About page
     "Our Story": "हमारी कहानी",
-    "20 Years of Excellence in Medical Career Training": "चिकित्सा कैरियर प्रशिक्षण में 20 वर्ष की उत्कृष्टता",
-    "Medtech Career is a leader in providing Medical Coding training and placement services across Tamil Nadu. We are building a platform where life science graduates can explore exciting and lucrative careers in the US healthcare industry.": "मेडटेक कैरियर तमिलनाडु भर में चिकित्सा कोडिंग प्रशिक्षण और प्लेसमेंट सेवाएं प्रदान करने में एक नेता है। हम एक मंच बना रहे हैं जहां जीवन विज्ञान स्नातक अमेरिकी स्वास्थ्यसेवा उद्योग में रोमांचक और लाभजनक कैरियर का पता लगा सकते हैं।",
+    "20 Years of Excellence in Healthcare Training and Job Placement": "स्वास्थ्यसेवा प्रशिक्षण और जॉब प्लेसमेंट में 20 वर्ष की उत्कृष्टता",
+    "Medtech Career is a leader in providing healthcare training and placement services across Tamil Nadu. We are building a platform where healthcare professionals, life science and paramedical graduates can explore exciting and lucrative careers in the healthcare industry.": "मेडटेक करियर तमिलनाडु भर में स्वास्थ्यसेवा प्रशिक्षण और प्लेसमेंट सेवाएं प्रदान करने में अग्रणी है। हम एक मंच बना रहे हैं जहां स्वास्थ्यसेवा पेशेवर, जीवन विज्ञान और पैरामेडिकल स्नातक स्वास्थ्यसेवा उद्योग में रोमांचक और लाभजनक करियर तलाश सकते हैं।",
     "Who We Are": "हम कौन हैं",
     "An Established Training & Placement Centre": "एक प्रतिष्ठित प्रशिक्षण और प्लेसमेंट केंद्र",
     "Medtech Career is a certified, well-established Training, Placement, and Certification centre providing projector-based intensive classroom training — combined with live online sessions — for all Medical, Paramedical, and Life Science graduates and post-graduates.": "मेडटेक कैरियर एक प्रमाणित, प्रतिष्ठित प्रशिक्षण, प्लेसमेंट और प्रमाणन केंद्र है जो सभी चिकित्सा, पैरामेडिकल और जीवन विज्ञान स्नातकों और स्नातकोत्तर के लिए प्रोजेक्टर-आधारित गहन कक्षा प्रशिक्षण प्रदान करता है।",
@@ -253,7 +253,7 @@ export const generatedPageTranslationsSix = {
     "2022": "2022",
     "Surpassed 3,000 successful placements across 50+ MNCs and healthcare BPOs.": "50+ MNCs और स्वास्थ्यसेवा BPOs में 3,000 सफल प्लेसमेंट से अधिक।",
     "2026": "2026",
-    "4,000+ placements, 95% placement rate, and a strong presence across Tamil Nadu.": "4,000+ प्लेसमेंट, 95% प्लेसमेंट दर, और तमिलनाडु भर में मजबूत उपस्थिति।",
+    "3,000+ placements, 100% placement support, and a strong presence across Tamil Nadu.": "3,000+ प्लेसमेंट, 100% प्लेसमेंट सहायता, और तमिलनाडु भर में मजबूत उपस्थिति।",
   },
   ml: {
     // Navigation
@@ -448,8 +448,8 @@ export const generatedPageTranslationsSix = {
     
     // About page
     "Our Story": "നമ്മുടെ കഥ",
-    "20 Years of Excellence in Medical Career Training": "മെഡിക്കൽ കരിയർ പരിശീലനത്തിൽ 20 വർഷത്തെ ശ്രേഷ്ഠത",
-    "Medtech Career is a leader in providing Medical Coding training and placement services across Tamil Nadu. We are building a platform where life science graduates can explore exciting and lucrative careers in the US healthcare industry.": "മെഡ്ടെക് കരിയർ തമിഴ്നാട്ടിലുടനീളം മെഡിക്കൽ കോഡിംഗ് പരിശീലനം കൂടാതെ പ്ലേസ്മെന്റ് സേവനങ്ങൾ നൽകുന്നതിൽ ഒരു നേതാവാണ്. ജീവന്റെ ശാസ്ത്ര ബിരുദധാരികൾ യു.എസ്. ആരോഗ്യസേവാ വ്യവസായത്തിൽ ആകർഷകവും ലാഭകരവുമായ കരിയർ കണ്ടെത്താൻ കഴിയുന്ന ഒരു പ്ലാറ്റ്ഫോം നിർമ്മിക്കാൻ നാം ശ്രമിക്കുകയാണ്.",
+    "20 Years of Excellence in Healthcare Training and Job Placement": "ആരോഗ്യപരിചരണ പരിശീലനത്തിലും ജോബ് പ്ലേസ്മെന്റിലും 20 വർഷത്തെ ശ്രേഷ്ഠത",
+    "Medtech Career is a leader in providing healthcare training and placement services across Tamil Nadu. We are building a platform where healthcare professionals, life science and paramedical graduates can explore exciting and lucrative careers in the healthcare industry.": "മെഡ്ടെക് കരിയർ തമിഴ്നാട്ടിലുടനീളം ആരോഗ്യപരിചരണ പരിശീലനവും പ്ലേസ്‌മെന്റ് സേവനങ്ങളും നൽകുന്നതിൽ മുന്നിലാണ്. ആരോഗ്യപരിചരണ വിദഗ്ധർക്കും ലൈഫ് സയൻസ്, പാരാമെഡിക്കൽ ബിരുദധാരികൾക്കും ആരോഗ്യരംഗത്ത് ആവേശകരവും ലാഭകരവുമായി കരിയറുകൾ അന്വേഷിക്കാനാകുന്ന ഒരു പ്ലാറ്റ്ഫോം ഞങ്ങൾ നിർമ്മിക്കുന്നു.",
     "Who We Are": "നാം ആരാണ്",
     "An Established Training & Placement Centre": "ഒരു സ്ഥാപിത പരിശീലനം കൂടാതെ പ്ലേസ്മെന്റ് കേന്ദ്രം",
     "Medtech Career is a certified, well-established Training, Placement, and Certification centre providing projector-based intensive classroom training — combined with live online sessions — for all Medical, Paramedical, and Life Science graduates and post-graduates.": "മെഡ്ടെക് കരിയർ ഒരു സർട്ടിഫൈഡ്, നല്ലതായി സ്ഥാപിത പരിശീലനം, പ്ലേസ്മെന്റ്, കൂടാതെ സർട്ടിഫിക്കേഷൻ കേന്ദ്രം ആയിരുന്നു പ്രതിവേദകം-ആധാരിത തീവ്രമായ ക്ലാസ്റ്റ് പരിശീലനം നൽകുന്നു - സാധാരണ ഓൺലൈൻ സെഷനുകൾ കൂടിച്ചേർന്നത് - എല്ലാ മെഡിക്കൽ, പരാ-മെഡിക്കൽ, കൂടാതെ ജീവന്റെ ശാസ്ത്ര ബിരുദധാരികൾ കൂടാതെ ബിരുദാനന്തര ബിരുദധാരികൾക്കുള്ള കൂടാതെ പോസ്ട്-ഗ്രാജുവേറ്റുകൾ.",
@@ -509,6 +509,6 @@ export const generatedPageTranslationsSix = {
     "2022": "2022",
     "Surpassed 3,000 successful placements across 50+ MNCs and healthcare BPOs.": "50+ MNCs കൂടാതെ ആരോഗ്യസേവാ BPOs കടന്നുകെട്ട 3,000 സാഫല്യപൂർണ്ണമായ പ്ലേസ്മെന്റുകൾ.",
     "2026": "2026",
-    "4,000+ placements, 95% placement rate, and a strong presence across Tamil Nadu.": "4,000+ പ്ലേസ്മെന്റുകൾ, 95% പ്ലേസ്മെന്റ് നിരക്ക്, കൂടാതെ തമിഴ്നാട്ടിലുടനീളം ശക്തമായ പ്രാധിഷ്ഠാനം.",
+    "3,000+ placements, 100% placement support, and a strong presence across Tamil Nadu.": "3,000+ പ്ലേസ്‌മെന്റുകൾ, 100% പ്ലേസ്‌മെന്റ് പിന്തുണ, കൂടാതെ തമിഴ്നാട്ടിലുടനീളം ശക്തമായ സാന്നിധ്യം.",
   }
 }

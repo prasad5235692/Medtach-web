@@ -769,11 +769,16 @@ const clientPageContent = {
     logoAlt: "Medtech Career",
     primaryLinks: [
       { label: "Home", href: "/" },
-      { label: "About", href: "/about-us" },
       { label: "Branches", href: "/branches" },
       { label: "Training", href: "/training" },
       { label: "Placements", href: "/placements" },
       { label: "Internship", href: "/internship" },
+    ],
+    exploreLabel: "Explore",
+    exploreLinks: [
+      { label: "Healthcare Information Technology", href: "/healthcare-information-technology" },
+      { label: "Physiotherapy Courses", href: "/physiotherapy-courses" },
+      { label: "Verify", href: "/verify" },
     ],
     moreLinks: [
       { label: "Our Team", href: "/our-team" },
@@ -781,7 +786,6 @@ const clientPageContent = {
       { label: "1:1 Counseling", href: "/counseling" },
       { label: "Blog", href: "/blog" },
     ],
-    coursesLabel: "Courses",
     viewAllCoursesLabel: "View All Courses",
     moreLabel: "More",
     business: {
@@ -831,12 +835,13 @@ const clientPageContent = {
           { label: "AMCT", href: "/course/amct" },
           { label: "CPC Certification", href: "/course/cpc-certification" },
           { label: "CRC", href: "/course/crc" },
+          { label: "Healthcare Information Technology", href: "/healthcare-information-technology" },
+          { label: "Physiotherapy Courses", href: "/physiotherapy-courses" },
         ],
       },
       {
         title: "Company",
         links: [
-          { label: "About Us", href: "/about-us" },
           { label: "Our Team", href: "/our-team" },
           { label: "Branches", href: "/branches" },
           { label: "Training", href: "/training" },
@@ -847,6 +852,8 @@ const clientPageContent = {
           { label: "Blog", href: "/blog" },
           { label: "Join as Teacher", href: "/join-as-teacher" },
           { label: "Contact", href: "/contact" },
+          { label: "Verify", href: "/verify" },
+          { label: "About Us", href: "/about-us" },
         ],
       },
     ],
@@ -1785,11 +1792,16 @@ const clientPageTranslations = {
       logoAlt: "मेडटेक करियर",
       primaryLinks: [
         { label: "होम", href: "/" },
-        { label: "हमारे बारे में", href: "/about-us" },
         { label: "शाखाएँ", href: "/branches" },
         { label: "प्रशिक्षण", href: "/training" },
         { label: "प्लेसमेंट्स", href: "/placements" },
         { label: "इंटर्नशिप", href: "/internship" },
+      ],
+      exploreLabel: "एक्सप्लोर",
+      exploreLinks: [
+        { label: "हेल्थकेयर इन्फॉर्मेशन टेक्नोलॉजी", href: "/healthcare-information-technology" },
+        { label: "फिजियोथेरेपी कोर्स", href: "/physiotherapy-courses" },
+        { label: "वेरिफ़ाई", href: "/verify" },
       ],
       moreLinks: [
         { label: "हमारी टीम", href: "/our-team" },
@@ -1797,7 +1809,6 @@ const clientPageTranslations = {
         { label: "1:1 काउंसलिंग", href: "/counseling" },
         { label: "ब्लॉग", href: "/blog" },
       ],
-      coursesLabel: "कोर्स",
       viewAllCoursesLabel: "सभी कोर्स देखें",
       moreLabel: "और",
       business: {
@@ -1842,12 +1853,13 @@ const clientPageTranslations = {
             { label: "AMCT", href: "/course/amct" },
             { label: "CPC प्रमाणन", href: "/course/cpc-certification" },
             { label: "CRC", href: "/course/crc" },
+            { label: "हेल्थकेयर इन्फॉर्मेशन टेक्नोलॉजी", href: "/healthcare-information-technology" },
+            { label: "फिजियोथेरेपी कोर्स", href: "/physiotherapy-courses" },
           ],
         },
         {
           title: "कंपनी",
           links: [
-            { label: "हमारे बारे में", href: "/about-us" },
             { label: "हमारी टीम", href: "/our-team" },
             { label: "शाखाएँ", href: "/branches" },
             { label: "प्रशिक्षण", href: "/training" },
@@ -1858,6 +1870,8 @@ const clientPageTranslations = {
             { label: "ब्लॉग", href: "/blog" },
             { label: "शिक्षक बनें", href: "/join-as-teacher" },
             { label: "संपर्क", href: "/contact" },
+            { label: "वेरिफ़ाई", href: "/verify" },
+            { label: "हमारे बारे में", href: "/about-us" },
           ],
         },
       ],
@@ -2785,11 +2799,16 @@ const clientPageTranslations = {
       logoAlt: "മെഡ്ടെക് കരിയർ",
       primaryLinks: [
         { label: "ഹോം", href: "/" },
-        { label: "ഞങ്ങളേക്കുറിച്ച്", href: "/about-us" },
         { label: "ശാഖകൾ", href: "/branches" },
         { label: "ട്രെയിനിംഗ്", href: "/training" },
         { label: "പ്ലേസ്‌മെന്റുകൾ", href: "/placements" },
         { label: "ഇന്റേൺഷിപ്പ്", href: "/internship" },
+      ],
+      exploreLabel: "എക്സ്പ്ലോർ",
+      exploreLinks: [
+        { label: "ഹെൽത്ത്‌കെയർ ഇൻഫർമേഷൻ ടെക്നോളജി", href: "/healthcare-information-technology" },
+        { label: "ഫിസിയോതെറാപ്പി കോഴ്സുകൾ", href: "/physiotherapy-courses" },
+        { label: "വെരിഫൈ", href: "/verify" },
       ],
       moreLinks: [
         { label: "ഞങ്ങളുടെ ടീം", href: "/our-team" },
@@ -2797,7 +2816,6 @@ const clientPageTranslations = {
         { label: "1:1 കൗൺസിലിംഗ്", href: "/counseling" },
         { label: "ബ്ലോഗ്", href: "/blog" },
       ],
-      coursesLabel: "കോഴ്സുകൾ",
       viewAllCoursesLabel: "എല്ലാ കോഴ്സുകളും കാണൂ",
       moreLabel: "കൂടുതൽ",
       business: {
@@ -2842,12 +2860,13 @@ const clientPageTranslations = {
             { label: "AMCT", href: "/course/amct" },
             { label: "CPC സർട്ടിഫിക്കേഷൻ", href: "/course/cpc-certification" },
             { label: "CRC", href: "/course/crc" },
+            { label: "ഹെൽത്ത്‌കെയർ ഇൻഫർമേഷൻ ടെക്നോളജി", href: "/healthcare-information-technology" },
+            { label: "ഫിസിയോതെറാപ്പി കോഴ്സുകൾ", href: "/physiotherapy-courses" },
           ],
         },
         {
           title: "കമ്പനി",
           links: [
-            { label: "ഞങ്ങളേക്കുറിച്ച്", href: "/about-us" },
             { label: "ഞങ്ങളുടെ ടീം", href: "/our-team" },
             { label: "ശാഖകൾ", href: "/branches" },
             { label: "ട്രെയിനിംഗ്", href: "/training" },
@@ -2858,6 +2877,8 @@ const clientPageTranslations = {
             { label: "ബ്ലോഗ്", href: "/blog" },
             { label: "ടീച്ചറായി ചേരുക", href: "/join-as-teacher" },
             { label: "ബന്ധപ്പെടുക", href: "/contact" },
+            { label: "വെരിഫൈ", href: "/verify" },
+            { label: "ഞങ്ങളേക്കുറിച്ച്", href: "/about-us" },
           ],
         },
       ],

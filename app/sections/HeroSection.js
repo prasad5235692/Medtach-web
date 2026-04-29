@@ -16,16 +16,16 @@ export default async function HeroSection() {
   const locale = await getLocale();
   const content = localizeContent(
     {
-      titleTop: "Launch Your Career",
-      titleAccent: "in Healthcare Coding",
+      titleTop: "Launch your career in healthcare and",
+      titleAccent: "achieve your dream career",
       description:
-        "Medtech Career provides job-oriented Medical Coding, Medical Billing, and CPC Certification training — placing graduates in leading healthcare BPOs and MNCs across India.",
+        "MedTechCareer is your trusted platform for building a successful future in the ever-evolving healthcare industry. We specialize in providing comprehensive training and career pathways for doctors, nurses, and aspiring healthcare IT professionals, life science and paramedical graduates helping them stay ahead in a technology-driven medical world.",
       primaryCta: "Explore Courses",
       secondaryCta: "Join 1-1 career Counseling",
       stats: [
-        { value: "500+", label: "Courses" },
-        { value: "12k+", label: "Graduates" },
-        { value: "95%", label: "Placement" },
+        { value: "50+", label: "Courses" },
+        { value: "3000+", label: "Placed" },
+        { value: "100%", label: "Placement Support" },
       ],
       certificationLabel: "Certification",
       certificationValue: "CPC / CCS Ready",
@@ -36,7 +36,7 @@ export default async function HeroSection() {
   );
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-[#eef5ff] text-gray-900">
+    <section className="relative min-h-screen w-full overflow-hidden bg-[#eef5ff] text-gray-900">
       <div className="absolute inset-0 flex">
         {STRIPS.map((strip, i) => (
           <div key={i} className="relative flex-1 overflow-hidden">
@@ -44,9 +44,9 @@ export default async function HeroSection() {
           </div>
         ))}
       </div>
-      <div className="page-container relative z-10 flex min-h-screen flex-col justify-center py-28 lg:py-0">
-        <div className="grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-2">
-          <div className="flex flex-col gap-7">
+      <div className="page-container relative z-10 flex min-h-screen flex-col justify-center py-24 lg:py-16">
+        <div className="grid w-full grid-cols-1 items-center gap-6 lg:grid-cols-2">
+          <div className="flex min-w-0 flex-col gap-4">
             <div className="animate-textUp" style={{ animationDelay: "1s" }}>
               <span className="inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/10 px-4 py-1.5 text-sm font-semibold text-purple-300 backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-purple-400" />
@@ -62,36 +62,36 @@ export default async function HeroSection() {
               }}
             />
 
-            <h1 className="animate-textUp text-4xl text-white font-black leading-tight tracking-tight sm:text-5xl xl:text-6xl" style={{ animationDelay: "1.2s" }}>
+            <h1 className="animate-textUp max-w-3xl text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl xl:text-6xl" style={{ animationDelay: "1.2s" }}>
               {content.titleTop}
               <br />
               <span className="text-orange-400">{content.titleAccent}</span>
             </h1>
 
-            <p className="animate-textUp max-w-lg text-base leading-relaxed text-white/55" style={{ animationDelay: "1.4s" }}>
+            <p className="animate-textUp max-w-xl text-base leading-relaxed text-white/72" style={{ animationDelay: "1.4s" }}>
               {content.description}
             </p>
 
-            <div className="animate-textUp flex flex-wrap gap-4" style={{ animationDelay: "1.6s" }}>
-              <Link href="/courses" className="group inline-flex items-center gap-2 rounded-lg bg-purple-700 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition hover:bg-purple-600">
+            <div className="animate-textUp flex flex-col gap-4 sm:flex-row sm:flex-wrap" style={{ animationDelay: "1.6s" }}>
+              <Link href="/courses" className="group inline-flex w-full items-center justify-center gap-2 rounded-lg bg-purple-700 px-7 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition hover:bg-purple-600 sm:w-auto">
                 {content.primaryCta}
                 <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </Link>
-              <Link href="/contact" className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white/80 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10">
+              <Link href="/contact" className="inline-flex w-full items-center justify-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-center text-sm font-semibold text-white/85 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10 sm:w-auto">
                 {content.secondaryCta}
               </Link>
             </div>
 
-            <div className="animate-fadeIn flex items-center gap-8 border-t border-white/10 pt-6" style={{ animationDelay: "1.8s" }}>
+            <div className="animate-fadeIn flex flex-wrap items-start gap-6 border-t border-white/10 pt-6 sm:gap-8" style={{ animationDelay: "1.8s" }}>
               {content.stats.map((stat) => (
                 <div key={stat.label}>
                   <p className="text-xl font-black text-white">{stat.value}</p>
-                  <p className="text-xs text-white/35">{stat.label}</p>
+                  <p className="text-xs text-white/60">{stat.label}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="hidden lg:flex animate-fadeIn justify-center lg:justify-end" style={{ animationDelay: "1.8s" }}>
+          <div className="hidden animate-fadeIn justify-center lg:flex lg:justify-end" style={{ animationDelay: "1.8s" }}>
             <div className="relative w-full max-w-md">
               <Image src="/background/students.png" alt="Hero Image" width={500} height={500} className="relative z-10 rounded-2xl shadow-lg" />
 
@@ -124,7 +124,7 @@ export default async function HeroSection() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 animate-bounce md:block">
         <div className="h-10 w-6 rounded-full border-2 border-purple-400 p-1">
           <div className="mx-auto h-2 w-1 rounded-full bg-purple-400" />
         </div>

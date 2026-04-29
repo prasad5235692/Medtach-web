@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getLocale } from "@/lib/i18n/server";
 import { localizeContent } from "@/lib/i18n/content";
 
-const featuredSlugs = ["medical-coding", "medical-billing", "cpc-certification"];
+const featuredSlugs = ["bmct", "amct", "cpc-certification"];
 
 export default async function CoursesSection() {
   const locale = await getLocale();

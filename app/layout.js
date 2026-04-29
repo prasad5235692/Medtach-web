@@ -1,4 +1,4 @@
-﻿import { Geist, Geist_Mono } from "next/font/google";
+﻿import { Geist, Geist_Mono, Noto_Sans_Malayalam } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import LayoutShell from "@/components/LayoutShell";
@@ -12,6 +12,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const notoSansMalayalam = Noto_Sans_Malayalam({
+  variable: "--font-malayalam",
+  subsets: ["malayalam"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export async function generateMetadata() {
@@ -35,7 +41,7 @@ export default async function RootLayout({ children }) {
     <html lang={locale}>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#f8fafc] text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansMalayalam.variable} antialiased bg-[#f8fafc] text-gray-900`}
       >
         <Providers initialLanguage={locale}>
           <LayoutShell>{children}</LayoutShell>

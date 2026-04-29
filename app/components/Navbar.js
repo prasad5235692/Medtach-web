@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, LogOut, User } from "lucide-react";
-import { getCourses } from "@/data/courses";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -23,8 +22,8 @@ export default function Navbar() {
   const content = getClientPageContent("siteNavbar", language);
 
   const primaryLinks = content.primaryLinks;
+  const exploreLinks = content.exploreLinks;
   const moreLinks = content.moreLinks;
-  const courses = getCourses(language);
 
   const handleLogout = async () => {
     await logout();
@@ -49,17 +48,17 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
             <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setCoursesOpen(true)} onClick={() => setCoursesOpen(!coursesOpen)}>
-              {content.coursesLabel} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
+              {content.exploreLabel} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
             </button>
             {coursesOpen && (
-              <div className="absolute left-0 top-full w-72 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+              <div className="absolute left-0 top-full w-80 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link href="/courses" className="block border-b border-purple-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setCoursesOpen(false)}>
                   {content.viewAllCoursesLabel} →
                 </Link>
-                <div className="max-h-80 overflow-y-auto py-1">
-                  {courses.map((course) => (
-                    <Link key={course.slug} href={`/courses/${course.slug}`} className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setCoursesOpen(false)}>
-                      <span className="leading-tight">{course.title}</span>
+                <div className="py-1">
+                  {exploreLinks.map((link) => (
+                    <Link key={link.href} href={link.href} className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setCoursesOpen(false)}>
+                      <span className="leading-tight">{link.label}</span>
                     </Link>
                   ))}
                 </div>
@@ -200,7 +199,7 @@ export default function Navbar() {
             ))}
             <div>
               <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}>
-                <span>{content.coursesLabel}</span>
+                <span>{content.exploreLabel}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileCoursesOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileCoursesOpen && (
@@ -216,10 +215,10 @@ export default function Navbar() {
                   >
                     {content.viewAllCoursesLabel}
                   </Link>
-                  {courses.map((course) => (
+                  {exploreLinks.map((link) => (
                     <Link
-                      key={course.slug}
-                      href={`/courses/${course.slug}`}
+                      key={link.href}
+                      href={link.href}
                       className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
                       onClick={() => {
                         setOpen(false);
@@ -227,7 +226,7 @@ export default function Navbar() {
                         setMobileMoreOpen(false);
                       }}
                     >
-                      {course.title}
+                      {link.label}
                     </Link>
                   ))}
                 </div>

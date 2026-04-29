@@ -15,7 +15,7 @@ const milestones = [
   { year: "2015", text: "Crossed 1,000 placements and established our Trichy branch for broader reach." },
   { year: "2019", text: "Launched fully live online training platform alongside classroom sessions." },
   { year: "2022", text: "Surpassed 3,000 successful placements across 50+ MNCs and healthcare BPOs." },
-  { year: "2026", text: "4,000+ placements, 95% placement rate, and a strong presence across Tamil Nadu." },
+  { year: "2026", text: "3,000+ placements, 100% placement support, and a strong presence across Tamil Nadu." },
 ];
 
 export const metadata = {
@@ -39,10 +39,10 @@ export default function AboutPage() {
           <AnimateOnScroll animation="fade-down">
             <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-purple-700">Our Story</p>
             <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-              20 Years of Excellence in <span className="text-purple-700">Medical Career Training</span>
+              20 Years of Excellence in <span className="text-purple-700">Healthcare Training and Job Placement</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base text-gray-500">
-              Medtech Career is a leader in providing Medical Coding training and placement services across Tamil Nadu. We are building a platform where life science graduates can explore exciting and lucrative careers in the US healthcare industry.
+              Medtech Career is a leader in providing healthcare training and placement services across Tamil Nadu. We are building a platform where healthcare professionals, life science and paramedical graduates can explore exciting and lucrative careers in the healthcare industry.
             </p>
           </AnimateOnScroll>
         </div>
