@@ -716,6 +716,8 @@ const clientPageContent = {
       noCourses: "No courses are available right now.",
       cartUpdate: "Unable to update your cart",
       wishlistUpdate: "Unable to update your wishlist",
+      purchaseUpdate: "Unable to complete your purchase",
+      alreadyPurchased: "Already Purchased",
     },
     defaults: {
       untitledCourse: "Untitled Course",
@@ -738,6 +740,12 @@ const clientPageContent = {
       removeFromCart: "Remove from Cart",
       addToCart: "Add to Cart",
       buy: "Buy",
+      buying: "Processing...",
+      purchased: "Purchased",
+    },
+    purchaseModal: {
+      title: "Course Purchased",
+      description: '"{title}" was purchased successfully.',
     },
     statusLabels: {
       active: "ACTIVE",
@@ -1739,6 +1747,8 @@ const clientPageTranslations = {
         noCourses: "इस समय कोई कोर्स उपलब्ध नहीं है।",
         cartUpdate: "आपकी कार्ट अपडेट नहीं की जा सकी",
         wishlistUpdate: "आपकी विशलिस्ट अपडेट नहीं की जा सकी",
+        purchaseUpdate: "आपकी खरीद पूरी नहीं हो सकी",
+        alreadyPurchased: "Already Purchased",
       },
       defaults: {
         untitledCourse: "बिना शीर्षक का कोर्स",
@@ -1761,6 +1771,12 @@ const clientPageTranslations = {
         removeFromCart: "कार्ट से हटाएँ",
         addToCart: "कार्ट में जोड़ें",
         buy: "खरीदें",
+        buying: "प्रोसेस हो रहा है...",
+        purchased: "खरीदा गया",
+      },
+      purchaseModal: {
+        title: "Course Purchased",
+        description: '"{title}" सफलतापूर्वक खरीदा गया।',
       },
       statusLabels: {
         active: "सक्रिय",
@@ -2746,6 +2762,8 @@ const clientPageTranslations = {
         noCourses: "ഇപ്പോൾ കോഴ്സുകളൊന്നും ലഭ്യമല്ല.",
         cartUpdate: "നിങ്ങളുടെ കാർട്ട് അപ്‌ഡേറ്റ് ചെയ്യാനായില്ല",
         wishlistUpdate: "നിങ്ങളുടെ വിഷ്‌ലിസ്റ്റ് അപ്‌ഡേറ്റ് ചെയ്യാനായില്ല",
+        purchaseUpdate: "വാങ്ങൽ പൂർത്തിയാക്കാനായില്ല",
+        alreadyPurchased: "Already Purchased",
       },
       defaults: {
         untitledCourse: "തലക്കെട്ടില്ലാത്ത കോഴ്സ്",
@@ -2768,6 +2786,12 @@ const clientPageTranslations = {
         removeFromCart: "കാർട്ടിൽ നിന്ന് നീക്കൂ",
         addToCart: "കാർട്ടിലേക്കു ചേർക്കൂ",
         buy: "വാങ്ങൂ",
+        buying: "പ്രോസസ് ചെയ്യുന്നു...",
+        purchased: "വാങ്ങി",
+      },
+      purchaseModal: {
+        title: "Course Purchased",
+        description: '"{title}" വിജയകരമായി വാങ്ങി.',
       },
       statusLabels: {
         active: "സജീവം",

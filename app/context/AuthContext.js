@@ -3,9 +3,44 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { fetchStudentSession, logoutStudent } from "@/lib/websiteStudentClient";
 
 const AuthContext = createContext(null);
+const SESSION_STORAGE_KEY = "medtech_student_session";
 
 function getSessionUser(payload) {
   return payload?.data?.userData || payload?.data || null;
+}
+
+function getStoredSession() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    return rawValue ? JSON.parse(rawValue) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredSession(session) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    if (session) {
+      window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+      return;
+    }
+
+    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  } catch {
+    // Ignore storage errors and keep auth state in memory.
+  }
+}
+
+function isAuthFailureMessage(message) {
+  return /authentication required|invalid token|jwt expired|token expired/i.test(String(message || ""));
 }
 
 export function AuthProvider({ children }) {
@@ -16,7 +51,9 @@ export function AuthProvider({ children }) {
     let cancelled = false;
 
     const hydrateSession = async (showLoader = false) => {
-      if (showLoader) {
+      const storedSession = getStoredSession();
+
+      if (showLoader && !storedSession) {
         setLoading(true);
       }
 
@@ -27,15 +64,29 @@ export function AuthProvider({ children }) {
       }
 
       if (payload?.success) {
-        setSession(getSessionUser(payload));
+        const nextSession = getSessionUser(payload);
+        setStoredSession(nextSession);
+        setSession(nextSession);
+      } else if (storedSession && !isAuthFailureMessage(payload?.message)) {
+        setSession(storedSession);
+      } else if (storedSession && isAuthFailureMessage(payload?.message)) {
+        setSession(storedSession);
       } else {
+        setStoredSession(null);
         setSession(false);
       }
 
       setLoading(false);
     };
 
-    hydrateSession(true);
+    const storedSession = getStoredSession();
+
+    if (storedSession) {
+      setSession(storedSession);
+      setLoading(false);
+    }
+
+    hydrateSession(!storedSession);
 
     const handlePageShow = () => {
       hydrateSession(false);
@@ -50,11 +101,14 @@ export function AuthProvider({ children }) {
   }, []);
 
   const saveSession = (data) => {
-    setSession(data || false);
+    const nextSession = data || false;
+    setStoredSession(nextSession || null);
+    setSession(nextSession);
     setLoading(false);
   };
 
   const logout = async () => {
+    setStoredSession(null);
     setSession(false);
     setLoading(false);
     await logoutStudent();

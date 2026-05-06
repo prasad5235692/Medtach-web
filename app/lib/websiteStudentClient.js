@@ -63,6 +63,13 @@ export function fetchStudentCourses(query) {
   return request("/courses", {query});
 }
 
+export function purchaseStudentCourse(courseIdOrSlug) {
+  return request("/purchases", {
+    method: "POST",
+    body: {slug: courseIdOrSlug},
+  });
+}
+
 export function fetchStudentCart() {
   return request("/cart");
 }

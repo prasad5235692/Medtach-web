@@ -41,6 +41,12 @@ function clearSessionCookies(response) {
   response.cookies.set(REFRESH_COOKIE, "", getCookieOptions(0));
 }
 
+function shouldClearSession(payload) {
+  return /student authentication required|invalid token|jwt expired|token expired/i.test(
+    String(payload?.message || ""),
+  );
+}
+
 function setSessionCookies(response, authData) {
   if (!authData?.accessToken || !authData?.refreshToken) {
     clearSessionCookies(response);
@@ -158,7 +164,7 @@ async function handleSessionRequest(request) {
   const normalizedPayload = normalizeAuthPayload(payload);
   const response = NextResponse.json(normalizedPayload, {status: normalizedPayload?.success ? 200 : 401});
 
-  if (!normalizedPayload?.success) {
+  if (!normalizedPayload?.success && shouldClearSession(normalizedPayload)) {
     clearSessionCookies(response);
   }
 
@@ -208,7 +214,8 @@ async function handleProxyRequest(request, segments) {
   if (
     accessToken &&
     !payload?.success &&
-    ["profile", "cart", "favorites"].includes(segments[0])
+    ["profile", "cart", "favorites"].includes(segments[0]) &&
+    shouldClearSession(payload)
   ) {
     clearSessionCookies(response);
   }

@@ -1,17 +1,17 @@
 ﻿"use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
   Heart, ShoppingCart, BookOpen, Clock, Building2,
-  Layers3, Check, CheckCircle, X, Search, ArrowRight,
+  Layers3, Check, CheckCircle, X, Search, ArrowRight, LoaderCircle,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
-import { fetchStudentCourses } from "@/lib/websiteStudentClient";
+import { fetchStudentCourses, purchaseStudentCourse } from "@/lib/websiteStudentClient";
 
 const STATUS_COLORS = {
   active: "bg-green-100 text-green-700",
@@ -73,11 +73,30 @@ function normalizeCourse(course) {
     status: course?.status || "Published",
     color: course?.color || "#7c3aed",
     thumbnail: course?.thumbnail || "",
+    isPurchased: Boolean(course?.isPurchased),
   };
 }
 
 function getCourseIdentifier(course) {
   return course?.id || course?._id || course?.courseSlug || "";
+}
+
+function courseMatchesIdentifier(course, identifier) {
+  const normalizedIdentifier = String(identifier || "").trim();
+
+  if (!normalizedIdentifier) {
+    return false;
+  }
+
+  return [course?.id, course?._id, course?.courseSlug]
+    .filter(Boolean)
+    .some((value) => String(value) === normalizedIdentifier);
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
 }
 
 function normalizeCourseError(message) {
@@ -208,6 +227,10 @@ export default function MyCoursesPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(content.filters.allCategoryValue);
   const [toast, setToast] = useState(null); // { message, type }
+  const [purchasePendingId, setPurchasePendingId] = useState("");
+  const [purchaseModal, setPurchaseModal] = useState(null);
+  const toastTimeoutRef = useRef(null);
+  const modalTimeoutRef = useRef(null);
   const urlTab = params.get("tab");
   const activeTab = urlTab === "wishlist" || urlTab === "cart" ? urlTab : "all";
 
@@ -244,10 +267,6 @@ export default function MyCoursesPage() {
       } else {
         setCourses([]);
         setCoursesError(normalizeCourseError(payload?.message));
-
-        if (/authentication/i.test(payload?.message || "")) {
-          router.replace("/login");
-        }
       }
 
       setCoursesLoading(false);
@@ -264,9 +283,61 @@ export default function MyCoursesPage() {
     setCategory(content.filters.allCategoryValue);
   }, [content.filters.allCategoryValue]);
 
+  useEffect(() => () => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+
+    if (modalTimeoutRef.current) {
+      clearTimeout(modalTimeoutRef.current);
+    }
+  }, []);
+
   const showToast = (message, type = "success") => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+
     setToast({ message, type });
-    setTimeout(() => setToast(null), 2500);
+
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 2500);
+  };
+
+  const showPurchaseModal = (title) => {
+    if (modalTimeoutRef.current) {
+      clearTimeout(modalTimeoutRef.current);
+    }
+
+    setPurchaseModal({ title });
+
+    modalTimeoutRef.current = setTimeout(() => {
+      setPurchaseModal(null);
+    }, 2200);
+  };
+
+  const markCourseAsPurchased = (identifier, nextCourse) => {
+    const normalizedNextCourse = nextCourse ? normalizeCourse(nextCourse) : null;
+
+    setCourses((currentCourses) => currentCourses.map((entry) => {
+      if (!courseMatchesIdentifier(entry, identifier)) {
+        return entry;
+      }
+
+      if (!normalizedNextCourse) {
+        return {
+          ...entry,
+          isPurchased: true,
+        };
+      }
+
+      return {
+        ...entry,
+        ...normalizedNextCourse,
+        isPurchased: true,
+      };
+    }));
   };
 
   const handleAddToCart = async (course) => {
@@ -318,20 +389,44 @@ export default function MyCoursesPage() {
     const identifier = course.courseSlug || getCourseIdentifier(course);
     const courseTitle = course.title || content.defaults.untitledCourse;
 
-    if (isInCart(identifier)) {
-      router.push("/my-courses?tab=cart");
+    if (course.isPurchased) {
+      showToast(content.errors.alreadyPurchased, "info");
       return;
     }
 
-    const payload = await addToCart(identifier);
+    if (purchasePendingId === identifier) {
+      return;
+    }
+
+    setPurchasePendingId(identifier);
+
+    const [payload] = await Promise.all([
+      purchaseStudentCourse(identifier),
+      delay(2000),
+    ]);
+
+    setPurchasePendingId("");
 
     if (!payload?.success) {
-      showToast(content.errors.cartUpdate, "remove");
+      const alreadyPurchased = /already purchased/i.test(payload?.message || "");
+
+      if (alreadyPurchased) {
+        markCourseAsPurchased(identifier, payload?.data?.course || course);
+        showToast(content.errors.alreadyPurchased, "info");
+        return;
+      }
+
+      showToast(content.errors.purchaseUpdate, "remove");
       return;
     }
 
-    showToast(formatToast(content.toastTemplates.addedCart, courseTitle));
-    router.push("/my-courses?tab=cart");
+    markCourseAsPurchased(identifier, payload?.data?.course || course);
+
+    if (isInCart(identifier)) {
+      await removeFromCart(identifier);
+    }
+
+    showPurchaseModal(courseTitle);
   };
 
   if (loading || !ready || (session && coursesLoading)) return null;
@@ -462,6 +557,7 @@ export default function MyCoursesPage() {
                 localeTag={localeTag}
                 inCart={isInCart(course.courseSlug || getCourseIdentifier(course))}
                 inWishlist={isInWishlist(course.courseSlug || getCourseIdentifier(course))}
+                isBuying={purchasePendingId === (course.courseSlug || getCourseIdentifier(course))}
                 onAddToCart={() => handleAddToCart(course)}
                 onToggleWishlist={() => handleToggleWishlist(course)}
                 onBuyNow={() => handleBuyNow(course)}
@@ -486,6 +582,40 @@ export default function MyCoursesPage() {
           {toast.message}
         </div>
       )}
+
+      {purchaseModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/20 px-4 backdrop-blur-sm">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={content.purchaseModal.title}
+            className="w-full max-w-xs rounded-3xl bg-white px-6 py-7 text-center shadow-2xl"
+            style={{ animation: "modal-pop 220ms ease-out" }}
+          >
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-inner shadow-emerald-200/60">
+              <CheckCircle size={28} className="animate-pulse" />
+            </div>
+            <p className="mt-4 text-lg font-semibold text-gray-900">{content.purchaseModal.title}</p>
+            <p className="mt-2 text-sm text-gray-500">
+              {formatToast(content.purchaseModal.description, purchaseModal.title)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        @keyframes modal-pop {
+          0% {
+            opacity: 0;
+            transform: translateY(12px) scale(0.96);
+          }
+
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -502,7 +632,7 @@ function Stat({ icon, label, value }) {
   );
 }
 
-function CourseCard({ course, content, localeTag, inCart, inWishlist, onAddToCart, onToggleWishlist, onBuyNow }) {
+function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, onAddToCart, onToggleWishlist, onBuyNow }) {
   const statusColor = STATUS_COLORS[course.status] || STATUS_COLORS.default;
   const durationLabel = getCourseDurationLabel(course, content);
   const priceLabel = getCoursePriceLabel(course, localeTag, content);
@@ -512,6 +642,7 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, onAddToCar
   const courseDescription = course.description || content.defaults.description;
   const categoryLabel = translateCourseCategory(course, content);
   const statusLabel = translateCourseStatus(course.status, content);
+  const isPurchased = Boolean(course.isPurchased);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
@@ -583,9 +714,29 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, onAddToCar
 
           <button
             onClick={onBuyNow}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 py-2 text-sm font-semibold text-purple-700 transition hover:border-purple-300 hover:bg-purple-100"
+            disabled={isBuying}
+            aria-disabled={isPurchased || isBuying}
+            className={`flex w-full items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition ${
+              isPurchased
+                ? "cursor-not-allowed border border-emerald-200 bg-emerald-50 text-emerald-700"
+                : "border border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100"
+            } ${isBuying ? "cursor-wait opacity-80" : ""}`}
           >
-            {content.actions.buy} <ArrowRight size={14} />
+            {isBuying ? (
+              <>
+                <LoaderCircle size={14} className="animate-spin" />
+                {content.actions.buying}
+              </>
+            ) : isPurchased ? (
+              <>
+                <Check size={14} />
+                {content.actions.purchased}
+              </>
+            ) : (
+              <>
+                {content.actions.buy} <ArrowRight size={14} />
+              </>
+            )}
           </button>
         </div>
       </div>
