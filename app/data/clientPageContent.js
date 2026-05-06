@@ -717,6 +717,9 @@ const clientPageContent = {
       cartUpdate: "Unable to update your cart",
       wishlistUpdate: "Unable to update your wishlist",
       purchaseUpdate: "Unable to complete your purchase",
+      updateProfileDetails: "Update your profile details",
+      cancelPurchaseUpdate: "Unable to cancel this purchase",
+      cancelPurchaseUnavailable: "Active purchases cannot be canceled",
       alreadyPurchased: "Already Purchased",
     },
     defaults: {
@@ -729,6 +732,7 @@ const clientPageContent = {
       generalCatalog: "General catalog",
       courseType: "Course",
       courseIdLabel: "Course ID",
+      purchaseStatusLabel: "Course Status",
       weekSingular: "week",
       weekPlural: "weeks",
       hourSingular: "hour",
@@ -740,12 +744,20 @@ const clientPageContent = {
       removeFromCart: "Remove from Cart",
       addToCart: "Add to Cart",
       buy: "Buy",
+      buyAgain: "Buy Again",
       buying: "Processing...",
+      cancelPurchase: "Cancel",
+      canceling: "Canceling...",
       purchased: "Purchased",
     },
     purchaseModal: {
       title: "Course Purchased",
       description: '"{title}" was purchased successfully.',
+    },
+    purchaseStatusLabels: {
+      inactive: "INACTIVE",
+      active: "ACTIVE",
+      canceled: "CANCELED",
     },
     statusLabels: {
       active: "ACTIVE",
@@ -771,6 +783,7 @@ const clientPageContent = {
       addedCart: '"{title}" added to cart!',
       removedWishlist: 'Removed "{title}" from wishlist',
       addedWishlist: '"{title}" added to wishlist!',
+      canceledPurchase: 'Canceled "{title}"',
     },
   },
   siteNavbar: {
@@ -822,7 +835,99 @@ const clientPageContent = {
     profileFallback: "User",
     profileAlt: "Profile",
     viewProfileLabel: "View Profile",
+    purchasedCoursesLabel: "Purchased Courses",
     logoutLabel: "Logout",
+  },
+  profilePanel: {
+    dialogLabel: "Edit profile",
+    title: "Edit Profile",
+    closeLabel: "Close",
+    avatarAlt: "Profile",
+    fallbackName: "Student",
+    sections: {
+      basic: "Basic Information",
+      additional: "Additional Details",
+    },
+    fields: {
+      name: {
+        label: "Full Name",
+        placeholder: "Enter your full name",
+      },
+      email: {
+        label: "Email",
+        placeholder: "you@example.com",
+      },
+      phone: {
+        label: "Phone Number",
+        placeholder: "+91 98765 43210",
+      },
+      gender: {
+        label: "Gender",
+      },
+      qualification: {
+        label: "Qualification",
+        placeholder: "Enter your qualification",
+      },
+      dateOfBirth: {
+        label: "Date of Birth",
+      },
+      bio: {
+        label: "Bio",
+        placeholder: "Tell us about yourself...",
+      },
+      address: {
+        label: "Address",
+        placeholder: "Enter your address",
+      },
+      city: {
+        label: "City",
+        placeholder: "Enter your city",
+      },
+      pincode: {
+        label: "Pincode",
+        placeholder: "Enter your pincode",
+      },
+      state: {
+        label: "State",
+        placeholder: "Select a state",
+      },
+      country: {
+        label: "Country",
+        placeholder: "Select a country",
+      },
+    },
+    selects: {
+      searchPlaceholder: "Search...",
+      noResultsLabel: "No options found",
+    },
+    messages: {
+      success: "Profile updated successfully!",
+      errorFallback: "Unable to update profile",
+      incompleteTemplate: "Complete these details: {fields}",
+    },
+    actions: {
+      save: "Save Changes",
+      saving: "Saving...",
+    },
+    genderOptions: [
+      { value: "", label: "Select gender" },
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+      { value: "other", label: "Other" },
+    ],
+  },
+  boughtCoursesPanel: {
+    dialogLabel: "Purchased courses",
+    title: "Purchased Courses",
+    closeLabel: "Close",
+    loading: "Loading purchases...",
+    empty: "No purchases yet.",
+    untitledCourse: "Untitled Course",
+    statusLabels: {
+      inactive: "Pending",
+      active: "Active",
+      canceled: "Canceled",
+    },
   },
   siteFooter: {
     logoAlt: "Medtech Career",
@@ -1748,7 +1853,10 @@ const clientPageTranslations = {
         cartUpdate: "आपकी कार्ट अपडेट नहीं की जा सकी",
         wishlistUpdate: "आपकी विशलिस्ट अपडेट नहीं की जा सकी",
         purchaseUpdate: "आपकी खरीद पूरी नहीं हो सकी",
-        alreadyPurchased: "Already Purchased",
+        updateProfileDetails: "अपनी प्रोफ़ाइल विवरण अपडेट करें",
+        cancelPurchaseUpdate: "इस खरीद को रद्द नहीं किया जा सका",
+        cancelPurchaseUnavailable: "सक्रिय खरीद रद्द नहीं की जा सकती",
+        alreadyPurchased: "पहले से खरीदा गया",
       },
       defaults: {
         untitledCourse: "बिना शीर्षक का कोर्स",
@@ -1760,6 +1868,7 @@ const clientPageTranslations = {
         generalCatalog: "सामान्य कैटलॉग",
         courseType: "कोर्स",
         courseIdLabel: "कोर्स आईडी",
+        purchaseStatusLabel: "कोर्स स्थिति",
         weekSingular: "सप्ताह",
         weekPlural: "सप्ताह",
         hourSingular: "घंटा",
@@ -1771,12 +1880,20 @@ const clientPageTranslations = {
         removeFromCart: "कार्ट से हटाएँ",
         addToCart: "कार्ट में जोड़ें",
         buy: "खरीदें",
+        buyAgain: "फिर से खरीदें",
         buying: "प्रोसेस हो रहा है...",
+        cancelPurchase: "रद्द करें",
+        canceling: "रद्द किया जा रहा है...",
         purchased: "खरीदा गया",
       },
       purchaseModal: {
-        title: "Course Purchased",
+        title: "कोर्स खरीदा गया",
         description: '"{title}" सफलतापूर्वक खरीदा गया।',
+      },
+      purchaseStatusLabels: {
+        inactive: "निष्क्रिय",
+        active: "सक्रिय",
+        canceled: "रद्द",
       },
       statusLabels: {
         active: "सक्रिय",
@@ -1802,6 +1919,7 @@ const clientPageTranslations = {
         addedCart: '"{title}" को कार्ट में जोड़ा गया!',
         removedWishlist: '"{title}" को विशलिस्ट से हटाया गया',
         addedWishlist: '"{title}" को विशलिस्ट में जोड़ा गया!',
+        canceledPurchase: '"{title}" रद्द किया गया',
       },
     },
     siteNavbar: {
@@ -1853,7 +1971,99 @@ const clientPageTranslations = {
       profileFallback: "यूज़र",
       profileAlt: "प्रोफ़ाइल",
       viewProfileLabel: "प्रोफ़ाइल देखें",
+      purchasedCoursesLabel: "खरीदे गए कोर्स",
       logoutLabel: "लॉगआउट",
+    },
+    profilePanel: {
+      dialogLabel: "प्रोफ़ाइल संपादित करें",
+      title: "प्रोफ़ाइल संपादित करें",
+      closeLabel: "बंद करें",
+      avatarAlt: "प्रोफ़ाइल",
+      fallbackName: "छात्र",
+      sections: {
+        basic: "मूल जानकारी",
+        additional: "अतिरिक्त विवरण",
+      },
+      fields: {
+        name: {
+          label: "पूरा नाम",
+          placeholder: "अपना पूरा नाम दर्ज करें",
+        },
+        email: {
+          label: "ईमेल",
+          placeholder: "you@example.com",
+        },
+        phone: {
+          label: "फ़ोन नंबर",
+          placeholder: "+91 98765 43210",
+        },
+        gender: {
+          label: "लिंग",
+        },
+        qualification: {
+          label: "योग्यता",
+          placeholder: "अपनी योग्यता दर्ज करें",
+        },
+        dateOfBirth: {
+          label: "जन्म तिथि",
+        },
+        bio: {
+          label: "बायो",
+          placeholder: "अपने बारे में बताइए...",
+        },
+        address: {
+          label: "पता",
+          placeholder: "अपना पता दर्ज करें",
+        },
+        city: {
+          label: "शहर",
+          placeholder: "अपना शहर दर्ज करें",
+        },
+        pincode: {
+          label: "पिनकोड",
+          placeholder: "अपना पिनकोड दर्ज करें",
+        },
+        state: {
+          label: "राज्य",
+          placeholder: "राज्य चुनें",
+        },
+        country: {
+          label: "देश",
+          placeholder: "देश चुनें",
+        },
+      },
+      selects: {
+        searchPlaceholder: "खोजें...",
+        noResultsLabel: "कोई विकल्प नहीं मिला",
+      },
+      messages: {
+        success: "प्रोफ़ाइल सफलतापूर्वक अपडेट हुई!",
+        errorFallback: "प्रोफ़ाइल अपडेट नहीं हो सकी",
+        incompleteTemplate: "इन विवरणों को पूरा करें: {fields}",
+      },
+      actions: {
+        save: "परिवर्तन सहेजें",
+        saving: "सहेजा जा रहा है...",
+      },
+      genderOptions: [
+        { value: "", label: "लिंग चुनें" },
+        { value: "male", label: "पुरुष" },
+        { value: "female", label: "महिला" },
+        { value: "other", label: "अन्य" },
+      ],
+    },
+    boughtCoursesPanel: {
+      dialogLabel: "खरीदे गए कोर्स",
+      title: "खरीदे गए कोर्स",
+      closeLabel: "बंद करें",
+      loading: "खरीदारी लोड हो रही है...",
+      empty: "अभी तक कोई खरीद नहीं हुई है।",
+      untitledCourse: "बिना शीर्षक का कोर्स",
+      statusLabels: {
+        inactive: "लंबित",
+        active: "सक्रिय",
+        canceled: "रद्द",
+      },
     },
     siteFooter: {
       logoAlt: "मेडटेक करियर",
@@ -2763,7 +2973,10 @@ const clientPageTranslations = {
         cartUpdate: "നിങ്ങളുടെ കാർട്ട് അപ്‌ഡേറ്റ് ചെയ്യാനായില്ല",
         wishlistUpdate: "നിങ്ങളുടെ വിഷ്‌ലിസ്റ്റ് അപ്‌ഡേറ്റ് ചെയ്യാനായില്ല",
         purchaseUpdate: "വാങ്ങൽ പൂർത്തിയാക്കാനായില്ല",
-        alreadyPurchased: "Already Purchased",
+        updateProfileDetails: "നിങ്ങളുടെ പ്രൊഫൈൽ വിവരങ്ങൾ അപ്‌ഡേറ്റ് ചെയ്യൂ",
+        cancelPurchaseUpdate: "ഈ വാങ്ങൽ റദ്ദാക്കാനായില്ല",
+        cancelPurchaseUnavailable: "സജീവമായ വാങ്ങലുകൾ റദ്ദാക്കാനാവില്ല",
+        alreadyPurchased: "ഇതിനകം വാങ്ങിയിരിക്കുന്നു",
       },
       defaults: {
         untitledCourse: "തലക്കെട്ടില്ലാത്ത കോഴ്സ്",
@@ -2775,6 +2988,7 @@ const clientPageTranslations = {
         generalCatalog: "സാധാരണ കാറ്റലോഗ്",
         courseType: "കോഴ്സ്",
         courseIdLabel: "കോഴ്സ് ഐഡി",
+        purchaseStatusLabel: "കോഴ്സ് നില",
         weekSingular: "ആഴ്ച",
         weekPlural: "ആഴ്ചകൾ",
         hourSingular: "മണിക്കൂർ",
@@ -2786,12 +3000,20 @@ const clientPageTranslations = {
         removeFromCart: "കാർട്ടിൽ നിന്ന് നീക്കൂ",
         addToCart: "കാർട്ടിലേക്കു ചേർക്കൂ",
         buy: "വാങ്ങൂ",
+        buyAgain: "വീണ്ടും വാങ്ങൂ",
         buying: "പ്രോസസ് ചെയ്യുന്നു...",
+        cancelPurchase: "റദ്ദാക്കൂ",
+        canceling: "റദ്ദാക്കുന്നു...",
         purchased: "വാങ്ങി",
       },
       purchaseModal: {
-        title: "Course Purchased",
+        title: "കോഴ്സ് വാങ്ങി",
         description: '"{title}" വിജയകരമായി വാങ്ങി.',
+      },
+      purchaseStatusLabels: {
+        inactive: "നിഷ്ക്രിയം",
+        active: "സജീവം",
+        canceled: "റദ്ദാക്കി",
       },
       statusLabels: {
         active: "സജീവം",
@@ -2817,6 +3039,7 @@ const clientPageTranslations = {
         addedCart: '"{title}" കാർട്ടിലേക്കു ചേർത്തു!',
         removedWishlist: '"{title}" വിഷ്‌ലിസ്റ്റിൽ നിന്ന് നീക്കി',
         addedWishlist: '"{title}" വിഷ്‌ലിസ്റ്റിലേക്കു ചേർത്തു!',
+        canceledPurchase: '"{title}" റദ്ദാക്കി',
       },
     },
     siteNavbar: {
@@ -2868,7 +3091,99 @@ const clientPageTranslations = {
       profileFallback: "ഉപയോക്താവ്",
       profileAlt: "പ്രൊഫൈൽ",
       viewProfileLabel: "പ്രൊഫൈൽ കാണൂ",
+      purchasedCoursesLabel: "വാങ്ങിയ കോഴ്സുകൾ",
       logoutLabel: "ലോഗ്ഔട്ട്",
+    },
+    profilePanel: {
+      dialogLabel: "പ്രൊഫൈൽ തിരുത്തൂ",
+      title: "പ്രൊഫൈൽ തിരുത്തൂ",
+      closeLabel: "അടയ്ക്കൂ",
+      avatarAlt: "പ്രൊഫൈൽ",
+      fallbackName: "വിദ്യാർത്ഥി",
+      sections: {
+        basic: "അടിസ്ഥാന വിവരങ്ങൾ",
+        additional: "കൂടുതൽ വിവരങ്ങൾ",
+      },
+      fields: {
+        name: {
+          label: "പൂർണ്ണ പേര്",
+          placeholder: "നിങ്ങളുടെ പൂർണ്ണ പേര് നൽകൂ",
+        },
+        email: {
+          label: "ഇമെയിൽ",
+          placeholder: "you@example.com",
+        },
+        phone: {
+          label: "ഫോൺ നമ്പർ",
+          placeholder: "+91 98765 43210",
+        },
+        gender: {
+          label: "ലിംഗം",
+        },
+        qualification: {
+          label: "യോഗ്യത",
+          placeholder: "നിങ്ങളുടെ യോഗ്യത നൽകൂ",
+        },
+        dateOfBirth: {
+          label: "ജനനത്തീയതി",
+        },
+        bio: {
+          label: "ബയോ",
+          placeholder: "നിങ്ങളെക്കുറിച്ച് പറയൂ...",
+        },
+        address: {
+          label: "വിലാസം",
+          placeholder: "നിങ്ങളുടെ വിലാസം നൽകൂ",
+        },
+        city: {
+          label: "നഗരം",
+          placeholder: "നിങ്ങളുടെ നഗരം നൽകൂ",
+        },
+        pincode: {
+          label: "പിൻകോഡ്",
+          placeholder: "നിങ്ങളുടെ പിൻകോഡ് നൽകൂ",
+        },
+        state: {
+          label: "സംസ്ഥാനം",
+          placeholder: "സംസ്ഥാനം തിരഞ്ഞെടുക്കൂ",
+        },
+        country: {
+          label: "രാജ്യം",
+          placeholder: "രാജ്യം തിരഞ്ഞെടുക്കൂ",
+        },
+      },
+      selects: {
+        searchPlaceholder: "തിരയൂ...",
+        noResultsLabel: "ഒന്നും കണ്ടെത്തിയില്ല",
+      },
+      messages: {
+        success: "പ്രൊഫൈൽ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു!",
+        errorFallback: "പ്രൊഫൈൽ അപ്‌ഡേറ്റ് ചെയ്യാനായില്ല",
+        incompleteTemplate: "ഈ വിവരങ്ങൾ പൂർത്തിയാക്കൂ: {fields}",
+      },
+      actions: {
+        save: "മാറ്റങ്ങൾ സേവ് ചെയ്യൂ",
+        saving: "സേവ് ചെയ്യുന്നു...",
+      },
+      genderOptions: [
+        { value: "", label: "ലിംഗം തിരഞ്ഞെടുക്കൂ" },
+        { value: "male", label: "പുരുഷൻ" },
+        { value: "female", label: "സ്ത്രീ" },
+        { value: "other", label: "മറ്റ്" },
+      ],
+    },
+    boughtCoursesPanel: {
+      dialogLabel: "വാങ്ങിയ കോഴ്സുകൾ",
+      title: "വാങ്ങിയ കോഴ്സുകൾ",
+      closeLabel: "അടയ്ക്കൂ",
+      loading: "വാങ്ങലുകൾ ലോഡ് ചെയ്യുന്നു...",
+      empty: "ഇതുവരെ വാങ്ങലുകളൊന്നുമില്ല.",
+      untitledCourse: "ശീർഷകമില്ലാത്ത കോഴ്സ്",
+      statusLabels: {
+        inactive: "കാത്തിരിക്കുന്നു",
+        active: "സജീവം",
+        canceled: "റദ്ദാക്കി",
+      },
     },
     siteFooter: {
       logoAlt: "മെഡ്ടെക് കരിയർ",

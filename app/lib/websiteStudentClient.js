@@ -70,6 +70,12 @@ export function purchaseStudentCourse(courseIdOrSlug) {
   });
 }
 
+export function cancelStudentCoursePurchase(courseIdOrSlug) {
+  return request(`/purchases/${encodeURIComponent(courseIdOrSlug)}`, {
+    method: "PATCH",
+  });
+}
+
 export function fetchStudentCart() {
   return request("/cart");
 }
@@ -98,4 +104,12 @@ export function addStudentFavoriteItem(courseIdOrSlug) {
 
 export function removeStudentFavoriteItem(courseId) {
   return request(`/favorites/${encodeURIComponent(courseId)}`, {method: "DELETE"});
+}
+
+export function fetchStudentPurchases() {
+  return request("/purchases");
+}
+
+export function updateStudentProfile(payload) {
+  return request("/profile", {method: "PATCH", body: payload});
 }

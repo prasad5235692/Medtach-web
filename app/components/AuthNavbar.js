@@ -12,26 +12,28 @@ import {
   ShoppingCart,
   Bell,
   LogOut,
-  Eye,
   X,
+  User,
+  Package,
 } from "lucide-react";
 import { getCourses } from "@/data/courses";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import CourseCollectionModal from "@/components/CourseCollectionModal";
+import ProfilePanel from "@/components/ProfilePanel";
+import BoughtCoursesPanel from "@/components/BoughtCoursesPanel";
 import { useLanguage } from "@/context/LanguageContext";
+import { OPEN_PROFILE_PANEL_EVENT } from "@/lib/profilePanelEvents";
 
 export default function AuthNavbar() {
   const router = useRouter();
-  const { session, logout } = useAuth();
+  const { session, logout, saveSession } = useAuth();
   const { language } = useLanguage();
   const {
     cart,
     wishlist,
     ready,
-    cartCount,
-    wishlistCount,
     removeFromCart,
     removeFromWishlist,
   } = useCart();
@@ -41,6 +43,7 @@ export default function AuthNavbar() {
   const [searchVal, setSearchVal] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [collectionModal, setCollectionModal] = useState(null);
+  const [activePanel, setActivePanel] = useState(null); // "profile" | "boughtCourses"
   const searchRef = useRef(null);
   const content = getClientPageContent("authNavbar", language);
   const courses = getCourses(language);
@@ -56,6 +59,19 @@ export default function AuthNavbar() {
     document.addEventListener("mousedown", handler);
 
     return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    const handleOpenProfilePanel = () => {
+      setProfileOpen(false);
+      setActivePanel("profile");
+    };
+
+    window.addEventListener(OPEN_PROFILE_PANEL_EVENT, handleOpenProfilePanel);
+
+    return () => {
+      window.removeEventListener(OPEN_PROFILE_PANEL_EVENT, handleOpenProfilePanel);
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -84,6 +100,17 @@ export default function AuthNavbar() {
     }
 
     await removeFromWishlist(identifier);
+  };
+
+  const openPanel = (panel) => {
+    setProfileOpen(false);
+    setActivePanel(panel);
+  };
+
+  const handleProfileSaved = (updatedUser) => {
+    if (updatedUser) {
+      saveSession(updatedUser);
+    }
   };
 
   const initials = session?.name
@@ -158,7 +185,7 @@ export default function AuthNavbar() {
           </button>
 
           <IconBtn href="/my-courses" label={content.myLearningLabel} icon={<BookOpen size={20} />} />
-          <IconBtn
+          {/* <IconBtn
             label={content.wishlistLabel}
             icon={<Heart size={20} />}
             badge={wishlistCount || null}
@@ -169,7 +196,7 @@ export default function AuthNavbar() {
             icon={<ShoppingCart size={20} />}
             badge={cartCount || null}
             onClick={() => setCollectionModal("cart")}
-          />
+          /> */}
           <IconBtn label={content.notificationsLabel} icon={<Bell size={20} />} onClick={() => {}} />
 
           <div className="relative ml-1" data-dropdown>
@@ -207,13 +234,41 @@ export default function AuthNavbar() {
                   </div>
                 </div>
 
-                <Link
-                  href="#"
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
-                  onClick={() => setProfileOpen(false)}
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
+                  onClick={() => openPanel("profile")}
                 >
-                  <Eye size={15} /> {content.viewProfileLabel}
-                </Link>
+                  <User size={15} /> {content.viewProfileLabel}
+                </button>
+
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
+                  onClick={() => openPanel("boughtCourses")}
+                >
+                  <Package size={15} /> {content.purchasedCoursesLabel}
+                </button>
+
+                <div className="mx-4 my-1 border-t border-gray-100" />
+
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
+                  onClick={() => { setProfileOpen(false); setCollectionModal("wishlist"); }}
+                >
+                  <Heart size={15} /> {content.wishlistLabel}
+                </button>
+
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
+                  onClick={() => { setProfileOpen(false); setCollectionModal("cart"); }}
+                >
+                  <ShoppingCart size={15} /> {content.cartLabel}
+                </button>
+
+                <div className="mx-4 my-1 border-t border-gray-100" />
 
                 <button
                   className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-500 transition hover:bg-red-50"
@@ -254,6 +309,18 @@ export default function AuthNavbar() {
         onClose={() => setCollectionModal(null)}
         onRemove={(course) => handleRemoveFromCollection(collectionModal, course)}
       />
+
+      {activePanel === "profile" && (
+        <ProfilePanel
+          session={session}
+          onClose={() => setActivePanel(null)}
+          onSaved={handleProfileSaved}
+        />
+      )}
+
+      {activePanel === "boughtCourses" && (
+        <BoughtCoursesPanel onClose={() => setActivePanel(null)} />
+      )}
     </header>
   );
 }

@@ -11,7 +11,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
-import { fetchStudentCourses, purchaseStudentCourse } from "@/lib/websiteStudentClient";
+import { openProfilePanel } from "@/lib/profilePanelEvents";
+import { getMissingStudentProfileFields } from "@/lib/studentProfileRequirements";
+import {
+  cancelStudentCoursePurchase,
+  fetchStudentCourses,
+  purchaseStudentCourse,
+} from "@/lib/websiteStudentClient";
 
 const STATUS_COLORS = {
   active: "bg-green-100 text-green-700",
@@ -74,6 +80,8 @@ function normalizeCourse(course) {
     color: course?.color || "#7c3aed",
     thumbnail: course?.thumbnail || "",
     isPurchased: Boolean(course?.isPurchased),
+    courseStatus: String(course?.courseStatus || "").trim().toLowerCase(),
+    canCancelPurchase: Boolean(course?.canCancelPurchase),
   };
 }
 
@@ -231,6 +239,7 @@ export default function MyCoursesPage() {
   const [purchaseModal, setPurchaseModal] = useState(null);
   const toastTimeoutRef = useRef(null);
   const modalTimeoutRef = useRef(null);
+  const profilePromptTimeoutRef = useRef(null);
   const urlTab = params.get("tab");
   const activeTab = urlTab === "wishlist" || urlTab === "cart" ? urlTab : "all";
 
@@ -279,10 +288,6 @@ export default function MyCoursesPage() {
     };
   }, [loading, session, router]);
 
-  useEffect(() => {
-    setCategory(content.filters.allCategoryValue);
-  }, [content.filters.allCategoryValue]);
-
   useEffect(() => () => {
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
@@ -290,6 +295,10 @@ export default function MyCoursesPage() {
 
     if (modalTimeoutRef.current) {
       clearTimeout(modalTimeoutRef.current);
+    }
+
+    if (profilePromptTimeoutRef.current) {
+      clearTimeout(profilePromptTimeoutRef.current);
     }
   }, []);
 
@@ -317,6 +326,18 @@ export default function MyCoursesPage() {
     }, 2200);
   };
 
+  const promptProfileUpdate = () => {
+    if (profilePromptTimeoutRef.current) {
+      clearTimeout(profilePromptTimeoutRef.current);
+    }
+
+    showToast(content.errors.updateProfileDetails, "info");
+
+    profilePromptTimeoutRef.current = setTimeout(() => {
+      openProfilePanel();
+    }, 2000);
+  };
+
   const markCourseAsPurchased = (identifier, nextCourse) => {
     const normalizedNextCourse = nextCourse ? normalizeCourse(nextCourse) : null;
 
@@ -336,6 +357,22 @@ export default function MyCoursesPage() {
         ...entry,
         ...normalizedNextCourse,
         isPurchased: true,
+      };
+    }));
+  };
+
+  const markCoursePurchaseState = (identifier, nextCourse, overrides = {}) => {
+    const normalizedNextCourse = nextCourse ? normalizeCourse(nextCourse) : null;
+
+    setCourses((currentCourses) => currentCourses.map((entry) => {
+      if (!courseMatchesIdentifier(entry, identifier)) {
+        return entry;
+      }
+
+      return {
+        ...entry,
+        ...(normalizedNextCourse || {}),
+        ...overrides,
       };
     }));
   };
@@ -394,6 +431,11 @@ export default function MyCoursesPage() {
       return;
     }
 
+    if (getMissingStudentProfileFields(session).length > 0) {
+      promptProfileUpdate();
+      return;
+    }
+
     if (purchasePendingId === identifier) {
       return;
     }
@@ -408,6 +450,11 @@ export default function MyCoursesPage() {
     setPurchasePendingId("");
 
     if (!payload?.success) {
+      if (/update your profile details/i.test(payload?.message || "")) {
+        promptProfileUpdate();
+        return;
+      }
+
       const alreadyPurchased = /already purchased/i.test(payload?.message || "");
 
       if (alreadyPurchased) {
@@ -427,6 +474,48 @@ export default function MyCoursesPage() {
     }
 
     showPurchaseModal(courseTitle);
+  };
+
+  const handleCancelPurchase = async (course) => {
+    const identifier = course.courseSlug || getCourseIdentifier(course);
+
+    if (!course.canCancelPurchase) {
+      showToast(content.errors.cancelPurchaseUnavailable, "info");
+      return;
+    }
+
+    if (purchasePendingId === identifier) {
+      return;
+    }
+
+    setPurchasePendingId(identifier);
+
+    const payload = await cancelStudentCoursePurchase(identifier);
+
+    setPurchasePendingId("");
+
+    if (!payload?.success) {
+      const activePurchase = /active purchases cannot be canceled/i.test(payload?.message || "");
+
+      if (activePurchase) {
+        markCoursePurchaseState(identifier, payload?.data?.course || course, {
+          isPurchased: true,
+        });
+        showToast(content.errors.cancelPurchaseUnavailable, "info");
+        return;
+      }
+
+      showToast(content.errors.cancelPurchaseUpdate, "remove");
+      return;
+    }
+
+    markCoursePurchaseState(identifier, payload?.data?.course || course, {
+      isPurchased: false,
+      courseStatus: "canceled",
+      canCancelPurchase: false,
+    });
+
+    showToast(formatToast(content.toastTemplates.canceledPurchase, course.title || content.defaults.untitledCourse), "remove");
   };
 
   if (loading || !ready || (session && coursesLoading)) return null;
@@ -561,6 +650,7 @@ export default function MyCoursesPage() {
                 onAddToCart={() => handleAddToCart(course)}
                 onToggleWishlist={() => handleToggleWishlist(course)}
                 onBuyNow={() => handleBuyNow(course)}
+                onCancelPurchase={() => handleCancelPurchase(course)}
               />
             ))}
           </div>
@@ -584,36 +674,70 @@ export default function MyCoursesPage() {
       )}
 
       {purchaseModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/20 px-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-40 flex items-center justify-center px-4" style={{ animation: "overlay-in 200ms ease-out both" }}>
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" aria-hidden="true" />
           <div
             role="dialog"
             aria-modal="true"
             aria-label={content.purchaseModal.title}
-            className="w-full max-w-xs rounded-3xl bg-white px-6 py-7 text-center shadow-2xl"
-            style={{ animation: "modal-pop 220ms ease-out" }}
+            className="relative w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-xl"
+            style={{ animation: "modal-in 280ms cubic-bezier(0.34,1.56,0.64,1) both" }}
           >
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-inner shadow-emerald-200/60">
-              <CheckCircle size={28} className="animate-pulse" />
+            {/* Top accent bar */}
+            <div className="h-1 w-full bg-linear-to-r from-emerald-400 via-teal-400 to-cyan-400" />
+
+            <div className="px-8 py-8 text-center">
+              {/* Icon ring */}
+              <div
+                className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-4 ring-emerald-100"
+                style={{ animation: "icon-pop 360ms 180ms cubic-bezier(0.34,1.56,0.64,1) both" }}
+              >
+                <CheckCircle size={30} className="text-emerald-500" strokeWidth={2} />
+              </div>
+
+              {/* Text */}
+              <p
+                className="text-base font-semibold tracking-tight text-gray-900"
+                style={{ animation: "fade-up 220ms 220ms ease-out both" }}
+              >
+                {content.purchaseModal.title}
+              </p>
+              <p
+                className="mt-1.5 text-sm text-gray-400"
+                style={{ animation: "fade-up 220ms 270ms ease-out both" }}
+              >
+                {formatToast(content.purchaseModal.description, purchaseModal.title)}
+              </p>
+
+              {/* Progress bar */}
+              <div className="mx-auto mt-6 h-0.5 w-16 overflow-hidden rounded-full bg-gray-100">
+                <div className="h-full bg-emerald-400" style={{ animation: "progress-bar 2200ms linear both" }} />
+              </div>
             </div>
-            <p className="mt-4 text-lg font-semibold text-gray-900">{content.purchaseModal.title}</p>
-            <p className="mt-2 text-sm text-gray-500">
-              {formatToast(content.purchaseModal.description, purchaseModal.title)}
-            </p>
           </div>
         </div>
       )}
 
       <style jsx global>{`
-        @keyframes modal-pop {
-          0% {
-            opacity: 0;
-            transform: translateY(12px) scale(0.96);
-          }
-
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
+        @keyframes overlay-in {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes modal-in {
+          from { opacity: 0; transform: translateY(20px) scale(0.94); }
+          to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+        @keyframes icon-pop {
+          from { opacity: 0; transform: scale(0.6); }
+          to   { opacity: 1; transform: scale(1);   }
+        }
+        @keyframes fade-up {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0);   }
+        }
+        @keyframes progress-bar {
+          from { width: 0%; }
+          to   { width: 100%; }
         }
       `}</style>
     </div>
@@ -632,7 +756,7 @@ function Stat({ icon, label, value }) {
   );
 }
 
-function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, onAddToCart, onToggleWishlist, onBuyNow }) {
+function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, onAddToCart, onToggleWishlist, onBuyNow, onCancelPurchase }) {
   const statusColor = STATUS_COLORS[course.status] || STATUS_COLORS.default;
   const durationLabel = getCourseDurationLabel(course, content);
   const priceLabel = getCoursePriceLabel(course, localeTag, content);
@@ -643,6 +767,9 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, 
   const categoryLabel = translateCourseCategory(course, content);
   const statusLabel = translateCourseStatus(course.status, content);
   const isPurchased = Boolean(course.isPurchased);
+  const purchaseStatus = String(course.courseStatus || "").toLowerCase();
+  const canCancelPurchase = Boolean(isPurchased && course.canCancelPurchase && purchaseStatus === "inactive");
+  const canBuyAgain = Boolean(!isPurchased && purchaseStatus === "canceled");
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
@@ -695,7 +822,6 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, 
             <span className="text-xs uppercase text-gray-400">{course.currency}</span>
           )}
         </div>
-
         <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-2">
           <button
             onClick={onAddToCart}
@@ -713,11 +839,13 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, 
           </button>
 
           <button
-            onClick={onBuyNow}
+            onClick={canCancelPurchase ? onCancelPurchase : onBuyNow}
             disabled={isBuying}
-            aria-disabled={isPurchased || isBuying}
+            aria-disabled={isBuying}
             className={`flex w-full items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition ${
-              isPurchased
+              canCancelPurchase
+                ? "border border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-100"
+                : isPurchased
                 ? "cursor-not-allowed border border-emerald-200 bg-emerald-50 text-emerald-700"
                 : "border border-purple-200 bg-purple-50 text-purple-700 hover:border-purple-300 hover:bg-purple-100"
             } ${isBuying ? "cursor-wait opacity-80" : ""}`}
@@ -725,7 +853,16 @@ function CourseCard({ course, content, localeTag, inCart, inWishlist, isBuying, 
             {isBuying ? (
               <>
                 <LoaderCircle size={14} className="animate-spin" />
-                {content.actions.buying}
+                {canCancelPurchase ? content.actions.canceling : content.actions.buying}
+              </>
+            ) : canCancelPurchase ? (
+              <>
+                <X size={14} />
+                {content.actions.cancelPurchase}
+              </>
+            ) : canBuyAgain ? (
+              <>
+                {content.actions.buyAgain} <ArrowRight size={14} />
               </>
             ) : isPurchased ? (
               <>
