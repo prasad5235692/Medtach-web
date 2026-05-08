@@ -20,7 +20,7 @@ export default function Navbar() {
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileBusinessOpen, setMobileBusinessOpen] = useState(false);
   const content = getClientPageContent("siteNavbar", language);
-  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL?.trim() || "/login";
+  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL?.trim();
 
   const primaryLinks = content.primaryLinks;
   const exploreLinks = content.exploreLinks;
