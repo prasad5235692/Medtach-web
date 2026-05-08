@@ -20,6 +20,7 @@ export default function Navbar() {
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileBusinessOpen, setMobileBusinessOpen] = useState(false);
   const content = getClientPageContent("siteNavbar", language);
+  const portalUrl = process.env.NEXT_PUBLIC_PORTAL_URL?.trim() || "/login";
 
   const primaryLinks = content.primaryLinks;
   const exploreLinks = content.exploreLinks;
@@ -148,7 +149,7 @@ export default function Navbar() {
                 {content.loginSignupLabel}
               </Link>
               <a
-                href="https://medtech-frontend-v4.vercel.app/"
+                href={portalUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
@@ -351,7 +352,7 @@ export default function Navbar() {
                   {content.loginSignupLabel}
                 </Link>
                 <a
-                  href="https://medtech-frontend-v4.vercel.app/"
+                  href={portalUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="block w-full rounded-lg border border-purple-200 px-5 py-2.5 text-center text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
