@@ -7,6 +7,7 @@ import { Eye, EyeOff, Upload, User, Mail, Phone, Lock, CheckCircle } from "lucid
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
+import { uploadStudentProfileImageFile } from "@/lib/studentProfileImageUpload";
 import { loginStudent, signupStudent } from "@/lib/websiteStudentClient";
 
 export default function LoginPage() {
@@ -20,7 +21,11 @@ export default function LoginPage() {
   const [signupStep, setSignupStep] = useState("creds");
   const [showPassword, setShowPassword] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [uploadedProfileImage, setUploadedProfileImage] = useState({ url: "", publicId: "" });
+  const [imageUploading, setImageUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
+  const previewUrlRef = useRef("");
 
   const [form, setForm] = useState({ phone: "", password: "", name: "", email: "" });
   const [errors, setErrors] = useState({});
@@ -30,6 +35,41 @@ export default function LoginPage() {
   useEffect(() => {
     if (!loading && session) router.replace("/my-courses");
   }, [loading, session, router]);
+
+  useEffect(() => () => {
+    if (previewUrlRef.current?.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+  }, []);
+
+  const updateImagePreview = (nextPreviewUrl) => {
+    if (previewUrlRef.current?.startsWith("blob:") && previewUrlRef.current !== nextPreviewUrl) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+
+    previewUrlRef.current = nextPreviewUrl || "";
+    setImagePreview(nextPreviewUrl || null);
+  };
+
+  const getImageErrorMessage = (errorCodeOrMessage) => {
+    if (!errorCodeOrMessage) {
+      return content.validation.imageUploadFailed;
+    }
+
+    if (errorCodeOrMessage === "imageTooSmall") {
+      return content.validation.imageTooSmall;
+    }
+
+    if (errorCodeOrMessage === "imageTooLarge") {
+      return content.validation.imageTooLarge;
+    }
+
+    if (errorCodeOrMessage === "imageInvalidType") {
+      return content.validation.imageInvalidType;
+    }
+
+    return String(errorCodeOrMessage);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,7 +151,8 @@ export default function LoginPage() {
       password: form.password,
       name: form.name,
       email: form.email,
-      photo: imagePreview ?? "",
+      profilePhoto: uploadedProfileImage.url,
+      profilePhotoPublicId: uploadedProfileImage.publicId,
     });
 
     if (!payload?.success) {
@@ -128,14 +169,34 @@ export default function LoginPage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors((prev) => ({ ...prev, image: content.validation.imageTooLarge }));
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => setImagePreview(ev.target.result);
-    reader.readAsDataURL(file);
+
+    setImageUploading(true);
+    setUploadProgress(0);
     setErrors((prev) => ({ ...prev, image: "" }));
+    setSubmitError("");
+
+    uploadStudentProfileImageFile(file, {
+      onProgress: setUploadProgress,
+    })
+      .then((payload) => {
+        if (!payload?.success) {
+          setErrors((prev) => ({ ...prev, image: getImageErrorMessage(payload?.message) }));
+          return;
+        }
+
+        updateImagePreview(payload?.data?.previewUrl || payload?.data?.profilePhoto || "");
+        setUploadedProfileImage({
+          url: payload?.data?.profilePhoto || "",
+          publicId: payload?.data?.profilePhotoPublicId || "",
+        });
+      })
+      .catch((error) => {
+        setErrors((prev) => ({ ...prev, image: getImageErrorMessage(error?.code || error?.message) }));
+      })
+      .finally(() => {
+        setImageUploading(false);
+        e.target.value = "";
+      });
   };
 
   const switchTab = (t) => {
@@ -244,7 +305,7 @@ export default function LoginPage() {
                     aria-label={content.profileForm.uploadAria}
                   >
                     {imagePreview ? (
-                      <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                      <Image src={imagePreview} alt={content.profileForm.photoLabel} fill unoptimized className="object-cover" />
                     ) : (
                       <div className="flex flex-col items-center gap-1 text-purple-400">
                         <Upload size={22} />
@@ -253,7 +314,12 @@ export default function LoginPage() {
                     )}
                   </button>
                   <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleImageChange} />
-                  <p className="text-xs text-gray-400">{imagePreview ? content.profileForm.changePhoto : content.profileForm.uploadPhoto}</p>
+                  <p className="text-center text-xs text-gray-400">
+                    {imageUploading ?
+                      content.profileForm.uploadProgressTemplate.replace("{progress}", String(uploadProgress)) :
+                      imagePreview ? content.profileForm.changePhoto : content.profileForm.uploadPhoto}
+                  </p>
+                  <p className="text-center text-[11px] text-gray-400">{content.profileForm.sizeHint}</p>
                   {errors.image && <p className="text-xs text-red-500">{errors.image}</p>}
                 </div>
 
@@ -265,7 +331,7 @@ export default function LoginPage() {
                   <button type="button" className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50" onClick={() => { setSignupStep("creds"); setErrors({}); }}>
                     {content.profileForm.back}
                   </button>
-                  <button type="submit" disabled={submitting} className="flex-1 rounded-lg bg-purple-700 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70">
+                  <button type="submit" disabled={submitting || imageUploading} className="flex-1 rounded-lg bg-purple-700 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70">
                     {submitting ? content.profileForm.submitting : content.profileForm.submit}
                   </button>
                 </div>

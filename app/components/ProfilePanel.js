@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Check, ChevronDown, Search, X } from "lucide-react";
+import { Check, ChevronDown, LoaderCircle, Search, Upload, X } from "lucide-react";
 import { Country, State } from "country-state-city";
 import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
+import { uploadStudentProfileImageFile } from "@/lib/studentProfileImageUpload";
 import { getMissingStudentProfileFields } from "@/lib/studentProfileRequirements";
 import { updateStudentProfile } from "@/lib/websiteStudentClient";
 
@@ -88,9 +89,15 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
   const { language } = useLanguage();
   const content = getClientPageContent("profilePanel", language);
   const [form, setForm] = useState(() => buildInitialForm(session));
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoProgress, setPhotoProgress] = useState(0);
+  const [photoError, setPhotoError] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const fileInputRef = useRef(null);
+  const previewUrlRef = useRef("");
   const stateOptions = getStateOptions(form.country);
 
   const initials = session?.name
@@ -103,6 +110,81 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
     setForm((prev) => ({ ...prev, [field]: nextValue }));
     setError("");
     setSuccess(false);
+  };
+
+  useEffect(() => () => {
+    if (previewUrlRef.current?.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+  }, []);
+
+  const updatePhotoPreview = (nextPreviewUrl) => {
+    if (previewUrlRef.current?.startsWith("blob:") && previewUrlRef.current !== nextPreviewUrl) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+
+    previewUrlRef.current = nextPreviewUrl || "";
+    setPhotoPreview(nextPreviewUrl || "");
+  };
+
+  const getPhotoErrorMessage = (errorCodeOrMessage) => {
+    if (!errorCodeOrMessage) {
+      return content.photo.errorFallback;
+    }
+
+    if (errorCodeOrMessage === "imageTooSmall") {
+      return content.photo.imageTooSmall;
+    }
+
+    if (errorCodeOrMessage === "imageTooLarge") {
+      return content.photo.imageTooLarge;
+    }
+
+    if (errorCodeOrMessage === "imageInvalidType") {
+      return content.photo.imageInvalidType;
+    }
+
+    return String(errorCodeOrMessage);
+  };
+
+  const handlePhotoChange = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setPhotoUploading(true);
+    setPhotoProgress(0);
+    setPhotoError("");
+    setError("");
+    setSuccess(false);
+
+    try {
+      const payload = await uploadStudentProfileImageFile(file, {
+        replaceCurrent: true,
+        onProgress: setPhotoProgress,
+      });
+
+      if (!payload?.success) {
+        setPhotoError(getPhotoErrorMessage(payload?.message));
+        return;
+      }
+
+      updatePhotoPreview(payload?.data?.previewUrl || payload?.data?.photo || payload?.data?.profilePhoto || "");
+
+      if (onSaved) {
+        const { previewUrl, optimizedSize, ...updatedUser } = payload.data || {};
+        void previewUrl;
+        void optimizedSize;
+        onSaved(updatedUser);
+      }
+    } catch (uploadError) {
+      setPhotoError(getPhotoErrorMessage(uploadError?.code || uploadError?.message));
+    } finally {
+      setPhotoUploading(false);
+      event.target.value = "";
+    }
   };
 
   const handleCountryChange = (nextCountry) => {
@@ -207,9 +289,9 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
           {/* Avatar row */}
           <div className="mb-6 flex items-center gap-4">
             <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple-100">
-              {session?.photo ? (
+              {photoPreview || session?.photo ? (
                 <Image
-                  src={session.photo}
+                  src={photoPreview || session?.photo}
                   alt={session.name || content.avatarAlt}
                   fill
                   sizes="64px"
@@ -223,6 +305,27 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
             <div className="min-w-0">
               <p className="truncate font-semibold text-gray-900">{session?.name || content.fallbackName}</p>
               <p className="truncate text-xs text-gray-400">{session?.email}</p>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={photoUploading}
+                className="mt-2 inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-1.5 text-xs font-semibold text-purple-700 transition hover:border-purple-300 hover:bg-purple-100 disabled:cursor-not-allowed disabled:opacity-70"
+                aria-label={content.photo.uploadAria}
+              >
+                {photoUploading ? <LoaderCircle size={13} className="animate-spin" /> : <Upload size={13} />}
+                {photoUploading ?
+                  content.photo.uploadProgressTemplate.replace("{progress}", String(photoProgress)) :
+                  content.photo.changeLabel}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
+              <p className="mt-2 text-[11px] text-gray-400">{content.photo.sizeHint}</p>
+              {photoError && <p className="mt-1 text-xs text-red-500">{photoError}</p>}
             </div>
           </div>
 
@@ -321,7 +424,7 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || photoUploading}
               className="flex w-full items-center justify-center rounded-xl bg-purple-600 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-700 disabled:opacity-60"
             >
               {saving ? content.actions.saving : content.actions.save}
