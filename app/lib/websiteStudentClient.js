@@ -100,6 +100,13 @@ export function signupStudent(payload) {
   return request("/signup", {method: "POST", body: payload});
 }
 
+export function prepareStudentProfilePhotoUpload() {
+  return request("/uploads/profile-photo/signature", {
+    method: "POST",
+    body: {},
+  });
+}
+
 export function uploadStudentProfilePhoto(payload, onProgress) {
   return requestWithProgress("/uploads/profile-photo", {
     method: "POST",
@@ -109,10 +116,11 @@ export function uploadStudentProfilePhoto(payload, onProgress) {
 }
 
 export function replaceStudentProfilePhoto(payload, onProgress) {
-  return requestWithProgress("/profile/photo", {
+  void onProgress;
+
+  return request("/profile/photo", {
     method: "POST",
     body: payload,
-    onProgress,
   });
 }
 

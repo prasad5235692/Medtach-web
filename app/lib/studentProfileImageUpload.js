@@ -1,6 +1,6 @@
 import {
+  prepareStudentProfilePhotoUpload,
   replaceStudentProfilePhoto,
-  uploadStudentProfilePhoto,
 } from "@/lib/websiteStudentClient";
 
 export const PROFILE_IMAGE_MIN_BYTES = 100 * 1024;
@@ -32,16 +32,6 @@ function canvasToBlob(canvas, quality) {
 
       resolve(blob);
     }, OUTPUT_IMAGE_TYPE, quality);
-  });
-}
-
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(createImageError("imageProcessingFailed"));
-    reader.readAsDataURL(file);
   });
 }
 
@@ -142,6 +132,84 @@ async function optimizeProfileImage(file) {
   throw createImageError("imageTooSmall");
 }
 
+function uploadOptimizedFileToCloudinary(file, signaturePayload, onProgress) {
+  return new Promise((resolve) => {
+    try {
+      const xhr = new XMLHttpRequest();
+      const formData = new FormData();
+
+      xhr.open("POST", signaturePayload.uploadUrl, true);
+      xhr.responseType = "json";
+
+      xhr.upload.onprogress = (event) => {
+        if (!event.lengthComputable || typeof onProgress !== "function") {
+          return;
+        }
+
+        onProgress(Math.min(99, Math.round((event.loaded / event.total) * 100)));
+      };
+
+      xhr.onload = () => {
+        if (typeof onProgress === "function") {
+          onProgress(100);
+        }
+
+        let payload = xhr.response && typeof xhr.response === "object" ? xhr.response : null;
+
+        if (!payload) {
+          try {
+            payload = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+          } catch {
+            payload = null;
+          }
+        }
+
+        if (xhr.status >= 200 && xhr.status < 300 && payload?.secure_url && payload?.public_id) {
+          resolve({
+            success: true,
+            data: {
+              profilePhoto: String(payload.secure_url || ""),
+              profilePhotoPublicId: String(payload.public_id || ""),
+            },
+          });
+          return;
+        }
+
+        resolve({
+          success: false,
+          message: payload?.error?.message || payload?.message || "Unable to upload profile image",
+          data: [],
+        });
+      };
+
+      xhr.onerror = () => {
+        resolve({
+          success: false,
+          message: "Unable to upload profile image",
+          data: [],
+        });
+      };
+
+      formData.append("file", file);
+      formData.append("api_key", String(signaturePayload.apiKey || ""));
+      formData.append("folder", String(signaturePayload.folder || ""));
+      formData.append("overwrite", String(signaturePayload.overwrite ?? false));
+      formData.append("signature", String(signaturePayload.signature || ""));
+      formData.append("timestamp", String(signaturePayload.timestamp || ""));
+      formData.append("unique_filename", String(signaturePayload.uniqueFilename ?? true));
+      formData.append("use_filename", String(signaturePayload.useFilename ?? false));
+
+      xhr.send(formData);
+    } catch {
+      resolve({
+        success: false,
+        message: "Unable to upload profile image",
+        data: [],
+      });
+    }
+  });
+}
+
 export async function uploadStudentProfileImageFile(
   file,
   {replaceCurrent = false, onProgress} = {},
@@ -150,10 +218,30 @@ export async function uploadStudentProfileImageFile(
   const previewUrl = URL.createObjectURL(optimizedFile);
 
   try {
-    const photoData = await fileToDataUrl(optimizedFile);
+    const signaturePayload = await prepareStudentProfilePhotoUpload();
+
+    if (!signaturePayload?.success) {
+      URL.revokeObjectURL(previewUrl);
+      return signaturePayload;
+    }
+
+    const uploadPayload = await uploadOptimizedFileToCloudinary(
+      optimizedFile,
+      signaturePayload.data || {},
+      onProgress,
+    );
+
+    if (!uploadPayload?.success) {
+      URL.revokeObjectURL(previewUrl);
+      return uploadPayload;
+    }
+
     const payload = replaceCurrent ?
-      await replaceStudentProfilePhoto({photoData}, onProgress) :
-      await uploadStudentProfilePhoto({photoData}, onProgress);
+      await replaceStudentProfilePhoto({
+        profilePhoto: uploadPayload.data.profilePhoto,
+        profilePhotoPublicId: uploadPayload.data.profilePhotoPublicId,
+      }) :
+      uploadPayload;
 
     if (!payload?.success) {
       URL.revokeObjectURL(previewUrl);
