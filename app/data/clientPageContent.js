@@ -68,6 +68,24 @@ const clientPageContent = {
           placeholder: "+91 00000 00000",
         },
         {
+          id: "collegeName",
+          label: "College Name",
+          type: "text",
+          placeholder: "Your college or institution",
+        },
+        {
+          id: "location",
+          label: "Location",
+          type: "text",
+          placeholder: "City, State",
+        },
+        {
+          id: "educationalQualification",
+          label: "Educational Qualification",
+          type: "text",
+          placeholder: "B.Sc, B.Pharm, BPT, etc.",
+        },
+        {
           id: "subject",
           label: "Subject",
           type: "text",
@@ -1208,6 +1226,24 @@ const clientPageTranslations = {
             placeholder: "+91 00000 00000",
           },
           {
+            id: "collegeName",
+            label: "कॉलेज का नाम",
+            type: "text",
+            placeholder: "अपने कॉलेज या संस्थान का नाम",
+          },
+          {
+            id: "location",
+            label: "स्थान",
+            type: "text",
+            placeholder: "शहर, राज्य",
+          },
+          {
+            id: "educationalQualification",
+            label: "शैक्षिक योग्यता",
+            type: "text",
+            placeholder: "B.Sc, B.Pharm, BPT आदि",
+          },
+          {
             id: "subject",
             label: "विषय",
             type: "text",
@@ -2326,6 +2362,24 @@ const clientPageTranslations = {
             label: "ഫോൺ",
             type: "tel",
             placeholder: "+91 00000 00000",
+          },
+          {
+            id: "collegeName",
+            label: "കോളേജ് പേര്",
+            type: "text",
+            placeholder: "നിങ്ങളുടെ കോളേജ് അല്ലെങ്കിൽ സ്ഥാപനത്തിന്റെ പേര്",
+          },
+          {
+            id: "location",
+            label: "സ്ഥലം",
+            type: "text",
+            placeholder: "നഗരം, സംസ്ഥാനം",
+          },
+          {
+            id: "educationalQualification",
+            label: "വിദ്യാഭ്യാസ യോഗ്യത",
+            type: "text",
+            placeholder: "B.Sc, B.Pharm, BPT മുതലായവ",
           },
           {
             id: "subject",

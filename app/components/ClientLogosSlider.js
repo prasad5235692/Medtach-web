@@ -26,7 +26,7 @@ export default function ClientLogosSlider() {
                 {track.map((logo, index) => (
                   <div key={`${logo.src}-${index}`} className="group relative flex h-30 w-60 shrink-0 cursor-pointer select-none items-center justify-center rounded-full border border-white/10 bg-white/40 p-3 shadow-md shadow-purple-100/30 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-purple-200/80 hover:bg-white/80 hover:shadow-lg hover:shadow-purple-200/40">
                     <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: "radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)" }} />
-                    <div className="relative h-full w-full grayscale transition-all duration-300 group-hover:grayscale-0">
+                    <div className="relative h-full w-full transition-all duration-300">
                       <Image src={logo.src} alt={logo.alt} fill sizes="400px" className="object-contain" draggable={false} />
                     </div>
                   </div>
