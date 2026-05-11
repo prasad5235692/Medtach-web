@@ -1,17 +1,14 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
-import { getCourses } from "@/data/courses";
+import { getVisibleCourses } from "@/data/courses";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n/server";
 import { localizeContent } from "@/lib/i18n/content";
 
-const featuredSlugs = ["bmct", "amct", "cpc-certification"];
-
 export default async function CoursesSection() {
   const locale = await getLocale();
-  const courses = getCourses(locale);
-  const featured = courses.filter((c) => featuredSlugs.includes(c.slug));
+  const featured = getVisibleCourses(locale);
   const content = localizeContent(
     {
       label: "Popular Courses",
@@ -19,9 +16,7 @@ export default async function CoursesSection() {
       subtitle:
         "Industry-aligned Medical Coding & Billing courses taught by certified professionals with 10+ years of experience.",
       cta: "View All Courses →",
-      alsoOffering: "Also offering:",
-      more: "and more.",
-      browseAll: "Browse all 7 courses →",
+      browseAll: "Browse all 3 courses →",
     },
     locale,
   );
@@ -65,6 +60,7 @@ export default async function CoursesSection() {
           ))}
         </div>
 
+        {/*
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
             {content.alsoOffering}&nbsp;
@@ -72,6 +68,16 @@ export default async function CoursesSection() {
             <Link href="/course/crc" className="font-semibold text-purple-700 hover:underline">CRC</Link>,&nbsp;
             <Link href="/course/cdm" className="font-semibold text-purple-700 hover:underline">CDM</Link>&nbsp;{content.more}&nbsp;
             <Link href="/courses" className="font-semibold text-orange-600 hover:underline">{content.browseAll}</Link>
+          </p>
+        </div>
+        */}
+
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500">
+            <Link href="/course/bmct" className="font-semibold text-purple-700 hover:underline">Basic Medical Coding Training</Link>,&nbsp;
+            <Link href="/course/amct" className="font-semibold text-purple-700 hover:underline">Advanced Medical Coding Training</Link>,&nbsp;
+            <Link href="/course/cpc-certification" className="font-semibold text-purple-700 hover:underline">Certified Medical Coding Training</Link>&nbsp;|
+            <Link href="/courses" className="ml-2 font-semibold text-orange-600 hover:underline">{content.browseAll}</Link>
           </p>
         </div>
       </div>

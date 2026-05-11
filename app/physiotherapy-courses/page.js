@@ -2,10 +2,11 @@ import Link from "next/link";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
-import { getCourses } from "@/data/courses";
+import { VISIBLE_COURSE_SLUGS, getVisibleCourses } from "@/data/courses";
 import { getLocale } from "@/lib/i18n/server";
 
-const FEATURED_SLUGS = ["bmct", "medical-coding", "cpc-certification", "cdm", "ehr"];
+const FEATURED_SLUGS = VISIBLE_COURSE_SLUGS;
+// const FEATURED_SLUGS = ["bmct", "medical-coding", "cpc-certification", "cdm", "ehr"];
 
 const PAGE_CONTENT = {
   en: {
@@ -113,12 +114,12 @@ export const metadata = {
 export default async function PhysiotherapyCoursesPage() {
   const locale = await getLocale();
   const content = PAGE_CONTENT[locale] ?? PAGE_CONTENT.en;
-  const courses = getCourses(locale).filter((course) => FEATURED_SLUGS.includes(course.slug));
+  const courses = getVisibleCourses(locale).filter((course) => FEATURED_SLUGS.includes(course.slug));
 
   return (
     <>
       <section className="relative overflow-hidden bg-[#fff7ed] pb-20 pt-36">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(249,115,22,0.12),_transparent_35%),radial-gradient(circle_at_bottom_left,_rgba(126,34,206,0.1),_transparent_32%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.12),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(126,34,206,0.1),transparent_32%)]" />
         <div className="page-container relative">
           <AnimateOnScroll animation="fade-down">
             <SectionHeading label={content.label} title={content.title} subtitle={content.subtitle} />

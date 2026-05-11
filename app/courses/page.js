@@ -2,7 +2,7 @@
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
 import { getCoursesPageContent } from "@/courses/data";
-import { getCourses } from "@/data/courses";
+import { getVisibleCourses } from "@/data/courses";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n/server";
 
@@ -19,8 +19,7 @@ export async function generateMetadata() {
 export default async function CoursesPage() {
   const locale = await getLocale();
   const content = getCoursesPageContent(locale);
-  const courses = getCourses(locale);
-  const healthcare = courses.filter((c) => c.category === "Healthcare");
+  const healthcare = getVisibleCourses(locale);
 
   return (
     <>

@@ -16,7 +16,7 @@ import {
   User,
   Package,
 } from "lucide-react";
-import { getCourses } from "@/data/courses";
+import { getVisibleCourses } from "@/data/courses";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
@@ -46,7 +46,7 @@ export default function AuthNavbar() {
   const [activePanel, setActivePanel] = useState(null); // "profile" | "boughtCourses"
   const searchRef = useRef(null);
   const content = getClientPageContent("authNavbar", language);
-  const courses = getCourses(language);
+  const courses = getVisibleCourses(language);
 
   useEffect(() => {
     const handler = (event) => {

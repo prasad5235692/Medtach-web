@@ -14,7 +14,7 @@ const coursesPageContent = {
   },
   learningPath: {
     label: "Recommended Learning Path",
-    value: "BMCT → AMCT → CPC Certification → Specialisation (CRC or CDM)",
+    value: "BMCT → AMCT → Certified Medical Coding Training",
     ctaLabel: "View Training Details →",
   },
   sectionHeading: {

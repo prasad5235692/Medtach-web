@@ -2,10 +2,11 @@ import Link from "next/link";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import CourseCard from "@/components/CourseCard";
 import SectionHeading from "@/components/SectionHeading";
-import { getCourses } from "@/data/courses";
+import { VISIBLE_COURSE_SLUGS, getVisibleCourses } from "@/data/courses";
 import { getLocale } from "@/lib/i18n/server";
 
-const FEATURED_SLUGS = ["emr", "ehr", "tm", "medical-billing", "cdm"];
+const FEATURED_SLUGS = VISIBLE_COURSE_SLUGS;
+// const FEATURED_SLUGS = ["emr", "ehr", "tm", "medical-billing", "cdm"];
 
 const PAGE_CONTENT = {
   en: {
@@ -113,7 +114,7 @@ export const metadata = {
 export default async function HealthcareInformationTechnologyPage() {
   const locale = await getLocale();
   const content = PAGE_CONTENT[locale] ?? PAGE_CONTENT.en;
-  const courses = getCourses(locale).filter((course) => FEATURED_SLUGS.includes(course.slug));
+  const courses = getVisibleCourses(locale).filter((course) => FEATURED_SLUGS.includes(course.slug));
 
   return (
     <>

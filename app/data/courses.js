@@ -23,6 +23,10 @@ const courseTranslations = {
   },
 };
 
+export const VISIBLE_COURSE_SLUGS = ["bmct", "amct", "cpc-certification"];
+
+const visibleCourseSlugSet = new Set(VISIBLE_COURSE_SLUGS);
+
 export const courses = [
   {
     slug: "medical-coding",
@@ -260,7 +264,7 @@ export const courses = [
   },
   {
     slug: "cpc-certification",
-    title: "Certification Exam Training",
+    title: "Certified Medical Coding Training",
     category: "Healthcare",
     badge: "High ROI",
     badgeColor: "blue",
@@ -844,5 +848,12 @@ export function getCourses(locale = DEFAULT_LOCALE) {
   });
 }
 
+export function getVisibleCourses(locale = DEFAULT_LOCALE) {
+  return getCourses(locale).filter((course) => visibleCourseSlugSet.has(course.slug));
+}
+
 export const getCourseBySlug = (slug, locale = DEFAULT_LOCALE) =>
   getCourses(locale).find((course) => course.slug === slug) ?? null;
+
+export const getVisibleCourseBySlug = (slug, locale = DEFAULT_LOCALE) =>
+  getVisibleCourses(locale).find((course) => course.slug === slug) ?? null;

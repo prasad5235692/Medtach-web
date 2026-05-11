@@ -1,6 +1,6 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import { getCourseDetailPageContent, getCourseTrainingDetailRows } from "@/courses/data";
-import { courses, getCourses, getCourseBySlug } from "@/data/courses";
+import { getVisibleCourseBySlug, getVisibleCourses } from "@/data/courses";
 import { localizeText } from "@/lib/i18n/content";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -14,13 +14,13 @@ const categoryIcon = {
 };
 
 export function generateStaticParams() {
-  return courses.map((c) => ({ slug: c.slug }));
+  return getVisibleCourses().map((course) => ({ slug: course.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const locale = await getLocale();
   const { slug } = await params;
-  const course = getCourseBySlug(slug, locale);
+  const course = getVisibleCourseBySlug(slug, locale);
   if (!course) return {};
   const content = getCourseDetailPageContent(locale, course);
 
@@ -33,9 +33,9 @@ export async function generateMetadata({ params }) {
 export default async function CourseDetailPage({ params }) {
   const locale = await getLocale();
   const { slug } = await params;
-  const course = getCourseBySlug(slug, locale);
+  const course = getVisibleCourseBySlug(slug, locale);
   if (!course) notFound();
-  const localizedCourses = getCourses(locale);
+  const localizedCourses = getVisibleCourses(locale);
   const CourseIcon = categoryIcon[course.category] ?? BookOpen;
   const content = getCourseDetailPageContent(locale, course);
   const categoryLabel = localizeText(locale, course.category);
