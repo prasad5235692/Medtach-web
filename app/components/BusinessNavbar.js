@@ -93,6 +93,7 @@ function MegaColumnsPanel({ nav, onClose, pathname }) {
                             ? "bg-purple-50 font-semibold text-purple-800"
                             : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
                         }`}
+                        
                       >
                         {item.label}
                         {item.badge && <Badge label={item.badge} />}
