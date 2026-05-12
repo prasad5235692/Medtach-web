@@ -5,11 +5,11 @@ const REFRESH_COOKIE = "medtech_student_refresh_token";
 const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
+const DEFAULT_WEBSITE_STUDENT_BASE_URL = "https://app-6rgaaxy4aq-uc.a.run.app/wedstudentuser";
 const BACKEND_BASE_ENV_KEYS = [
   "WEBSITE_STUDENT_BASE_URL",
   "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL",
   "BASE_URL",
-  "NEXT_PUBLIC_BASE_URL",
 ];
 
 function getCookieOptions(maxAge) {
@@ -22,13 +22,49 @@ function getCookieOptions(maxAge) {
   };
 }
 
-function getConfiguredBackendBaseUrl() {
-  for (const envKey of BACKEND_BASE_ENV_KEYS) {
-    const envValue = process.env[envKey]?.trim();
+function normalizeBackendBaseUrl(baseUrl) {
+  const normalizedBaseUrl = String(baseUrl || "").trim().replace(/\/+$/, "");
 
-    if (envValue) {
-      return envValue.replace(/\/+$/, "");
+  if (!normalizedBaseUrl) {
+    return "";
+  }
+
+  if (/\/wedstudentuser$/i.test(normalizedBaseUrl)) {
+    return normalizedBaseUrl;
+  }
+
+  return `${normalizedBaseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`;
+}
+
+function getBackendBaseUrlCandidates() {
+  const seenBaseUrls = new Set();
+  const baseUrls = [];
+
+  BACKEND_BASE_ENV_KEYS.forEach((envKey) => {
+    const normalizedBaseUrl = normalizeBackendBaseUrl(process.env[envKey]);
+
+    if (!normalizedBaseUrl || seenBaseUrls.has(normalizedBaseUrl)) {
+      return;
     }
+
+    seenBaseUrls.add(normalizedBaseUrl);
+    baseUrls.push(normalizedBaseUrl);
+  });
+
+  const defaultBaseUrl = normalizeBackendBaseUrl(DEFAULT_WEBSITE_STUDENT_BASE_URL);
+
+  if (defaultBaseUrl && !seenBaseUrls.has(defaultBaseUrl)) {
+    baseUrls.push(defaultBaseUrl);
+  }
+
+  return baseUrls;
+}
+
+function getBackendBaseUrl() {
+  const [baseUrl] = getBackendBaseUrlCandidates();
+
+  if (baseUrl) {
+    return baseUrl;
   }
 
   throw new Error(
@@ -36,25 +72,19 @@ function getConfiguredBackendBaseUrl() {
   );
 }
 
-function getBackendBaseUrl() {
-  const baseUrl = getConfiguredBackendBaseUrl();
-
-  if (/\/wedstudentuser$/i.test(baseUrl)) {
-    return baseUrl;
-  }
-
-  return `${baseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`;
-}
-
 function getRoutePath(segments) {
   return segments.length ? `/${segments.join("/")}` : "";
 }
 
-function buildBackendUrl(segments, searchParams) {
+function buildBackendUrl(baseUrl, segments, searchParams) {
   const queryString = searchParams.toString();
   const routePath = getRoutePath(segments);
 
-  return `${getBackendBaseUrl()}${routePath}${queryString ? `?${queryString}` : ""}`;
+  return `${baseUrl}${routePath}${queryString ? `?${queryString}` : ""}`;
+}
+
+function getBackendUrlCandidates(segments, searchParams) {
+  return getBackendBaseUrlCandidates().map((baseUrl) => buildBackendUrl(baseUrl, segments, searchParams));
 }
 
 function getAccessToken(request) {
@@ -105,7 +135,7 @@ function createErrorPayload(message) {
   };
 }
 
-function normalizeBackendTextError(rawPayload, requestMethod, segments) {
+function normalizeBackendTextError(rawPayload, requestMethod, segments, backendUrl) {
   const textPayload = String(rawPayload || "").trim();
 
   if (!textPayload) {
@@ -115,14 +145,20 @@ function normalizeBackendTextError(rawPayload, requestMethod, segments) {
   const missingRouteMatch = textPayload.match(/Cannot\s+(GET|POST|PATCH|DELETE|PUT|HEAD|OPTIONS)\s+([^<\s]+)/i);
 
   if (missingRouteMatch) {
-    return `Backend route is unavailable at ${missingRouteMatch[2]}. Check WEBSITE_STUDENT_BASE_URL or BASE_URL in the frontend deployment and confirm the website-student router is deployed on the backend.`;
+    return `Backend route is unavailable at ${missingRouteMatch[2]} while calling ${backendUrl}. Check WEBSITE_STUDENT_BASE_URL or BASE_URL in the frontend deployment.`;
   }
 
   if (/<!doctype html|<html/i.test(textPayload)) {
-    return `Unexpected HTML response from backend for ${requestMethod} ${getRoutePath(segments) || "/"}`;
+    return `Unexpected HTML response from backend for ${requestMethod} ${getRoutePath(segments) || "/"} via ${backendUrl}`;
   }
 
   return textPayload;
+}
+
+function isRetryableMissingRouteResponse(status, rawPayload) {
+  return status === 404 && /Cannot\s+(GET|POST|PATCH|DELETE|PUT|HEAD|OPTIONS)\s+([^<\s]+)/i.test(
+    String(rawPayload || ""),
+  );
 }
 
 async function parseRequestBody(request) {
@@ -154,7 +190,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
     Accept: "application/json",
   };
   const requestBody = await parseRequestBody(request);
-  let backendUrl = "";
+  let backendUrls = [];
 
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
@@ -165,7 +201,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
   }
 
   try {
-    backendUrl = buildBackendUrl(segments, request.nextUrl.searchParams);
+    backendUrls = getBackendUrlCandidates(segments, request.nextUrl.searchParams);
   } catch (error) {
     return {
       payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
@@ -173,33 +209,56 @@ async function proxyToBackend({ request, segments, accessToken }) {
     };
   }
 
-  try {
-    const backendResponse = await fetch(backendUrl, {
-      method: request.method,
-      headers,
-      body: requestBody !== undefined ? JSON.stringify(requestBody) : undefined,
-      cache: "no-store",
-    });
-
-    const rawPayload = await backendResponse.text();
-    let payload = null;
-
-    try {
-      payload = rawPayload ? JSON.parse(rawPayload) : null;
-    } catch {
-      payload = createErrorPayload(normalizeBackendTextError(rawPayload, request.method, segments));
-    }
-
+  if (!backendUrls.length) {
     return {
-      payload: payload || createErrorPayload("Empty backend response"),
-      status: backendResponse.ok ? 200 : backendResponse.status || 500,
-    };
-  } catch {
-    return {
-      payload: createErrorPayload("Unable to reach the student website API"),
-      status: 502,
+      payload: createErrorPayload("Student website backend URL is not configured"),
+      status: 500,
     };
   }
+
+  let lastFailure = null;
+
+  for (const backendUrl of backendUrls) {
+    try {
+      const backendResponse = await fetch(backendUrl, {
+        method: request.method,
+        headers,
+        body: requestBody !== undefined ? JSON.stringify(requestBody) : undefined,
+        cache: "no-store",
+      });
+
+      const rawPayload = await backendResponse.text();
+      let payload = null;
+
+      try {
+        payload = rawPayload ? JSON.parse(rawPayload) : null;
+      } catch {
+        payload = createErrorPayload(normalizeBackendTextError(rawPayload, request.method, segments, backendUrl));
+      }
+
+      const result = {
+        payload: payload || createErrorPayload("Empty backend response"),
+        status: backendResponse.ok ? 200 : backendResponse.status || 500,
+      };
+
+      if (isRetryableMissingRouteResponse(result.status, rawPayload)) {
+        lastFailure = result;
+        continue;
+      }
+
+      return result;
+    } catch {
+      lastFailure = {
+        payload: createErrorPayload(`Unable to reach the student website API via ${backendUrl}`),
+        status: 502,
+      };
+    }
+  }
+
+  return lastFailure || {
+    payload: createErrorPayload("Unable to reach the student website API"),
+    status: 502,
+  };
 }
 
 async function handleSessionRequest(request) {
