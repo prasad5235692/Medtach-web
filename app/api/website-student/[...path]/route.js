@@ -2,10 +2,10 @@
 
 const ACCESS_COOKIE = "medtech_student_access_token";
 const REFRESH_COOKIE = "medtech_student_refresh_token";
+const BACKEND_BASE_COOKIE = "medtech_student_backend_base_url";
 const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
-const DEFAULT_WEBSITE_STUDENT_BASE_URL = "https://app-6rgaaxy4aq-uc.a.run.app/wedstudentuser";
 const PROTECTED_WEBSITE_STUDENT_SEGMENTS = new Set(["profile", "cart", "favorites", "purchases"]);
 const BACKEND_BASE_ENV_KEYS = [
   "WEBSITE_STUDENT_BASE_URL",
@@ -52,12 +52,6 @@ function getBackendBaseUrlCandidates() {
     baseUrls.push(normalizedBaseUrl);
   });
 
-  const defaultBaseUrl = normalizeBackendBaseUrl(DEFAULT_WEBSITE_STUDENT_BASE_URL);
-
-  if (defaultBaseUrl && !seenBaseUrls.has(defaultBaseUrl)) {
-    baseUrls.push(defaultBaseUrl);
-  }
-
   return baseUrls;
 }
 
@@ -92,12 +86,54 @@ function getBackendUrlCandidates(segments, searchParams) {
   return getBackendBaseUrlCandidates().map((baseUrl) => buildBackendUrl(baseUrl, segments, searchParams));
 }
 
-function getResolvedBackendBaseUrls(backendBaseUrls) {
-  if (Array.isArray(backendBaseUrls) && backendBaseUrls.length > 0) {
-    return [...new Set(backendBaseUrls.filter(Boolean))];
+function appendBackendBaseUrl(baseUrls, seenBaseUrls, baseUrl) {
+  const normalizedBaseUrl = normalizeBackendBaseUrl(baseUrl);
+
+  if (!normalizedBaseUrl || seenBaseUrls.has(normalizedBaseUrl)) {
+    return;
   }
 
-  return getBackendBaseUrlCandidates();
+  seenBaseUrls.add(normalizedBaseUrl);
+  baseUrls.push(normalizedBaseUrl);
+}
+
+function getPinnedBackendBaseUrl(request) {
+  const encodedBaseUrl = request?.cookies.get(BACKEND_BASE_COOKIE)?.value || "";
+
+  if (!encodedBaseUrl) {
+    return "";
+  }
+
+  try {
+    return normalizeBackendBaseUrl(decodeURIComponent(encodedBaseUrl));
+  } catch {
+    return normalizeBackendBaseUrl(encodedBaseUrl);
+  }
+}
+
+function getResolvedBackendBaseUrls(
+  request,
+  backendBaseUrls,
+  { includePinnedBackendBaseUrl = true } = {},
+) {
+  const seenBaseUrls = new Set();
+  const resolvedBaseUrls = [];
+
+  if (includePinnedBackendBaseUrl) {
+    appendBackendBaseUrl(resolvedBaseUrls, seenBaseUrls, getPinnedBackendBaseUrl(request));
+  }
+
+  if (Array.isArray(backendBaseUrls) && backendBaseUrls.length > 0) {
+    backendBaseUrls.forEach((baseUrl) => {
+      appendBackendBaseUrl(resolvedBaseUrls, seenBaseUrls, baseUrl);
+    });
+  }
+
+  getBackendBaseUrlCandidates().forEach((baseUrl) => {
+    appendBackendBaseUrl(resolvedBaseUrls, seenBaseUrls, baseUrl);
+  });
+
+  return resolvedBaseUrls;
 }
 
 function getAccessToken(request) {
@@ -111,6 +147,22 @@ function getRefreshToken(request) {
 function clearSessionCookies(response) {
   response.cookies.set(ACCESS_COOKIE, "", getCookieOptions(0));
   response.cookies.set(REFRESH_COOKIE, "", getCookieOptions(0));
+  response.cookies.set(BACKEND_BASE_COOKIE, "", getCookieOptions(0));
+}
+
+function setPinnedBackendBaseUrl(response, backendBaseUrl) {
+  const normalizedBaseUrl = normalizeBackendBaseUrl(backendBaseUrl);
+
+  if (!normalizedBaseUrl) {
+    response.cookies.set(BACKEND_BASE_COOKIE, "", getCookieOptions(0));
+    return;
+  }
+
+  response.cookies.set(
+    BACKEND_BASE_COOKIE,
+    encodeURIComponent(normalizedBaseUrl),
+    getCookieOptions(REFRESH_MAX_AGE),
+  );
 }
 
 function isAuthFailure(payload) {
@@ -247,7 +299,9 @@ async function proxyToBackend({
   }
 
   try {
-    backendBaseUrls = getResolvedBackendBaseUrls(preferredBackendBaseUrls);
+    backendBaseUrls = getResolvedBackendBaseUrls(request, preferredBackendBaseUrls, {
+      includePinnedBackendBaseUrl: Boolean(accessToken) || retryOnAuthFailure,
+    });
   } catch (error) {
     return {
       payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
@@ -321,7 +375,7 @@ async function refreshStudentTokens(request) {
   let backendBaseUrls = [];
 
   try {
-    backendBaseUrls = getResolvedBackendBaseUrls();
+    backendBaseUrls = getResolvedBackendBaseUrls(request);
   } catch (error) {
     return {
       payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
@@ -435,7 +489,7 @@ async function proxyProtectedRequest(request, segments) {
 }
 
 async function handleSessionRequest(request) {
-  const { payload, status, refreshedAuthData } = await proxyProtectedRequest(request, ["profile"]);
+  const { payload, status, refreshedAuthData, backendBaseUrl } = await proxyProtectedRequest(request, ["profile"]);
   const normalizedPayload = normalizeAuthPayload(payload);
   const response = NextResponse.json(normalizedPayload, {
     status: normalizedPayload?.success || shouldClearSession(normalizedPayload) ? 200 : status,
@@ -443,6 +497,10 @@ async function handleSessionRequest(request) {
 
   if (normalizedPayload?.success && refreshedAuthData) {
     setSessionCookies(response, refreshedAuthData);
+  }
+
+  if (normalizedPayload?.success && backendBaseUrl) {
+    setPinnedBackendBaseUrl(response, backendBaseUrl);
   } else if (!normalizedPayload?.success && shouldClearSession(normalizedPayload)) {
     clearSessionCookies(response);
   }
@@ -451,7 +509,7 @@ async function handleSessionRequest(request) {
 }
 
 async function handleAuthRequest(request, segments) {
-  const {payload, status} = await proxyToBackend({
+  const {payload, status, backendBaseUrl} = await proxyToBackend({
     request,
     segments,
     accessToken: "",
@@ -463,6 +521,9 @@ async function handleAuthRequest(request, segments) {
 
   if (payload?.success) {
     setSessionCookies(response, payload.data);
+    if (backendBaseUrl) {
+      setPinnedBackendBaseUrl(response, backendBaseUrl);
+    }
   } else {
     clearSessionCookies(response);
   }
@@ -489,11 +550,15 @@ async function handleProxyRequest(request, segments) {
       segments,
       accessToken: getAccessToken(request),
     });
-  const { payload, status, refreshedAuthData } = proxyResult;
+  const { payload, status, refreshedAuthData, backendBaseUrl } = proxyResult;
   const response = NextResponse.json(payload, {status});
 
   if (payload?.success && refreshedAuthData) {
     setSessionCookies(response, refreshedAuthData);
+  }
+
+  if (payload?.success && isProtectedWebsiteStudentRoute(segments) && backendBaseUrl) {
+    setPinnedBackendBaseUrl(response, backendBaseUrl);
   } else if (!payload?.success && isProtectedWebsiteStudentRoute(segments) && shouldClearSession(payload)) {
     clearSessionCookies(response);
   }

@@ -6,6 +6,17 @@ import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { branchesPageContent } from "./data";
 
+function getBranchMapUrl(mapQuery) {
+  const baseUrl = String(process.env.GOOGLE_MAPS_SEARCH_URL || "").trim();
+  const normalizedQuery = String(mapQuery || "").trim();
+
+  if (!baseUrl || !normalizedQuery) {
+    return "#";
+  }
+
+  return `${baseUrl}${encodeURIComponent(normalizedQuery)}`;
+}
+
 export async function generateMetadata() {
   const locale = await getLocale();
   const metadata = localizeContent(branchesPageContent.metadata, locale);
@@ -90,7 +101,7 @@ export default async function BranchesPage() {
 
                     {/* Map link */}
                     <div className="mt-auto pt-4">
-                      <a href={`https://www.google.com/maps/search/?api=1&query=${branch.mapQuery}`} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100">
+                      <a href={getBranchMapUrl(branch.mapQuery)} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100">
                         <MapPin className="h-4 w-4" />
                         {content.mapButtonLabel}
                       </a>
