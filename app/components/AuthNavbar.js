@@ -27,6 +27,10 @@ import { useLanguage } from "@/context/LanguageContext";
 import { OPEN_PROFILE_PANEL_EVENT } from "@/lib/profilePanelEvents";
 import { isRouteActive } from "@/lib/navActive";
 
+function isDirectImageSource(value) {
+  return /^(blob:|data:)/i.test(String(value || ""));
+}
+
 export default function AuthNavbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -51,6 +55,8 @@ export default function AuthNavbar() {
   const courses = getVisibleCourses(language);
   const coursesIsCurrent = isRouteActive(pathname, "/courses");
   const myLearningIsCurrent = isRouteActive(pathname, "/my-courses");
+  const profilePhoto = session?.photo || "";
+  const shouldBypassImageOptimization = isDirectImageSource(profilePhoto);
 
   useEffect(() => {
     const handler = (event) => {
@@ -232,7 +238,7 @@ export default function AuthNavbar() {
             >
               {session?.photo ? (
                 <span className="relative block h-8 w-8 overflow-hidden rounded-full">
-                  <Image src={session.photo} alt={session.name || content.profileAlt} fill sizes="32px" unoptimized className="object-cover" />
+                  <Image src={profilePhoto} alt={session.name || content.profileAlt} fill sizes="32px" unoptimized={shouldBypassImageOptimization} className="object-cover" />
                 </span>
               ) : (
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
@@ -246,7 +252,7 @@ export default function AuthNavbar() {
                 <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
                   {session?.photo ? (
                     <span className="relative block h-9 w-9 overflow-hidden rounded-full">
-                      <Image src={session.photo} alt="" fill sizes="36px" unoptimized className="object-cover" />
+                      <Image src={profilePhoto} alt="" fill sizes="36px" unoptimized={shouldBypassImageOptimization} className="object-cover" />
                     </span>
                   ) : (
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-100 text-sm font-bold text-purple-700">

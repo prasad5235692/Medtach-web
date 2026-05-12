@@ -28,6 +28,10 @@ const ALL_STATE_OPTIONS = State.getAllStates().map((state) => ({
   countryCode: state.countryCode,
 }));
 
+function isDirectImageSource(value) {
+  return /^(blob:|data:)/i.test(String(value || ""));
+}
+
 function buildInitialForm(session) {
   const wp = session?.websiteProfile || {};
   return {
@@ -99,6 +103,8 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
   const fileInputRef = useRef(null);
   const previewUrlRef = useRef("");
   const stateOptions = getStateOptions(form.country);
+  const displayedPhoto = photoPreview || session?.photo || "";
+  const shouldBypassImageOptimization = isDirectImageSource(displayedPhoto);
 
   const initials = session?.name
     ? session.name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
@@ -291,11 +297,11 @@ export default function ProfilePanel({ session, onClose, onSaved }) {
             <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple-100">
               {photoPreview || session?.photo ? (
                 <Image
-                  src={photoPreview || session?.photo}
+                  src={displayedPhoto}
                   alt={session.name || content.avatarAlt}
                   fill
                   sizes="64px"
-                  unoptimized
+                  unoptimized={shouldBypassImageOptimization}
                   className="object-cover"
                 />
               ) : (

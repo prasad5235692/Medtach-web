@@ -395,9 +395,11 @@ async function proxyProtectedRequest(request, segments) {
 }
 
 async function handleSessionRequest(request) {
-  const { payload, refreshedAuthData } = await proxyProtectedRequest(request, ["profile"]);
+  const { payload, status, refreshedAuthData } = await proxyProtectedRequest(request, ["profile"]);
   const normalizedPayload = normalizeAuthPayload(payload);
-  const response = NextResponse.json(normalizedPayload, {status: normalizedPayload?.success ? 200 : 401});
+  const response = NextResponse.json(normalizedPayload, {
+    status: normalizedPayload?.success || shouldClearSession(normalizedPayload) ? 200 : status,
+  });
 
   if (normalizedPayload?.success && refreshedAuthData) {
     setSessionCookies(response, refreshedAuthData);

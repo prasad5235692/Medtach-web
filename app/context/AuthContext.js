@@ -88,7 +88,6 @@ export function AuthProvider({ children }) {
         }
 
         setSession(storedSession);
-        setLoading(false);
       }
 
       await hydrateSession(!storedSession);

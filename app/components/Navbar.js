@@ -10,6 +10,10 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { isAnyRouteActive, isRouteActive } from "@/lib/navActive";
 
+function isDirectImageSource(value) {
+  return /^(blob:|data:)/i.test(String(value || ""));
+}
+
 export default function Navbar() {
   const { session, logout } = useAuth();
   const { language } = useLanguage();
@@ -32,6 +36,8 @@ export default function Navbar() {
   const moreIsCurrent = isAnyRouteActive(pathname, moreLinks.map((link) => link.href));
   const businessIsCurrent = isRouteActive(pathname, "/business");
   const contactIsCurrent = isRouteActive(pathname, "/contact");
+  const profilePhoto = session?.photo || "";
+  const shouldBypassImageOptimization = isDirectImageSource(profilePhoto);
 
   const handleLogout = async () => {
     await logout();
@@ -235,7 +241,7 @@ export default function Navbar() {
               <button className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-purple-200 py-1 pl-1 pr-2.5 text-xs font-medium text-purple-700 transition hover:bg-purple-50 xl:pr-3 xl:text-sm" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((value) => !value)}>
                 {session.photo ? (
                   <span className="relative block h-7 w-7 overflow-hidden rounded-full">
-                    <Image src={session.photo} alt={session.name} fill sizes="28px" unoptimized className="object-cover" />
+                    <Image src={profilePhoto} alt={session.name} fill sizes="28px" unoptimized={shouldBypassImageOptimization} className="object-cover" />
                   </span>
                 ) : (
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-purple-600">
@@ -497,7 +503,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-purple-50 px-3 py-2">
                   {session.photo ? (
                     <span className="relative block h-8 w-8 overflow-hidden rounded-full">
-                      <Image src={session.photo} alt={session.name} fill sizes="32px" unoptimized className="object-cover" />
+                      <Image src={profilePhoto} alt={session.name} fill sizes="32px" unoptimized={shouldBypassImageOptimization} className="object-cover" />
                     </span>
                   ) : (
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-purple-600">
