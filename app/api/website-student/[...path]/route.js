@@ -20,26 +20,30 @@ function getCookieOptions(maxAge) {
 }
 
 function normalizeBackendBaseUrl(baseUrl) {
-  const normalizedBaseUrl = String(baseUrl || "").trim().replace(/\/+$/, "");
+  return String(baseUrl || "").trim().replace(/\/+$/, "");
+}
+
+function getBackendBaseUrlVariants(baseUrl) {
+  const normalizedBaseUrl = normalizeBackendBaseUrl(baseUrl);
 
   if (!normalizedBaseUrl) {
-    return "";
+    return [];
   }
 
   if (/\/wedstudentuser$/i.test(normalizedBaseUrl)) {
-    return normalizedBaseUrl;
+    return [normalizedBaseUrl];
   }
 
-  return `${normalizedBaseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`;
+  return [normalizedBaseUrl, `${normalizedBaseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`];
 }
 
 function getBackendBaseUrlCandidates() {
   const baseUrls = [];
-  const normalizedBaseUrl = normalizeBackendBaseUrl(process.env[BACKEND_BASE_ENV_KEY]);
+  const seenBaseUrls = new Set();
 
-  if (normalizedBaseUrl) {
-    baseUrls.push(normalizedBaseUrl);
-  }
+  getBackendBaseUrlVariants(process.env[BACKEND_BASE_ENV_KEY]).forEach((baseUrl) => {
+    appendBackendBaseUrl(baseUrls, seenBaseUrls, baseUrl);
+  });
 
   return baseUrls;
 }
@@ -76,14 +80,14 @@ function getBackendUrlCandidates(segments, searchParams) {
 }
 
 function appendBackendBaseUrl(baseUrls, seenBaseUrls, baseUrl) {
-  const normalizedBaseUrl = normalizeBackendBaseUrl(baseUrl);
+  getBackendBaseUrlVariants(baseUrl).forEach((candidateBaseUrl) => {
+    if (!candidateBaseUrl || seenBaseUrls.has(candidateBaseUrl)) {
+      return;
+    }
 
-  if (!normalizedBaseUrl || seenBaseUrls.has(normalizedBaseUrl)) {
-    return;
-  }
-
-  seenBaseUrls.add(normalizedBaseUrl);
-  baseUrls.push(normalizedBaseUrl);
+    seenBaseUrls.add(candidateBaseUrl);
+    baseUrls.push(candidateBaseUrl);
+  });
 }
 
 function getPinnedBackendBaseUrl(request) {
