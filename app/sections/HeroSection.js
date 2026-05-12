@@ -19,7 +19,7 @@ export default async function HeroSection() {
       titleTop: "Launch your career in healthcare and",
       titleAccent: "achieve your dream career",
       description:
-        "MedTechCareer is your trusted platform for building a successful future in the ever-evolving healthcare industry. We specialize in providing comprehensive training and career pathways for doctors, nurses, and aspiring healthcare IT professionals, life science and paramedical graduates helping them stay ahead in a technology-driven medical world.",
+        "MedTech Career is your trusted platform for building a successful future in the ever-evolving healthcare industry. We specialize in providing comprehensive training and career pathways for doctors, nurses, and aspiring healthcare IT professionals, life science and paramedical graduates helping them stay ahead in a technology-driven medical world.",
       primaryCta: "Explore Courses",
       secondaryCta: "Join 1-1 career Counseling",
       stats: [

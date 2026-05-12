@@ -44,18 +44,15 @@ function isAuthFailureMessage(message) {
 }
 
 export function AuthProvider({ children }) {
-  const [session, setSession] = useState(() => getStoredSession() || null); // null = loading, false = guest, object = logged in
-  const [loading, setLoading] = useState(() => !getStoredSession());
+  const [session, setSession] = useState(null); // null = loading, false = guest, object = logged in
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
 
     const hydrateSession = async (showLoader = false) => {
-      const storedSession = getStoredSession();
-
-      if (showLoader && !storedSession) {
-        setLoading(true);
-      }
+      const cachedSession = getStoredSession();
+      void showLoader;
 
       const payload = await fetchStudentSession();
 
@@ -67,9 +64,9 @@ export function AuthProvider({ children }) {
         const nextSession = getSessionUser(payload);
         setStoredSession(nextSession);
         setSession(nextSession);
-      } else if (storedSession && !isAuthFailureMessage(payload?.message)) {
-        setSession(storedSession);
-      } else if (storedSession && isAuthFailureMessage(payload?.message)) {
+      } else if (cachedSession && !isAuthFailureMessage(payload?.message)) {
+        setSession(cachedSession);
+      } else if (cachedSession && isAuthFailureMessage(payload?.message)) {
         setStoredSession(null);
         setSession(false);
       } else {
@@ -80,7 +77,24 @@ export function AuthProvider({ children }) {
       setLoading(false);
     };
 
-    hydrateSession(!getStoredSession());
+    const initializeSession = async () => {
+      const storedSession = getStoredSession();
+
+      if (storedSession) {
+        await Promise.resolve();
+
+        if (cancelled) {
+          return;
+        }
+
+        setSession(storedSession);
+        setLoading(false);
+      }
+
+      await hydrateSession(!storedSession);
+    };
+
+    initializeSession();
 
     const handlePageShow = () => {
       hydrateSession(false);
