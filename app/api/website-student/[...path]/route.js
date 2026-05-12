@@ -4,6 +4,13 @@ const ACCESS_COOKIE = "medtech_student_access_token";
 const REFRESH_COOKIE = "medtech_student_refresh_token";
 const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
+const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
+const BACKEND_BASE_ENV_KEYS = [
+  "WEBSITE_STUDENT_BASE_URL",
+  "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL",
+  "BASE_URL",
+  "NEXT_PUBLIC_BASE_URL",
+];
 
 function getCookieOptions(maxAge) {
   return {
@@ -15,21 +22,39 @@ function getCookieOptions(maxAge) {
   };
 }
 
-function getBackendBaseUrl() {
-  const baseUrl = process.env.BASE_URL?.trim();
+function getConfiguredBackendBaseUrl() {
+  for (const envKey of BACKEND_BASE_ENV_KEYS) {
+    const envValue = process.env[envKey]?.trim();
 
-  if (!baseUrl) {
-    throw new Error("BASE_URL is not configured");
+    if (envValue) {
+      return envValue.replace(/\/+$/, "");
+    }
   }
 
-  return baseUrl.replace(/\/+$/, "");
+  throw new Error(
+    `Student website backend URL is not configured. Set one of: ${BACKEND_BASE_ENV_KEYS.join(", ")}`,
+  );
+}
+
+function getBackendBaseUrl() {
+  const baseUrl = getConfiguredBackendBaseUrl();
+
+  if (/\/wedstudentuser$/i.test(baseUrl)) {
+    return baseUrl;
+  }
+
+  return `${baseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`;
+}
+
+function getRoutePath(segments) {
+  return segments.length ? `/${segments.join("/")}` : "";
 }
 
 function buildBackendUrl(segments, searchParams) {
   const queryString = searchParams.toString();
-  const routePath = segments.length ? `/${segments.join("/")}` : "";
+  const routePath = getRoutePath(segments);
 
-  return `${getBackendBaseUrl()}/wedstudentuser${routePath}${queryString ? `?${queryString}` : ""}`;
+  return `${getBackendBaseUrl()}${routePath}${queryString ? `?${queryString}` : ""}`;
 }
 
 function getAccessToken(request) {
@@ -80,6 +105,26 @@ function createErrorPayload(message) {
   };
 }
 
+function normalizeBackendTextError(rawPayload, requestMethod, segments) {
+  const textPayload = String(rawPayload || "").trim();
+
+  if (!textPayload) {
+    return "Empty backend response";
+  }
+
+  const missingRouteMatch = textPayload.match(/Cannot\s+(GET|POST|PATCH|DELETE|PUT|HEAD|OPTIONS)\s+([^<\s]+)/i);
+
+  if (missingRouteMatch) {
+    return `Backend route is unavailable at ${missingRouteMatch[2]}. Check WEBSITE_STUDENT_BASE_URL or BASE_URL in the frontend deployment and confirm the website-student router is deployed on the backend.`;
+  }
+
+  if (/<!doctype html|<html/i.test(textPayload)) {
+    return `Unexpected HTML response from backend for ${requestMethod} ${getRoutePath(segments) || "/"}`;
+  }
+
+  return textPayload;
+}
+
 async function parseRequestBody(request) {
   if (request.method === "GET" || request.method === "HEAD") {
     return undefined;
@@ -109,6 +154,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
     Accept: "application/json",
   };
   const requestBody = await parseRequestBody(request);
+  let backendUrl = "";
 
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
@@ -119,7 +165,16 @@ async function proxyToBackend({ request, segments, accessToken }) {
   }
 
   try {
-    const backendResponse = await fetch(buildBackendUrl(segments, request.nextUrl.searchParams), {
+    backendUrl = buildBackendUrl(segments, request.nextUrl.searchParams);
+  } catch (error) {
+    return {
+      payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
+      status: 500,
+    };
+  }
+
+  try {
+    const backendResponse = await fetch(backendUrl, {
       method: request.method,
       headers,
       body: requestBody !== undefined ? JSON.stringify(requestBody) : undefined,
@@ -132,7 +187,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
     try {
       payload = rawPayload ? JSON.parse(rawPayload) : null;
     } catch {
-      payload = createErrorPayload(rawPayload || "Unexpected backend response");
+      payload = createErrorPayload(normalizeBackendTextError(rawPayload, request.method, segments));
     }
 
     return {
