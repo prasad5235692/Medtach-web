@@ -44,8 +44,8 @@ function isAuthFailureMessage(message) {
 }
 
 export function AuthProvider({ children }) {
-  const [session, setSession] = useState(null); // null = loading, false = guest, object = logged in
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(() => getStoredSession() || null); // null = loading, false = guest, object = logged in
+  const [loading, setLoading] = useState(() => !getStoredSession());
 
   useEffect(() => {
     let cancelled = false;
@@ -70,7 +70,8 @@ export function AuthProvider({ children }) {
       } else if (storedSession && !isAuthFailureMessage(payload?.message)) {
         setSession(storedSession);
       } else if (storedSession && isAuthFailureMessage(payload?.message)) {
-        setSession(storedSession);
+        setStoredSession(null);
+        setSession(false);
       } else {
         setStoredSession(null);
         setSession(false);
@@ -79,14 +80,7 @@ export function AuthProvider({ children }) {
       setLoading(false);
     };
 
-    const storedSession = getStoredSession();
-
-    if (storedSession) {
-      setSession(storedSession);
-      setLoading(false);
-    }
-
-    hydrateSession(!storedSession);
+    hydrateSession(!getStoredSession());
 
     const handlePageShow = () => {
       hydrateSession(false);
