@@ -7,11 +7,7 @@ const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
 const PROTECTED_WEBSITE_STUDENT_SEGMENTS = new Set(["profile", "cart", "favorites", "purchases"]);
-const BACKEND_BASE_ENV_KEYS = [
-  "WEBSITE_STUDENT_BASE_URL",
-  "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL",
-  "BASE_URL",
-];
+const BACKEND_BASE_ENV_KEY = "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL";
 
 function getCookieOptions(maxAge) {
   return {
@@ -38,19 +34,12 @@ function normalizeBackendBaseUrl(baseUrl) {
 }
 
 function getBackendBaseUrlCandidates() {
-  const seenBaseUrls = new Set();
   const baseUrls = [];
+  const normalizedBaseUrl = normalizeBackendBaseUrl(process.env[BACKEND_BASE_ENV_KEY]);
 
-  BACKEND_BASE_ENV_KEYS.forEach((envKey) => {
-    const normalizedBaseUrl = normalizeBackendBaseUrl(process.env[envKey]);
-
-    if (!normalizedBaseUrl || seenBaseUrls.has(normalizedBaseUrl)) {
-      return;
-    }
-
-    seenBaseUrls.add(normalizedBaseUrl);
+  if (normalizedBaseUrl) {
     baseUrls.push(normalizedBaseUrl);
-  });
+  }
 
   return baseUrls;
 }
@@ -63,7 +52,7 @@ function getBackendBaseUrl() {
   }
 
   throw new Error(
-    `Student website backend URL is not configured. Set one of: ${BACKEND_BASE_ENV_KEYS.join(", ")}`,
+    `Student website backend URL is not configured. Set ${BACKEND_BASE_ENV_KEY}.`,
   );
 }
 
@@ -225,7 +214,7 @@ function normalizeBackendTextError(rawPayload, requestMethod, segments, backendU
   const missingRouteMatch = textPayload.match(/Cannot\s+(GET|POST|PATCH|DELETE|PUT|HEAD|OPTIONS)\s+([^<\s]+)/i);
 
   if (missingRouteMatch) {
-    return `Backend route is unavailable at ${missingRouteMatch[2]} while calling ${backendUrl}. Check WEBSITE_STUDENT_BASE_URL or BASE_URL in the frontend deployment.`;
+    return `Backend route is unavailable at ${missingRouteMatch[2]} while calling ${backendUrl}. Check ${BACKEND_BASE_ENV_KEY} in the frontend deployment.`;
   }
 
   if (/<!doctype html|<html/i.test(textPayload)) {
