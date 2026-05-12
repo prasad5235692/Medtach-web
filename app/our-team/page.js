@@ -61,14 +61,14 @@ export default async function OurTeamPage() {
       <section className="bg-white py-16">
         <div className="page-container">
           <AnimateOnScroll animation="fade-up">
-            <SectionHeading
+            <SectionHeading className="items-center "
               center
               label={content.managementSection.label}
               title={content.managementSection.title}
               subtitle={content.managementSection.subtitle}
             />
           </AnimateOnScroll>
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {content.managementSection.members.map((member, i) => (
               <AnimateOnScroll key={member.id} animation="fade-up" delay={i * 100}>
                 <TeamCard member={member} showBio />
@@ -88,7 +88,7 @@ export default async function OurTeamPage() {
                 title={section.title}
               />
             </AnimateOnScroll>
-            <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
+            <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3">
               {section.members.map((member, i) => (
                 <AnimateOnScroll key={member.id} animation="fade-up" delay={i * 80}>
                   <TeamCard member={member} />

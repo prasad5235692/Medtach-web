@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
   Search,
@@ -25,9 +25,11 @@ import ProfilePanel from "@/components/ProfilePanel";
 import BoughtCoursesPanel from "@/components/BoughtCoursesPanel";
 import { useLanguage } from "@/context/LanguageContext";
 import { OPEN_PROFILE_PANEL_EVENT } from "@/lib/profilePanelEvents";
+import { isRouteActive } from "@/lib/navActive";
 
 export default function AuthNavbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const { session, logout, saveSession } = useAuth();
   const { language } = useLanguage();
   const {
@@ -47,6 +49,8 @@ export default function AuthNavbar() {
   const searchRef = useRef(null);
   const content = getClientPageContent("authNavbar", language);
   const courses = getVisibleCourses(language);
+  const coursesIsCurrent = isRouteActive(pathname, "/courses");
+  const myLearningIsCurrent = isRouteActive(pathname, "/my-courses");
 
   useEffect(() => {
     const handler = (event) => {
@@ -127,35 +131,56 @@ export default function AuthNavbar() {
 
           <div className="relative hidden md:block" data-dropdown onMouseLeave={() => setCoursesOpen(false)}>
             <button
-              className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 transition hover:bg-purple-50 hover:text-purple-700"
+              className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                coursesOpen
+                  ? "bg-purple-50 text-purple-700"
+                  : coursesIsCurrent
+                    ? "bg-purple-50/80 text-purple-700"
+                    : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+              }`}
               onMouseEnter={() => setCoursesOpen(true)}
               onClick={() => setCoursesOpen((value) => !value)}
             >
               {content.findCoursesLabel}
-              <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
+              <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180 text-purple-600" : coursesIsCurrent ? "text-purple-600" : ""}`} />
             </button>
 
             {coursesOpen && (
               <div className="absolute left-0 top-full z-50 mt-1 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
                 <Link
                   href="/courses"
-                  className="block border-b border-purple-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
+                  aria-current={coursesIsCurrent ? "page" : undefined}
+                  className={`block border-b border-purple-50 px-4 py-3 text-sm font-semibold transition ${
+                    coursesIsCurrent
+                      ? "bg-purple-100 text-purple-800"
+                      : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                  }`}
                   onClick={() => setCoursesOpen(false)}
                 >
                   {content.browseAllCoursesLabel} →
                 </Link>
                 <div className="max-h-72 overflow-y-auto py-1">
-                  {courses.map((course) => (
-                    <Link
-                      key={course.slug}
-                      href={`/courses/${course.slug}`}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700"
-                      onClick={() => setCoursesOpen(false)}
-                    >
-                      <BookOpen size={13} className="shrink-0 text-purple-400" />
-                      {course.title}
-                    </Link>
-                  ))}
+                  {courses.map((course) => {
+                    const courseHref = `/courses/${course.slug}`;
+                    const isCurrent = isRouteActive(pathname, courseHref);
+
+                    return (
+                      <Link
+                        key={course.slug}
+                        href={courseHref}
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : "text-gray-600 hover:bg-purple-50 hover:text-purple-700"
+                        }`}
+                        onClick={() => setCoursesOpen(false)}
+                      >
+                        <BookOpen size={13} className={`shrink-0 ${isCurrent ? "text-purple-600" : "text-purple-400"}`} />
+                        {course.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -177,14 +202,14 @@ export default function AuthNavbar() {
 
         <div className="ml-auto flex shrink-0 items-center gap-1 md:gap-2">
           <button
-            className="rounded-lg p-2 text-gray-500 transition hover:bg-purple-50 hover:text-purple-700 md:hidden"
+            className={`rounded-lg p-2 transition md:hidden ${searchOpen ? "bg-purple-50 text-purple-700" : "text-gray-500 hover:bg-purple-50 hover:text-purple-700"}`}
             onClick={() => setSearchOpen((value) => !value)}
             aria-label={content.searchLabel}
           >
             {searchOpen ? <X size={20} /> : <Search size={20} />}
           </button>
 
-          <IconBtn href="/my-courses" label={content.myLearningLabel} icon={<BookOpen size={20} />} />
+          <IconBtn href="/my-courses" label={content.myLearningLabel} icon={<BookOpen size={20} />} active={myLearningIsCurrent} />
           {/* <IconBtn
             label={content.wishlistLabel}
             icon={<Heart size={20} />}
@@ -201,7 +226,7 @@ export default function AuthNavbar() {
 
           <div className="relative ml-1" data-dropdown>
             <button
-              className="flex items-center justify-center overflow-hidden rounded-full ring-2 ring-purple-200 transition hover:ring-purple-500 focus:outline-none focus:ring-purple-500"
+              className={`flex items-center justify-center overflow-hidden rounded-full ring-2 transition hover:ring-purple-500 focus:outline-none focus:ring-purple-500 ${profileOpen || activePanel ? "ring-purple-500" : "ring-purple-200"}`}
               onClick={() => setProfileOpen((value) => !value)}
               aria-label={content.accountMenuLabel}
             >
@@ -325,8 +350,8 @@ export default function AuthNavbar() {
   );
 }
 
-function IconBtn({ href, label, icon, badge, onClick }) {
-  const className = "relative rounded-lg p-2 text-gray-500 transition hover:bg-purple-50 hover:text-purple-700";
+function IconBtn({ href, label, icon, badge, onClick, active = false }) {
+  const className = `relative rounded-lg p-2 transition ${active ? "bg-purple-50 text-purple-700" : "text-gray-500 hover:bg-purple-50 hover:text-purple-700"}`;
 
   if (onClick) {
     return (
@@ -343,7 +368,7 @@ function IconBtn({ href, label, icon, badge, onClick }) {
   }
 
   return (
-    <Link href={href} className={className} title={label}>
+    <Link href={href} className={className} title={label} aria-current={active ? "page" : undefined}>
       {icon}
       {badge && (
         <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold leading-none text-white">

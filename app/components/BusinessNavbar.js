@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ChevronDown, ChevronRight,  Phone, Menu, X,
   Users, Monitor,
@@ -8,11 +9,48 @@ import {
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { getBusinessNavbarContent } from "@/components/data/businessNavbarContent";
+import { isAnyRouteActive, isRouteActive } from "@/lib/navActive";
 
 const navIconMap = {
   monitor: Monitor,
   users: Users,
 };
+
+function getNavItemHrefs(nav) {
+  if (nav.type === "dropdown") {
+    return nav.items.map((item) => item.href);
+  }
+
+  if (nav.type === "mega-columns") {
+    return nav.columns.flatMap((column) => column.items.map((item) => item.href));
+  }
+
+  if (nav.type === "mega-sections") {
+    return [
+      ...(nav.topLink ? [nav.topLink.href] : []),
+      ...nav.groups.flatMap((group) => group.subMenus?.flatMap((subMenu) => subMenu.items.map((item) => item.href)) ?? []),
+      ...nav.groups.flatMap((group) => group.directLinks?.map((link) => link.href) ?? []),
+    ];
+  }
+
+  return [];
+}
+
+function getMatchingSubMenuId(nav, pathname) {
+  if (nav.type !== "mega-sections") {
+    return null;
+  }
+
+  for (const group of nav.groups) {
+    for (const subMenu of group.subMenus ?? []) {
+      if (isAnyRouteActive(pathname, subMenu.items.map((item) => item.href))) {
+        return subMenu.id;
+      }
+    }
+  }
+
+  return null;
+}
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function Badge({ label }) {
@@ -24,7 +62,7 @@ function Badge({ label }) {
 }
 
 // Mega-columns panel (What We Do)
-function MegaColumnsPanel({ nav, onClose }) {
+function MegaColumnsPanel({ nav, onClose, pathname }) {
   return (
     <div
       className={`animate-nav-menu absolute left-0 top-full mt-2 ${nav.width} rounded-2xl border border-gray-100 bg-white p-5 shadow-2xl`}
@@ -41,18 +79,27 @@ function MegaColumnsPanel({ nav, onClose }) {
                 </span>
               </div>
               <ul className="flex flex-col gap-0.5">
-                {col.items.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      onClick={onClose}
-                      className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm text-gray-600 transition-colors hover:bg-purple-50 hover:text-purple-800"
-                    >
-                      {item.label}
-                      {item.badge && <Badge label={item.badge} />}
-                    </Link>
-                  </li>
-                ))}
+                {col.items.map((item) => {
+                  const isCurrent = isRouteActive(pathname, item.href);
+
+                  return (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        onClick={onClose}
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`flex items-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
+                        }`}
+                      >
+                        {item.label}
+                        {item.badge && <Badge label={item.badge} />}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           );
@@ -63,7 +110,7 @@ function MegaColumnsPanel({ nav, onClose }) {
 }
 
 // Mega-sections panel (How We Do It / Resources) — left nav + right sub-panel
-function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, emptyStateLabel }) {
+function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, emptyStateLabel, pathname }) {
   // flatten all subMenus from all groups
   const allSubMenus = nav.groups.flatMap((g) => g.subMenus ?? []);
   const activeSub = allSubMenus.find((s) => s.id === activeSubMenu);
@@ -77,7 +124,10 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
           <Link
             href={nav.topLink.href}
             onClick={onClose}
-            className="text-xs font-semibold text-purple-700 hover:text-purple-900 hover:underline"
+            aria-current={isRouteActive(pathname, nav.topLink.href) ? "page" : undefined}
+            className={`text-xs font-semibold transition-colors hover:text-purple-900 hover:underline ${
+              isRouteActive(pathname, nav.topLink.href) ? "text-purple-900" : "text-purple-700"
+            }`}
           >
             {nav.topLink.label}
           </Link>
@@ -97,6 +147,7 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
               {group.subMenus?.map((sub) => {
                 const Icon = navIconMap[sub.icon] ?? Users;
                 const isActive = activeSubMenu === sub.id;
+                const isCurrent = isAnyRouteActive(pathname, sub.items.map((item) => item.href));
                 return (
                   <button
                     key={sub.id}
@@ -106,6 +157,8 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
                     className={`flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-sm font-medium transition-colors ${
                       isActive
                         ? "bg-purple-50 text-purple-800"
+                        : isCurrent
+                          ? "bg-purple-50/70 text-purple-800"
                         : "text-gray-700 hover:bg-purple-50 hover:text-purple-800"
                     }`}
                   >
@@ -113,19 +166,25 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
                       <Icon size={13} />
                       {sub.label}
                     </span>
-                    <ChevronRight size={11} className={`text-gray-400 transition-transform ${isActive ? "translate-x-0.5 text-purple-600" : ""}`} />
+                    <ChevronRight size={11} className={`transition-transform ${isActive ? "translate-x-0.5 text-purple-600" : isCurrent ? "text-purple-600" : "text-gray-400"}`} />
                   </button>
                 );
               })}
               {/* Direct links */}
               {group.directLinks?.map((link) => {
                 const Icon = link.icon;
+                const isCurrent = isRouteActive(pathname, link.href);
                 return (
                   <Link
                     key={link.href + link.label}
                     href={link.href}
                     onClick={onClose}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-purple-50 hover:text-purple-800"
+                    aria-current={isCurrent ? "page" : undefined}
+                    className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors ${
+                      isCurrent
+                        ? "bg-purple-50 text-purple-800"
+                        : "text-gray-700 hover:bg-purple-50 hover:text-purple-800"
+                    }`}
                   >
                     {Icon && <Icon size={13} />}
                     {link.label}
@@ -144,22 +203,29 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
                 {activeSub.label}
               </p>
               <ul className="flex flex-col gap-0.5">
-                {activeSub.items.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      onClick={onClose}
-                      className={`flex items-center gap-1 rounded-md px-2.5 py-2 text-sm transition-colors ${
-                        item.highlight
-                          ? "font-semibold text-purple-700 hover:text-purple-900"
-                          : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
-                      }`}
-                    >
-                      {item.label}
-                      {item.badge && <Badge label={item.badge} />}
-                    </Link>
-                  </li>
-                ))}
+                {activeSub.items.map((item) => {
+                  const isCurrent = isRouteActive(pathname, item.href);
+
+                  return (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        onClick={onClose}
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`flex items-center gap-1 rounded-md px-2.5 py-2 text-sm transition-colors ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : item.highlight
+                              ? "font-semibold text-purple-700 hover:text-purple-900"
+                              : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
+                        }`}
+                      >
+                        {item.label}
+                        {item.badge && <Badge label={item.badge} />}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ) : (
@@ -174,7 +240,7 @@ function MegaSectionsPanel({ nav, activeSubMenu, setActiveSubMenu, onClose, empt
 }
 
 // Simple dropdown panel (Plans / AI Transformation)
-function DropdownPanel({ nav, onClose }) {
+function DropdownPanel({ nav, onClose, pathname }) {
   return (
     <div
       className={`animate-nav-menu absolute top-full mt-2 ${nav.width} rounded-2xl border border-gray-100 bg-white p-2 shadow-2xl ${
@@ -183,24 +249,29 @@ function DropdownPanel({ nav, onClose }) {
     >
       {nav.items.map((item) => {
         const Icon = item.icon;
+        const isCurrent = isRouteActive(pathname, item.href);
+
         return (
           <Link
             key={item.label}
             href={item.href}
             onClick={onClose}
-            className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-purple-50"
+            aria-current={isCurrent ? "page" : undefined}
+            className={`flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors ${
+              isCurrent ? "bg-purple-50" : "hover:bg-purple-50"
+            }`}
           >
             {Icon && (
-              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-800">
+              <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${isCurrent ? "bg-purple-200 text-purple-900" : "bg-purple-100 text-purple-800"}`}>
                 <Icon size={14} />
               </span>
             )}
             <span>
-              <span className="flex items-center gap-1 text-sm font-semibold text-gray-800">
+              <span className={`flex items-center gap-1 text-sm font-semibold ${isCurrent ? "text-purple-900" : "text-gray-800"}`}>
                 {item.label}
                 {item.badge && <Badge label={item.badge} />}
               </span>
-              <span className="text-xs text-gray-500">{item.desc}</span>
+              <span className={isCurrent ? "text-xs text-purple-700" : "text-xs text-gray-500"}>{item.desc}</span>
             </span>
           </Link>
         );
@@ -214,6 +285,7 @@ export default function BusinessNavbar() {
   const { language } = useLanguage();
   const content = getBusinessNavbarContent(language);
   const navItems = content.navItems;
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen]         = useState(false);
   const [activeNav, setActiveNav]           = useState(null);
   const [activeSubMenu, setActiveSubMenu]   = useState(null);
@@ -233,12 +305,16 @@ export default function BusinessNavbar() {
   // Auto-select default sub-menu when nav opens
   useEffect(() => {
     const found = navItems.find((n) => n.id === activeNav);
-    if (found?.defaultSubMenu) {
+    const matchedSubMenuId = found ? getMatchingSubMenuId(found, pathname) : null;
+
+    if (matchedSubMenuId) {
+      setActiveSubMenu(matchedSubMenuId);
+    } else if (found?.defaultSubMenu) {
       setActiveSubMenu(found.defaultSubMenu);
     } else {
       setActiveSubMenu(null);
     }
-  }, [activeNav, navItems]);
+  }, [activeNav, navItems, pathname]);
 
   // Close on Escape key
   useEffect(() => {
@@ -262,6 +338,8 @@ export default function BusinessNavbar() {
   const closeAll = () => {
     setActiveNav(null);
     setMobileOpen(false);
+    setMobileL1(null);
+    setMobileL2(null);
   };
 
   return (
@@ -292,6 +370,7 @@ export default function BusinessNavbar() {
         >
           {navItems.map((nav) => {
             const isOpen = activeNav === nav.id;
+            const isCurrent = isAnyRouteActive(pathname, getNavItemHrefs(nav));
             return (
               <div
                 key={nav.id}
@@ -314,16 +393,18 @@ export default function BusinessNavbar() {
                   }}
                   className={`flex items-center gap-1 rounded-lg px-3 py-4 text-sm font-medium transition-colors ${
                     isOpen
-                      ? "text-purple-800"
-                      : "text-gray-600 hover:text-purple-800"
+                      ? "bg-purple-50 text-purple-800"
+                      : isCurrent
+                        ? "bg-purple-50/80 text-purple-800"
+                        : "text-gray-600 hover:text-purple-800"
                   }`}
                 >
                   {nav.label}
                   {nav.badge && <Badge label={nav.badge} />}
                   <ChevronDown
                     size={13}
-                    className={`mt-px text-gray-400 transition-transform duration-200 ${
-                      isOpen ? "rotate-180 text-purple-600" : ""
+                    className={`mt-px transition-transform duration-200 ${
+                      isOpen ? "rotate-180 text-purple-600" : isCurrent ? "text-purple-600" : "text-gray-400"
                     }`}
                   />
                 </button>
@@ -336,7 +417,7 @@ export default function BusinessNavbar() {
                     onMouseLeave={closeNav}
                   >
                     {nav.type === "mega-columns" && (
-                      <MegaColumnsPanel nav={nav} onClose={closeAll} />
+                      <MegaColumnsPanel nav={nav} onClose={closeAll} pathname={pathname} />
                     )}
                     {nav.type === "mega-sections" && (
                       <MegaSectionsPanel
@@ -345,10 +426,11 @@ export default function BusinessNavbar() {
                         setActiveSubMenu={setActiveSubMenu}
                         onClose={closeAll}
                         emptyStateLabel={content.emptyStateLabel}
+                        pathname={pathname}
                       />
                     )}
                     {nav.type === "dropdown" && (
-                      <DropdownPanel nav={nav} onClose={closeAll} />
+                      <DropdownPanel nav={nav} onClose={closeAll} pathname={pathname} />
                     )}
                   </div>
                 )}
@@ -368,7 +450,12 @@ export default function BusinessNavbar() {
           </a>
           <Link
             href="/business/contact"
-            className="rounded-lg bg-purple-700 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-purple-200 transition-colors hover:bg-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
+            aria-current={isRouteActive(pathname, "/business/contact") ? "page" : undefined}
+            className={`rounded-lg px-5 py-2 text-sm font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 ${
+              isRouteActive(pathname, "/business/contact")
+                ? "bg-purple-800 text-white shadow-purple-300"
+                : "bg-purple-700 text-white shadow-purple-200 hover:bg-purple-800"
+            }`}
           >
             {content.ctas.demoLabel}
           </Link>
@@ -398,16 +485,7 @@ export default function BusinessNavbar() {
             <nav className="flex flex-col gap-0.5">
               {navItems.map((nav) => {
                 const isL1Open = mobileL1 === nav.id;
-
-                // Flatten all sub-menus for l2 mobile use
-                const allSubMenus =
-                  nav.type === "mega-sections"
-                    ? nav.groups.flatMap((g) => g.subMenus ?? [])
-                    : [];
-                const allDirectLinks =
-                  nav.type === "mega-sections"
-                    ? nav.groups.flatMap((g) => g.directLinks ?? [])
-                    : [];
+                const isCurrent = isAnyRouteActive(pathname, getNavItemHrefs(nav));
 
                 return (
                   <div key={nav.id}>
@@ -416,7 +494,9 @@ export default function BusinessNavbar() {
                       className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold transition-colors ${
                         isL1Open
                           ? "bg-purple-50 text-purple-800"
-                          : "text-gray-800 hover:bg-gray-50"
+                          : isCurrent
+                            ? "bg-purple-50/80 text-purple-800"
+                            : "text-gray-800 hover:bg-gray-50"
                       }`}
                       onClick={() => {
                         setMobileL1(isL1Open ? null : nav.id);
@@ -430,8 +510,8 @@ export default function BusinessNavbar() {
                       </span>
                       <ChevronDown
                         size={15}
-                        className={`text-gray-400 transition-transform duration-200 ${
-                          isL1Open ? "rotate-180 text-purple-600" : ""
+                        className={`transition-transform duration-200 ${
+                          isL1Open ? "rotate-180 text-purple-600" : isCurrent ? "text-purple-600" : "text-gray-400"
                         }`}
                       />
                     </button>
@@ -451,7 +531,12 @@ export default function BusinessNavbar() {
                                   key={item.label}
                                   href={item.href}
                                   onClick={closeAll}
-                                  className="flex items-center gap-1 rounded-lg px-2 py-2 text-sm text-gray-600 hover:text-purple-800"
+                                  aria-current={isRouteActive(pathname, item.href) ? "page" : undefined}
+                                  className={`flex items-center gap-1 rounded-lg px-2 py-2 text-sm ${
+                                    isRouteActive(pathname, item.href)
+                                      ? "bg-purple-50 font-semibold text-purple-800"
+                                      : "text-gray-600 hover:text-purple-800"
+                                  }`}
                                 >
                                   {item.label}
                                   {item.badge && <Badge label={item.badge} />}
@@ -467,7 +552,12 @@ export default function BusinessNavbar() {
                               <Link
                                 href={nav.topLink.href}
                                 onClick={closeAll}
-                                className="mb-1 block rounded-lg px-2 py-2 text-sm font-semibold text-purple-700 hover:text-purple-900"
+                                aria-current={isRouteActive(pathname, nav.topLink.href) ? "page" : undefined}
+                                className={`mb-1 block rounded-lg px-2 py-2 text-sm font-semibold ${
+                                  isRouteActive(pathname, nav.topLink.href)
+                                    ? "bg-purple-50 text-purple-900"
+                                    : "text-purple-700 hover:text-purple-900"
+                                }`}
                               >
                                 {nav.topLink.label}
                               </Link>
@@ -483,13 +573,16 @@ export default function BusinessNavbar() {
                                 {group.subMenus?.map((sub) => {
                                   const SubIcon = navIconMap[sub.icon] ?? Users;
                                   const isL2Open = mobileL2 === sub.id;
+                                  const isCurrentSubMenu = isAnyRouteActive(pathname, sub.items.map((item) => item.href));
                                   return (
                                     <div key={sub.id}>
                                       <button
                                         className={`flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm font-medium transition-colors ${
                                           isL2Open
                                             ? "text-purple-800"
-                                            : "text-gray-700 hover:text-purple-800"
+                                            : isCurrentSubMenu
+                                              ? "bg-purple-50 text-purple-800"
+                                              : "text-gray-700 hover:text-purple-800"
                                         }`}
                                         onClick={() =>
                                           setMobileL2(isL2Open ? null : sub.id)
@@ -502,8 +595,8 @@ export default function BusinessNavbar() {
                                         </span>
                                         <ChevronDown
                                           size={12}
-                                          className={`text-gray-400 transition-transform ${
-                                            isL2Open ? "rotate-180 text-purple-600" : ""
+                                          className={`transition-transform ${
+                                            isL2Open ? "rotate-180 text-purple-600" : isCurrentSubMenu ? "text-purple-600" : "text-gray-400"
                                           }`}
                                         />
                                       </button>
@@ -515,10 +608,13 @@ export default function BusinessNavbar() {
                                               key={item.label}
                                               href={item.href}
                                               onClick={closeAll}
+                                              aria-current={isRouteActive(pathname, item.href) ? "page" : undefined}
                                               className={`flex items-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
-                                                item.highlight
-                                                  ? "font-semibold text-purple-700"
-                                                  : "text-gray-600 hover:text-purple-800"
+                                                isRouteActive(pathname, item.href)
+                                                  ? "bg-purple-50 font-semibold text-purple-800"
+                                                  : item.highlight
+                                                    ? "font-semibold text-purple-700"
+                                                    : "text-gray-600 hover:text-purple-800"
                                               }`}
                                             >
                                               {item.label}
@@ -540,7 +636,12 @@ export default function BusinessNavbar() {
                                       key={link.label}
                                       href={link.href}
                                       onClick={closeAll}
-                                      className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-600 hover:text-purple-800"
+                                      aria-current={isRouteActive(pathname, link.href) ? "page" : undefined}
+                                      className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${
+                                        isRouteActive(pathname, link.href)
+                                          ? "bg-purple-50 font-semibold text-purple-800"
+                                          : "text-gray-600 hover:text-purple-800"
+                                      }`}
                                     >
                                       {Icon && <Icon size={13} />}
                                       {link.label}
@@ -561,7 +662,12 @@ export default function BusinessNavbar() {
                                 key={item.label}
                                 href={item.href}
                                 onClick={closeAll}
-                                className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-gray-600 hover:text-purple-800"
+                                aria-current={isRouteActive(pathname, item.href) ? "page" : undefined}
+                                className={`flex items-center gap-2 rounded-lg px-2 py-2 text-sm ${
+                                  isRouteActive(pathname, item.href)
+                                    ? "bg-purple-50 font-semibold text-purple-800"
+                                    : "text-gray-600 hover:text-purple-800"
+                                }`}
                               >
                                 {Icon && <Icon size={13} className="text-purple-600" />}
                                 {item.label}
@@ -588,7 +694,12 @@ export default function BusinessNavbar() {
               <Link
                 href="/business/contact"
                 onClick={closeAll}
-                className="rounded-xl bg-purple-700 py-3 text-center text-sm font-semibold text-white shadow-sm shadow-purple-200 transition-colors hover:bg-purple-800"
+                aria-current={isRouteActive(pathname, "/business/contact") ? "page" : undefined}
+                className={`rounded-xl py-3 text-center text-sm font-semibold text-white shadow-sm transition-colors ${
+                  isRouteActive(pathname, "/business/contact")
+                    ? "bg-purple-800 shadow-purple-300"
+                    : "bg-purple-700 shadow-purple-200 hover:bg-purple-800"
+                }`}
               >
                 {content.ctas.demoLabel}
               </Link>

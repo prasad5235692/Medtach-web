@@ -3,14 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { isAnyRouteActive, isRouteActive } from "@/lib/navActive";
 
 export default function Navbar() {
   const { session, logout } = useAuth();
   const { language } = useLanguage();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
@@ -25,6 +28,10 @@ export default function Navbar() {
   const primaryLinks = content.primaryLinks;
   const exploreLinks = content.exploreLinks;
   const moreLinks = content.moreLinks;
+  const exploreIsCurrent = isAnyRouteActive(pathname, ["/courses", "/course", ...exploreLinks.map((link) => link.href)]);
+  const moreIsCurrent = isAnyRouteActive(pathname, moreLinks.map((link) => link.href));
+  const businessIsCurrent = isRouteActive(pathname, "/business");
+  const contactIsCurrent = isRouteActive(pathname, "/contact");
 
   const handleLogout = async () => {
     await logout();
@@ -41,50 +48,128 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">
-          {primaryLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-gray-600 transition hover:text-purple-700">
-              {link.label}
-            </Link>
-          ))}
+          {primaryLinks.map((link) => {
+            const isCurrent = isRouteActive(pathname, link.href);
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isCurrent ? "page" : undefined}
+                className={`rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+                  isCurrent
+                    ? "bg-purple-50 text-purple-800"
+                    : "text-gray-600 hover:text-purple-700"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
-            <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setCoursesOpen(true)} onClick={() => setCoursesOpen(!coursesOpen)}>
+            <button
+              className={`flex items-center gap-1 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+                coursesOpen
+                  ? "bg-purple-50 text-purple-800"
+                  : exploreIsCurrent
+                    ? "bg-purple-50/80 text-purple-800"
+                    : "text-gray-600 hover:text-purple-700"
+              }`}
+              onMouseEnter={() => setCoursesOpen(true)}
+              onClick={() => setCoursesOpen(!coursesOpen)}
+            >
               {content.exploreLabel} <ChevronDown size={14} className={`transition-transform ${coursesOpen ? "rotate-180" : ""}`} />
             </button>
             {coursesOpen && (
               <div className="absolute left-0 top-full w-80 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
-                <Link href="/courses" className="block border-b border-purple-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setCoursesOpen(false)}>
+                <Link
+                  href="/courses"
+                  aria-current={isRouteActive(pathname, "/courses") ? "page" : undefined}
+                  className={`block border-b border-purple-50 px-4 py-3 text-sm font-semibold transition ${
+                    isRouteActive(pathname, "/courses")
+                      ? "bg-purple-100 text-purple-800"
+                      : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                  }`}
+                  onClick={() => setCoursesOpen(false)}
+                >
                   {content.viewAllCoursesLabel} →
                 </Link>
                 <div className="py-1">
-                  {exploreLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setCoursesOpen(false)}>
-                      <span className="leading-tight">{link.label}</span>
-                    </Link>
-                  ))}
+                  {exploreLinks.map((link) => {
+                    const isCurrent = isRouteActive(pathname, link.href);
+
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm transition ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : "text-gray-600 hover:bg-purple-50 hover:text-purple-700"
+                        }`}
+                        onClick={() => setCoursesOpen(false)}
+                      >
+                        <span className="leading-tight">{link.label}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}
           </div>
 
           <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
-            <button className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-purple-700" onMouseEnter={() => setMoreOpen(true)} onClick={() => setMoreOpen(!moreOpen)}>
+            <button
+              className={`flex items-center gap-1 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+                moreOpen
+                  ? "bg-purple-50 text-purple-800"
+                  : moreIsCurrent
+                    ? "bg-purple-50/80 text-purple-800"
+                    : "text-gray-600 hover:text-purple-700"
+              }`}
+              onMouseEnter={() => setMoreOpen(true)}
+              onClick={() => setMoreOpen(!moreOpen)}
+            >
               {content.moreLabel} <ChevronDown size={14} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
               <div className="absolute left-0 top-full w-48 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
-                {moreLinks.map((link) =>
-                  link.href === "/join-as-teacher" ? (
-                    <Link key={link.href} href={link.href} className="flex items-center gap-2 border-t border-purple-50 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setMoreOpen(false)}>
+                {moreLinks.map((link) => {
+                  const isCurrent = isRouteActive(pathname, link.href);
+
+                  return link.href === "/join-as-teacher" ? (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={isCurrent ? "page" : undefined}
+                      className={`flex items-center gap-2 border-t border-purple-50 px-4 py-2.5 text-sm font-semibold transition ${
+                        isCurrent
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                      }`}
+                      onClick={() => setMoreOpen(false)}
+                    >
                       <span className="flex h-4 w-4 items-center justify-center rounded-full bg-purple-700 text-[9px] text-white">✦</span>
                       {link.label}
                     </Link>
                   ) : (
-                    <Link key={link.href} href={link.href} className="block px-4 py-2.5 text-sm text-gray-600 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setMoreOpen(false)}>
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={isCurrent ? "page" : undefined}
+                      className={`block px-4 py-2.5 text-sm transition ${
+                        isCurrent
+                          ? "bg-purple-50 font-semibold text-purple-800"
+                          : "text-gray-600 hover:bg-purple-50 hover:text-purple-700"
+                      }`}
+                      onClick={() => setMoreOpen(false)}
+                    >
                       {link.label}
                     </Link>
-                  ),
-                )}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -92,11 +177,21 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
           <div className="relative" onMouseEnter={() => setBusinessOpen(true)} onMouseLeave={() => setBusinessOpen(false)}>
-            <Link href="/business" className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition hover:text-purple-700">
+            <Link
+              href="/business"
+              aria-current={businessIsCurrent ? "page" : undefined}
+              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+                businessOpen
+                  ? "bg-purple-50 text-purple-800"
+                  : businessIsCurrent
+                    ? "bg-purple-50/80 text-purple-800"
+                    : "text-gray-600 hover:text-purple-700"
+              }`}
+            >
               {content.business.label}
               <ChevronDown
                 size={12}
-                className={`transition-transform duration-200 ${businessOpen ? "rotate-180" : ""}`}
+                className={`transition-transform duration-200 ${businessOpen ? "rotate-180 text-purple-600" : businessIsCurrent ? "text-purple-600" : ""}`}
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -107,11 +202,29 @@ export default function Navbar() {
 
             {businessOpen && (
               <div className="absolute right-0 top-full mt-0 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
-                <Link href="/business/pricing" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700" onClick={() => setBusinessOpen(false)}>
+                <Link
+                  href="/business/pricing"
+                  aria-current={isRouteActive(pathname, "/business/pricing") ? "page" : undefined}
+                  className={`flex items-center gap-2 px-4 py-3 text-sm transition ${
+                    isRouteActive(pathname, "/business/pricing")
+                      ? "bg-purple-50 font-semibold text-purple-800"
+                      : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                  }`}
+                  onClick={() => setBusinessOpen(false)}
+                >
                   {content.business.comparePlansLabel}
                 </Link>
 
-                <Link href="/business/request-demo" className="flex items-center gap-2 border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100" onClick={() => setBusinessOpen(false)}>
+                <Link
+                  href="/business/request-demo"
+                  aria-current={isRouteActive(pathname, "/business/request-demo") ? "page" : undefined}
+                  className={`flex items-center gap-2 border-t border-gray-50 px-4 py-3 text-sm font-semibold transition ${
+                    isRouteActive(pathname, "/business/request-demo")
+                      ? "bg-purple-100 text-purple-800"
+                      : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                  }`}
+                  onClick={() => setBusinessOpen(false)}
+                >
                   {content.business.tryLabel}
                 </Link>
               </div>
@@ -145,7 +258,7 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/login" className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50">
+              <Link href="/login" className={`rounded-lg border px-5 py-2 text-sm font-semibold transition ${isRouteActive(pathname, "/login") ? "border-purple-300 bg-purple-50 text-purple-800" : "border-purple-200 text-purple-700 hover:bg-purple-50"}`}>
                 {content.loginSignupLabel}
               </Link>
               <a
@@ -158,7 +271,15 @@ export default function Navbar() {
               </a>
             </>
           )}
-          <Link href="/contact" className="rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-orange-200 transition hover:bg-orange-600">
+          <Link
+            href="/contact"
+            aria-current={contactIsCurrent ? "page" : undefined}
+            className={`rounded-lg px-5 py-2 text-sm font-semibold text-white shadow-sm transition ${
+              contactIsCurrent
+                ? "bg-orange-600 shadow-orange-300"
+                : "bg-orange-500 shadow-orange-200 hover:bg-orange-600"
+            }`}
+          >
             {content.contactUsLabel}
           </Link>
         </div>
@@ -171,6 +292,7 @@ export default function Navbar() {
             if (!nextOpen) {
               setMobileCoursesOpen(false);
               setMobileMoreOpen(false);
+              setMobileBusinessOpen(false);
             }
           }}
           aria-label={content.toggleMenuLabel}
@@ -184,22 +306,36 @@ export default function Navbar() {
       {open && (
         <div className="max-h-[calc(100vh-92px)] overflow-y-auto border-t border-purple-100/60 bg-white px-6 py-4 shadow-lg md:hidden">
           <nav className="flex flex-col gap-4">
-            {primaryLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-600 transition hover:text-purple-700"
-                onClick={() => {
-                  setOpen(false);
-                  setMobileCoursesOpen(false);
-                  setMobileMoreOpen(false);
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {primaryLinks.map((link) => {
+              const isCurrent = isRouteActive(pathname, link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isCurrent ? "page" : undefined}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    isCurrent
+                      ? "bg-purple-50 text-purple-800"
+                      : "text-gray-600 hover:text-purple-700"
+                  }`}
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileCoursesOpen(false);
+                    setMobileMoreOpen(false);
+                    setMobileBusinessOpen(false);
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <div>
-              <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}>
+              <button
+                type="button"
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium ${exploreIsCurrent ? "bg-purple-50 text-purple-800" : "text-gray-700"}`}
+                onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}
+              >
                 <span>{content.exploreLabel}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileCoursesOpen ? "rotate-180" : ""}`} />
               </button>
@@ -207,49 +343,71 @@ export default function Navbar() {
                 <div className="border-purple-100 bg-purple-50/30 py-2">
                   <Link
                     href="/courses"
-                    className="block px-3 py-2 text-sm font-semibold text-purple-700"
+                    aria-current={isRouteActive(pathname, "/courses") ? "page" : undefined}
+                    className={`block px-3 py-2 text-sm font-semibold ${isRouteActive(pathname, "/courses") ? "bg-purple-100 text-purple-800" : "text-purple-700"}`}
                     onClick={() => {
                       setOpen(false);
                       setMobileCoursesOpen(false);
                       setMobileMoreOpen(false);
+                      setMobileBusinessOpen(false);
                     }}
                   >
                     {content.viewAllCoursesLabel}
                   </Link>
-                  {exploreLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
-                      onClick={() => {
-                        setOpen(false);
-                        setMobileCoursesOpen(false);
-                        setMobileMoreOpen(false);
-                      }}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+                  {exploreLinks.map((link) => {
+                    const isCurrent = isRouteActive(pathname, link.href);
+
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`block px-3 py-2 text-sm transition ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : "text-gray-600 hover:text-purple-700"
+                        }`}
+                        onClick={() => {
+                          setOpen(false);
+                          setMobileCoursesOpen(false);
+                          setMobileMoreOpen(false);
+                          setMobileBusinessOpen(false);
+                        }}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
             <div>
-              <button type="button" className="flex w-full items-center justify-between text-left text-sm font-medium text-gray-700" onClick={() => setMobileMoreOpen(!mobileMoreOpen)}>
+              <button
+                type="button"
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium ${moreIsCurrent ? "bg-purple-50 text-purple-800" : "text-gray-700"}`}
+                onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
+              >
                 <span>{content.moreLabel}</span>
                 <ChevronDown size={16} className={`transition-transform ${mobileMoreOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileMoreOpen && (
                 <div className="border-purple-100 bg-purple-50/30 py-2">
-                  {moreLinks.map((link) =>
-                    link.href === "/join-as-Mentor" ? (
+                  {moreLinks.map((link) => {
+                    const isCurrent = isRouteActive(pathname, link.href);
+
+                    return link.href === "/join-as-Mentor" ? (
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="mx-2 mt-1 flex items-center gap-2 rounded-lg bg-purple-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-purple-800"
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`mx-2 mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-white transition ${
+                          isCurrent ? "bg-purple-800" : "bg-purple-700 hover:bg-purple-800"
+                        }`}
                         onClick={() => {
                           setOpen(false);
                           setMobileCoursesOpen(false);
                           setMobileMoreOpen(false);
+                          setMobileBusinessOpen(false);
                         }}
                       >
                         <span className="text-[10px]">✦</span>
@@ -259,17 +417,23 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="block px-3 py-2 text-sm text-gray-600 transition hover:text-purple-700"
+                        aria-current={isCurrent ? "page" : undefined}
+                        className={`block px-3 py-2 text-sm transition ${
+                          isCurrent
+                            ? "bg-purple-50 font-semibold text-purple-800"
+                            : "text-gray-600 hover:text-purple-700"
+                        }`}
                         onClick={() => {
                           setOpen(false);
                           setMobileCoursesOpen(false);
                           setMobileMoreOpen(false);
+                          setMobileBusinessOpen(false);
                         }}
                       >
                         {link.label}
                       </Link>
-                    ),
-                  )}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -277,7 +441,8 @@ export default function Navbar() {
               <div className="flex items-center justify-between">
                 <Link
                   href="/business"
-                  className="text-sm font-medium text-gray-600"
+                  aria-current={businessIsCurrent ? "page" : undefined}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium ${businessIsCurrent ? "bg-purple-50 text-purple-800" : "text-gray-600"}`}
                   onClick={() => {
                     setOpen(false);
                     setMobileBusinessOpen(false);
@@ -295,7 +460,12 @@ export default function Navbar() {
                 <div className="mt-1 overflow-hidden">
                   <Link
                     href="/business/pricing"
-                    className="block px-4 py-3 text-sm text-gray-700 transition hover:bg-purple-50 hover:text-purple-700"
+                    aria-current={isRouteActive(pathname, "/business/pricing") ? "page" : undefined}
+                    className={`block px-4 py-3 text-sm transition ${
+                      isRouteActive(pathname, "/business/pricing")
+                        ? "bg-purple-50 font-semibold text-purple-800"
+                        : "text-gray-700 hover:bg-purple-50 hover:text-purple-700"
+                    }`}
                     onClick={() => {
                       setOpen(false);
                       setMobileBusinessOpen(false);
@@ -306,7 +476,12 @@ export default function Navbar() {
 
                   <Link
                     href="/business/request-demo"
-                    className="block border-t border-gray-50 bg-purple-50 px-4 py-3 text-sm font-semibold text-purple-700 transition hover:bg-purple-100"
+                    aria-current={isRouteActive(pathname, "/business/request-demo") ? "page" : undefined}
+                    className={`block border-t border-gray-50 px-4 py-3 text-sm font-semibold transition ${
+                      isRouteActive(pathname, "/business/request-demo")
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                    }`}
                     onClick={() => {
                       setOpen(false);
                       setMobileBusinessOpen(false);
@@ -342,11 +517,17 @@ export default function Navbar() {
               <>
                 <Link
                   href="/courses"
-                  className="mt-2 block w-full rounded-lg border border-purple-200 px-5 py-2.5 text-center text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                  aria-current={isRouteActive(pathname, "/courses") ? "page" : undefined}
+                  className={`mt-2 block w-full rounded-lg border px-5 py-2.5 text-center text-sm font-semibold transition ${
+                    isRouteActive(pathname, "/courses")
+                      ? "border-purple-300 bg-purple-50 text-purple-800"
+                      : "border-purple-200 text-purple-700 hover:bg-purple-50"
+                  }`}
                   onClick={() => {
                     setOpen(false);
                     setMobileCoursesOpen(false);
                     setMobileMoreOpen(false);
+                    setMobileBusinessOpen(false);
                   }}
                 >
                   {content.loginSignupLabel}
@@ -360,6 +541,7 @@ export default function Navbar() {
                     setOpen(false);
                     setMobileCoursesOpen(false);
                     setMobileMoreOpen(false);
+                    setMobileBusinessOpen(false);
                   }}
                 >
                   {content.loginLabel}
@@ -368,11 +550,13 @@ export default function Navbar() {
             )}
             <Link
               href="/contact"
-              className="rounded-lg bg-orange-500 px-5 py-2.5 text-center text-sm font-semibold text-white"
+              aria-current={contactIsCurrent ? "page" : undefined}
+              className={`rounded-lg px-5 py-2.5 text-center text-sm font-semibold text-white ${contactIsCurrent ? "bg-orange-600" : "bg-orange-500"}`}
               onClick={() => {
                 setOpen(false);
                 setMobileCoursesOpen(false);
                 setMobileMoreOpen(false);
+                setMobileBusinessOpen(false);
               }}
             >
               {content.contactUsLabel}
