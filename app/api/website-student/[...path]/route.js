@@ -92,6 +92,14 @@ function getBackendUrlCandidates(segments, searchParams) {
   return getBackendBaseUrlCandidates().map((baseUrl) => buildBackendUrl(baseUrl, segments, searchParams));
 }
 
+function getResolvedBackendBaseUrls(backendBaseUrls) {
+  if (Array.isArray(backendBaseUrls) && backendBaseUrls.length > 0) {
+    return [...new Set(backendBaseUrls.filter(Boolean))];
+  }
+
+  return getBackendBaseUrlCandidates();
+}
+
 function getAccessToken(request) {
   return request.cookies.get(ACCESS_COOKIE)?.value || "";
 }
@@ -181,6 +189,18 @@ function isRetryableMissingRouteResponse(status, rawPayload) {
   );
 }
 
+function shouldTryNextBackendCandidate(result, rawPayload, retryOnAuthFailure = false) {
+  if (isRetryableMissingRouteResponse(result.status, rawPayload)) {
+    return true;
+  }
+
+  if (retryOnAuthFailure && !result.payload?.success && shouldClearSession(result.payload)) {
+    return true;
+  }
+
+  return false;
+}
+
 async function parseRequestBody(request) {
   if (request.method === "GET" || request.method === "HEAD") {
     return undefined;
@@ -205,12 +225,18 @@ async function parseRequestBody(request) {
   }
 }
 
-async function proxyToBackend({ request, segments, accessToken }) {
+async function proxyToBackend({
+  request,
+  segments,
+  accessToken,
+  backendBaseUrls: preferredBackendBaseUrls,
+  retryOnAuthFailure = false,
+}) {
   const headers = {
     Accept: "application/json",
   };
   const requestBody = await parseRequestBody(request);
-  let backendUrls = [];
+  let backendBaseUrls = [];
 
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
@@ -221,7 +247,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
   }
 
   try {
-    backendUrls = getBackendUrlCandidates(segments, request.nextUrl.searchParams);
+    backendBaseUrls = getResolvedBackendBaseUrls(preferredBackendBaseUrls);
   } catch (error) {
     return {
       payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
@@ -229,7 +255,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
     };
   }
 
-  if (!backendUrls.length) {
+  if (!backendBaseUrls.length) {
     return {
       payload: createErrorPayload("Student website backend URL is not configured"),
       status: 500,
@@ -238,7 +264,9 @@ async function proxyToBackend({ request, segments, accessToken }) {
 
   let lastFailure = null;
 
-  for (const backendUrl of backendUrls) {
+  for (const backendBaseUrl of backendBaseUrls) {
+    const backendUrl = buildBackendUrl(backendBaseUrl, segments, request.nextUrl.searchParams);
+
     try {
       const backendResponse = await fetch(backendUrl, {
         method: request.method,
@@ -259,9 +287,10 @@ async function proxyToBackend({ request, segments, accessToken }) {
       const result = {
         payload: payload || createErrorPayload("Empty backend response"),
         status: backendResponse.ok ? 200 : backendResponse.status || 500,
+        backendBaseUrl,
       };
 
-      if (isRetryableMissingRouteResponse(result.status, rawPayload)) {
+      if (shouldTryNextBackendCandidate(result, rawPayload, retryOnAuthFailure)) {
         lastFailure = result;
         continue;
       }
@@ -271,6 +300,7 @@ async function proxyToBackend({ request, segments, accessToken }) {
       lastFailure = {
         payload: createErrorPayload(`Unable to reach the student website API via ${backendUrl}`),
         status: 502,
+        backendBaseUrl,
       };
     }
   }
@@ -288,10 +318,10 @@ async function refreshStudentTokens(request) {
     return createUnauthorizedResult();
   }
 
-  let backendUrls = [];
+  let backendBaseUrls = [];
 
   try {
-    backendUrls = getBackendUrlCandidates(["refresh-token"], new URLSearchParams());
+    backendBaseUrls = getResolvedBackendBaseUrls();
   } catch (error) {
     return {
       payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
@@ -299,7 +329,7 @@ async function refreshStudentTokens(request) {
     };
   }
 
-  if (!backendUrls.length) {
+  if (!backendBaseUrls.length) {
     return {
       payload: createErrorPayload("Student website backend URL is not configured"),
       status: 500,
@@ -308,7 +338,9 @@ async function refreshStudentTokens(request) {
 
   let lastFailure = createUnauthorizedResult();
 
-  for (const backendUrl of backendUrls) {
+  for (const backendBaseUrl of backendBaseUrls) {
+    const backendUrl = buildBackendUrl(backendBaseUrl, ["refresh-token"], new URLSearchParams());
+
     try {
       const backendResponse = await fetch(backendUrl, {
         method: "POST",
@@ -332,9 +364,10 @@ async function refreshStudentTokens(request) {
       const result = {
         payload: payload || createErrorPayload("Empty backend response"),
         status: backendResponse.ok ? 200 : backendResponse.status || 500,
+        backendBaseUrl,
       };
 
-      if (isRetryableMissingRouteResponse(result.status, rawPayload)) {
+      if (shouldTryNextBackendCandidate(result, rawPayload, true)) {
         lastFailure = result;
         continue;
       }
@@ -344,6 +377,7 @@ async function refreshStudentTokens(request) {
       lastFailure = {
         payload: createErrorPayload(`Unable to reach the student website API via ${backendUrl}`),
         status: 502,
+        backendBaseUrl,
       };
     }
   }
@@ -354,6 +388,7 @@ async function refreshStudentTokens(request) {
 async function proxyProtectedRequest(request, segments) {
   let accessToken = getAccessToken(request);
   let refreshedAuthData = null;
+  let preferredBackendBaseUrls = undefined;
 
   if (!accessToken) {
     const refreshResult = await refreshStudentTokens(request);
@@ -367,12 +402,15 @@ async function proxyProtectedRequest(request, segments) {
 
     accessToken = refreshResult.payload.data?.accessToken || "";
     refreshedAuthData = refreshResult.payload.data || null;
+    preferredBackendBaseUrls = refreshResult.backendBaseUrl ? [refreshResult.backendBaseUrl] : undefined;
   }
 
   let result = await proxyToBackend({
     request,
     segments,
     accessToken,
+    backendBaseUrls: preferredBackendBaseUrls,
+    retryOnAuthFailure: !preferredBackendBaseUrls,
   });
 
   if (!result.payload?.success && isAuthFailure(result.payload) && !refreshedAuthData) {
@@ -380,10 +418,12 @@ async function proxyProtectedRequest(request, segments) {
 
     if (refreshResult?.payload?.success) {
       refreshedAuthData = refreshResult.payload.data || null;
+      preferredBackendBaseUrls = refreshResult.backendBaseUrl ? [refreshResult.backendBaseUrl] : undefined;
       result = await proxyToBackend({
         request,
         segments,
         accessToken: refreshResult.payload.data?.accessToken || "",
+        backendBaseUrls: preferredBackendBaseUrls,
       });
     }
   }
