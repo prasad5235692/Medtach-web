@@ -42,12 +42,12 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100/60 bg-white/95 shadow-sm backdrop-blur-sm">
-      <div className="page-container flex items-center justify-between py-3">
-        <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt={content.logoAlt} width={180} height={62} className="h-16 w-auto object-contain" priority />
+      <div className="page-container flex flex-nowrap items-center justify-between py-2 xl:py-3">
+        <Link href="/" className="flex shrink-0 items-center">
+          <Image src="/logo.png" alt={content.logoAlt} width={180} height={62} className="h-11 w-auto object-contain xl:h-16" priority />
         </Link>
 
-        <nav className="hidden items-center gap-5 md:flex">
+        <nav className="hidden flex-nowrap items-center gap-1 md:flex lg:gap-1.5 xl:gap-4">
           {primaryLinks.map((link) => {
             const isCurrent = isRouteActive(pathname, link.href);
 
@@ -56,7 +56,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={isCurrent ? "page" : undefined}
-                className={`rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+                className={`whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
                   isCurrent
                     ? "bg-purple-50 text-purple-800"
                     : "text-gray-600 hover:text-purple-700"
@@ -69,7 +69,7 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
             <button
-              className={`flex items-center gap-1 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
                 coursesOpen
                   ? "bg-purple-50 text-purple-800"
                   : exploreIsCurrent
@@ -122,7 +122,7 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
             <button
-              className={`flex items-center gap-1 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
                 moreOpen
                   ? "bg-purple-50 text-purple-800"
                   : moreIsCurrent
@@ -175,12 +175,12 @@ export default function Navbar() {
           </div>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden flex-nowrap items-center gap-1.5 md:flex xl:gap-3">
           <div className="relative" onMouseEnter={() => setBusinessOpen(true)} onMouseLeave={() => setBusinessOpen(false)}>
             <Link
               href="/business"
               aria-current={businessIsCurrent ? "page" : undefined}
-              className={`flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium transition ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
                 businessOpen
                   ? "bg-purple-50 text-purple-800"
                   : businessIsCurrent
@@ -232,7 +232,7 @@ export default function Navbar() {
           </div>
           {session ? (
             <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
-              <button className="flex items-center gap-2 rounded-full border border-purple-200 py-1 pl-1 pr-3 text-sm font-medium text-purple-700 transition hover:bg-purple-50" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((value) => !value)}>
+              <button className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-purple-200 py-1 pl-1 pr-2.5 text-xs font-medium text-purple-700 transition hover:bg-purple-50 xl:pr-3 xl:text-sm" onMouseEnter={() => setUserMenuOpen(true)} onClick={() => setUserMenuOpen((value) => !value)}>
                 {session.photo ? (
                   <span className="relative block h-7 w-7 overflow-hidden rounded-full">
                     <Image src={session.photo} alt={session.name} fill sizes="28px" unoptimized className="object-cover" />
@@ -258,14 +258,14 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/login" className={`rounded-lg border px-5 py-2 text-sm font-semibold transition ${isRouteActive(pathname, "/login") ? "border-purple-300 bg-purple-50 text-purple-800" : "border-purple-200 text-purple-700 hover:bg-purple-50"}`}>
+              <Link href="/login" className={`whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition lg:px-3 xl:px-5 xl:py-2 xl:text-sm ${isRouteActive(pathname, "/login") ? "border-purple-300 bg-purple-50 text-purple-800" : "border-purple-200 text-purple-700 hover:bg-purple-50"}`}>
                 {content.loginSignupLabel}
               </Link>
               <a
                 href={portalUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-lg border border-purple-200 px-5 py-2 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
+                className="whitespace-nowrap rounded-lg border border-purple-200 px-2.5 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 lg:px-3 xl:px-5 xl:py-2 xl:text-sm"
               >
                 {content.loginLabel}
               </a>
@@ -274,7 +274,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             aria-current={contactIsCurrent ? "page" : undefined}
-            className={`rounded-lg px-5 py-2 text-sm font-semibold text-white shadow-sm transition ${
+            className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition lg:px-3 xl:px-5 xl:py-2 xl:text-sm ${
               contactIsCurrent
                 ? "bg-orange-600 shadow-orange-300"
                 : "bg-orange-500 shadow-orange-200 hover:bg-orange-600"
