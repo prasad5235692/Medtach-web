@@ -6,6 +6,7 @@ const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
 const DEFAULT_WEBSITE_STUDENT_BASE_URL = "https://app-6rgaaxy4aq-uc.a.run.app/wedstudentuser";
+const PROTECTED_WEBSITE_STUDENT_SEGMENTS = new Set(["profile", "cart", "favorites", "purchases"]);
 const BACKEND_BASE_ENV_KEYS = [
   "WEBSITE_STUDENT_BASE_URL",
   "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL",
@@ -76,6 +77,10 @@ function getRoutePath(segments) {
   return segments.length ? `/${segments.join("/")}` : "";
 }
 
+function isProtectedWebsiteStudentRoute(segments) {
+  return PROTECTED_WEBSITE_STUDENT_SEGMENTS.has(String(segments[0] || "").toLowerCase());
+}
+
 function buildBackendUrl(baseUrl, segments, searchParams) {
   const queryString = searchParams.toString();
   const routePath = getRoutePath(segments);
@@ -91,15 +96,23 @@ function getAccessToken(request) {
   return request.cookies.get(ACCESS_COOKIE)?.value || "";
 }
 
+function getRefreshToken(request) {
+  return request.cookies.get(REFRESH_COOKIE)?.value || "";
+}
+
 function clearSessionCookies(response) {
   response.cookies.set(ACCESS_COOKIE, "", getCookieOptions(0));
   response.cookies.set(REFRESH_COOKIE, "", getCookieOptions(0));
 }
 
-function shouldClearSession(payload) {
+function isAuthFailure(payload) {
   return /student authentication required|invalid token|jwt expired|token expired/i.test(
     String(payload?.message || ""),
   );
+}
+
+function shouldClearSession(payload) {
+  return isAuthFailure(payload) || /refresh token|token error/i.test(String(payload?.message || ""));
 }
 
 function setSessionCookies(response, authData) {
@@ -132,6 +145,13 @@ function createErrorPayload(message) {
     success: false,
     message,
     data: [],
+  };
+}
+
+function createUnauthorizedResult() {
+  return {
+    payload: createErrorPayload("Student authentication required"),
+    status: 401,
   };
 }
 
@@ -261,24 +281,127 @@ async function proxyToBackend({ request, segments, accessToken }) {
   };
 }
 
-async function handleSessionRequest(request) {
-  const accessToken = getAccessToken(request);
+async function refreshStudentTokens(request) {
+  const refreshToken = getRefreshToken(request);
 
-  if (!accessToken) {
-    const response = NextResponse.json(createErrorPayload("Student authentication required"), {status: 401});
-    clearSessionCookies(response);
-    return response;
+  if (!refreshToken) {
+    return createUnauthorizedResult();
   }
 
-  const {payload} = await proxyToBackend({
+  let backendUrls = [];
+
+  try {
+    backendUrls = getBackendUrlCandidates(["refresh-token"], new URLSearchParams());
+  } catch (error) {
+    return {
+      payload: createErrorPayload(error instanceof Error ? error.message : "Student website backend URL is not configured"),
+      status: 500,
+    };
+  }
+
+  if (!backendUrls.length) {
+    return {
+      payload: createErrorPayload("Student website backend URL is not configured"),
+      status: 500,
+    };
+  }
+
+  let lastFailure = createUnauthorizedResult();
+
+  for (const backendUrl of backendUrls) {
+    try {
+      const backendResponse = await fetch(backendUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+        cache: "no-store",
+      });
+
+      const rawPayload = await backendResponse.text();
+      let payload = null;
+
+      try {
+        payload = rawPayload ? JSON.parse(rawPayload) : null;
+      } catch {
+        payload = createErrorPayload(normalizeBackendTextError(rawPayload, "POST", ["refresh-token"], backendUrl));
+      }
+
+      const result = {
+        payload: payload || createErrorPayload("Empty backend response"),
+        status: backendResponse.ok ? 200 : backendResponse.status || 500,
+      };
+
+      if (isRetryableMissingRouteResponse(result.status, rawPayload)) {
+        lastFailure = result;
+        continue;
+      }
+
+      return result;
+    } catch {
+      lastFailure = {
+        payload: createErrorPayload(`Unable to reach the student website API via ${backendUrl}`),
+        status: 502,
+      };
+    }
+  }
+
+  return lastFailure;
+}
+
+async function proxyProtectedRequest(request, segments) {
+  let accessToken = getAccessToken(request);
+  let refreshedAuthData = null;
+
+  if (!accessToken) {
+    const refreshResult = await refreshStudentTokens(request);
+
+    if (!refreshResult?.payload?.success) {
+      return {
+        ...createUnauthorizedResult(),
+        refreshedAuthData: null,
+      };
+    }
+
+    accessToken = refreshResult.payload.data?.accessToken || "";
+    refreshedAuthData = refreshResult.payload.data || null;
+  }
+
+  let result = await proxyToBackend({
     request,
-    segments: ["profile"],
+    segments,
     accessToken,
   });
+
+  if (!result.payload?.success && isAuthFailure(result.payload) && !refreshedAuthData) {
+    const refreshResult = await refreshStudentTokens(request);
+
+    if (refreshResult?.payload?.success) {
+      refreshedAuthData = refreshResult.payload.data || null;
+      result = await proxyToBackend({
+        request,
+        segments,
+        accessToken: refreshResult.payload.data?.accessToken || "",
+      });
+    }
+  }
+
+  return {
+    ...result,
+    refreshedAuthData,
+  };
+}
+
+async function handleSessionRequest(request) {
+  const { payload, refreshedAuthData } = await proxyProtectedRequest(request, ["profile"]);
   const normalizedPayload = normalizeAuthPayload(payload);
   const response = NextResponse.json(normalizedPayload, {status: normalizedPayload?.success ? 200 : 401});
 
-  if (!normalizedPayload?.success && shouldClearSession(normalizedPayload)) {
+  if (normalizedPayload?.success && refreshedAuthData) {
+    setSessionCookies(response, refreshedAuthData);
+  } else if (!normalizedPayload?.success && shouldClearSession(normalizedPayload)) {
     clearSessionCookies(response);
   }
 
@@ -317,20 +440,19 @@ async function handleLogoutRequest() {
 }
 
 async function handleProxyRequest(request, segments) {
-  const accessToken = getAccessToken(request);
-  const {payload, status} = await proxyToBackend({
-    request,
-    segments,
-    accessToken,
-  });
+  const proxyResult = isProtectedWebsiteStudentRoute(segments) ?
+    await proxyProtectedRequest(request, segments) :
+    await proxyToBackend({
+      request,
+      segments,
+      accessToken: getAccessToken(request),
+    });
+  const { payload, status, refreshedAuthData } = proxyResult;
   const response = NextResponse.json(payload, {status});
 
-  if (
-    accessToken &&
-    !payload?.success &&
-    ["profile", "cart", "favorites"].includes(segments[0]) &&
-    shouldClearSession(payload)
-  ) {
+  if (payload?.success && refreshedAuthData) {
+    setSessionCookies(response, refreshedAuthData);
+  } else if (!payload?.success && isProtectedWebsiteStudentRoute(segments) && shouldClearSession(payload)) {
     clearSessionCookies(response);
   }
 
