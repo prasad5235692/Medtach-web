@@ -42,12 +42,12 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-purple-100/60 bg-white/95 shadow-sm backdrop-blur-sm">
-      <div className="page-container flex flex-nowrap items-center justify-between py-2 xl:py-3">
+      <div className="page-container flex flex-nowrap items-center justify-between py-2 lg:py-2.5 xl:py-3">
         <Link href="/" className="flex shrink-0 items-center">
-          <Image src="/logo.png" alt={content.logoAlt} width={180} height={62} className="h-11 w-auto object-contain xl:h-16" priority />
+          <Image src="/logo.png" alt={content.logoAlt} width={180} height={62} className="h-10 w-auto object-contain lg:h-11 xl:h-13 2xl:h-16" priority />
         </Link>
 
-        <nav className="hidden flex-nowrap items-center gap-1 md:flex lg:gap-1.5 xl:gap-4">
+        <nav className="hidden flex-nowrap items-center gap-0.5 lg:flex lg:gap-1 xl:gap-2.5 2xl:gap-4">
           {primaryLinks.map((link) => {
             const isCurrent = isRouteActive(pathname, link.href);
 
@@ -56,7 +56,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={isCurrent ? "page" : undefined}
-                className={`whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
+                className={`whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition xl:px-2.5 xl:py-2 xl:text-sm 2xl:px-3 ${
                   isCurrent
                     ? "bg-purple-50 text-purple-800"
                     : "text-gray-600 hover:text-purple-700"
@@ -69,7 +69,7 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setCoursesOpen(false)}>
             <button
-              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition xl:px-2.5 xl:py-2 xl:text-sm 2xl:px-3 ${
                 coursesOpen
                   ? "bg-purple-50 text-purple-800"
                   : exploreIsCurrent
@@ -122,7 +122,7 @@ export default function Navbar() {
 
           <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
             <button
-              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition xl:px-2.5 xl:py-2 xl:text-sm 2xl:px-3 ${
                 moreOpen
                   ? "bg-purple-50 text-purple-800"
                   : moreIsCurrent
@@ -175,12 +175,12 @@ export default function Navbar() {
           </div>
         </nav>
 
-        <div className="hidden flex-nowrap items-center gap-1.5 md:flex xl:gap-3">
+        <div className="hidden flex-nowrap items-center gap-1 lg:flex xl:gap-2 2xl:gap-3">
           <div className="relative" onMouseEnter={() => setBusinessOpen(true)} onMouseLeave={() => setBusinessOpen(false)}>
             <Link
               href="/business"
               aria-current={businessIsCurrent ? "page" : undefined}
-              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition lg:px-2 xl:px-2.5 xl:py-2 xl:text-sm ${
+              className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition xl:px-2.5 xl:py-2 xl:text-sm 2xl:px-3 ${
                 businessOpen
                   ? "bg-purple-50 text-purple-800"
                   : businessIsCurrent
@@ -258,14 +258,14 @@ export default function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/login" className={`whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition lg:px-3 xl:px-5 xl:py-2 xl:text-sm ${isRouteActive(pathname, "/login") ? "border-purple-300 bg-purple-50 text-purple-800" : "border-purple-200 text-purple-700 hover:bg-purple-50"}`}>
+              <Link href="/login" className={`whitespace-nowrap rounded-lg border px-2 py-1.5 text-xs font-semibold transition xl:px-3.5 xl:py-2 xl:text-sm 2xl:px-5 ${isRouteActive(pathname, "/login") ? "border-purple-300 bg-purple-50 text-purple-800" : "border-purple-200 text-purple-700 hover:bg-purple-50"}`}>
                 {content.loginSignupLabel}
               </Link>
               <a
                 href={portalUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="whitespace-nowrap rounded-lg border border-purple-200 px-2.5 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 lg:px-3 xl:px-5 xl:py-2 xl:text-sm"
+                className="whitespace-nowrap rounded-lg border border-purple-200 px-2 py-1.5 text-xs font-semibold text-purple-700 transition hover:bg-purple-50 xl:px-3.5 xl:py-2 xl:text-sm 2xl:px-5"
               >
                 {content.loginLabel}
               </a>
@@ -274,7 +274,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             aria-current={contactIsCurrent ? "page" : undefined}
-            className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition lg:px-3 xl:px-5 xl:py-2 xl:text-sm ${
+            className={`whitespace-nowrap rounded-lg px-2 py-1.5 text-xs font-semibold text-white shadow-sm transition xl:px-4 xl:py-2 xl:text-sm 2xl:px-5 ${
               contactIsCurrent
                 ? "bg-orange-600 shadow-orange-300"
                 : "bg-orange-500 shadow-orange-200 hover:bg-orange-600"
@@ -285,7 +285,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="flex flex-col gap-1.5 md:hidden"
+          className="flex flex-col gap-1.5 lg:hidden"
           onClick={() => {
             const nextOpen = !open;
             setOpen(nextOpen);
@@ -304,7 +304,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="max-h-[calc(100vh-92px)] overflow-y-auto border-t border-purple-100/60 bg-white px-6 py-4 shadow-lg md:hidden">
+        <div className="max-h-[calc(100vh-60px)] overflow-y-auto border-t border-purple-100/60 bg-white px-6 py-4 shadow-lg lg:hidden">
           <nav className="flex flex-col gap-4">
             {primaryLinks.map((link) => {
               const isCurrent = isRouteActive(pathname, link.href);
