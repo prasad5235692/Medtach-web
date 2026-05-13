@@ -44,8 +44,18 @@ function getBackendBaseUrlCandidates() {
       return;
     }
 
-    appendBackendBaseUrl(baseUrls, seenBaseUrls, normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: false}));
-    appendBackendBaseUrl(baseUrls, seenBaseUrls, normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: true}));
+    const routeBaseUrl = normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: true});
+    const exactBaseUrl = normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: false});
+    const alreadyIncludesRouteBase = /\/wedstudentuser$/i.test(exactBaseUrl);
+
+    if (alreadyIncludesRouteBase) {
+      appendBackendBaseUrl(baseUrls, seenBaseUrls, exactBaseUrl);
+      return;
+    }
+
+    // Prefer the website-student route base for deployed backends and keep the raw base as fallback.
+    appendBackendBaseUrl(baseUrls, seenBaseUrls, routeBaseUrl);
+    appendBackendBaseUrl(baseUrls, seenBaseUrls, exactBaseUrl);
   });
 
   return baseUrls;

@@ -118,7 +118,7 @@ export default function LoginPage() {
     });
 
     if (!payload?.success) {
-      setSubmitError(content.errors.loginFallback);
+      setSubmitError(payload?.message || content.errors.loginFallback);
       setSubmitting(false);
       return;
     }
@@ -156,7 +156,7 @@ export default function LoginPage() {
     });
 
     if (!payload?.success) {
-      setSubmitError(content.errors.signupFallback);
+      setSubmitError(payload?.message || content.errors.signupFallback);
       setSubmitting(false);
       return;
     }
