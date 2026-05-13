@@ -221,6 +221,9 @@ export async function uploadStudentProfileImageFile(
     const signaturePayload = await prepareStudentProfilePhotoUpload();
 
     if (!signaturePayload?.success) {
+      console.error("[student-photo-upload] Unable to prepare Cloudinary upload", {
+        message: signaturePayload?.message || "Unknown upload preparation error",
+      });
       URL.revokeObjectURL(previewUrl);
       return signaturePayload;
     }
@@ -232,6 +235,9 @@ export async function uploadStudentProfileImageFile(
     );
 
     if (!uploadPayload?.success) {
+      console.error("[student-photo-upload] Cloudinary upload failed", {
+        message: uploadPayload?.message || "Unknown Cloudinary upload error",
+      });
       URL.revokeObjectURL(previewUrl);
       return uploadPayload;
     }
@@ -244,6 +250,11 @@ export async function uploadStudentProfileImageFile(
       uploadPayload;
 
     if (!payload?.success) {
+      console.error("[student-photo-upload] Profile photo finalize request failed", {
+        message: payload?.message || "Unknown profile photo finalize error",
+        hasProfilePhoto: Boolean(uploadPayload?.data?.profilePhoto),
+        hasProfilePhotoPublicId: Boolean(uploadPayload?.data?.profilePhotoPublicId),
+      });
       URL.revokeObjectURL(previewUrl);
       return payload;
     }

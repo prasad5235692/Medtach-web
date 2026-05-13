@@ -7,7 +7,7 @@ const ACCESS_MAX_AGE = 60 * 15;
 const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
 const PROTECTED_WEBSITE_STUDENT_SEGMENTS = new Set(["profile", "cart", "favorites", "purchases"]);
-const BACKEND_BASE_ENV_KEY = "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL";
+const BACKEND_BASE_ENV_KEYS = ["WEBSITE_STUDENT_BASE_URL", "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL"];
 
 function getCookieOptions(maxAge) {
   return {
@@ -19,30 +19,33 @@ function getCookieOptions(maxAge) {
   };
 }
 
-function normalizeBackendBaseUrl(baseUrl) {
-  return String(baseUrl || "").trim().replace(/\/+$/, "");
-}
-
-function getBackendBaseUrlVariants(baseUrl) {
-  const normalizedBaseUrl = normalizeBackendBaseUrl(baseUrl);
+function normalizeBackendBaseUrl(baseUrl, {appendRouteBase = true} = {}) {
+  const normalizedBaseUrl = String(baseUrl || "").trim().replace(/\/+$/, "");
 
   if (!normalizedBaseUrl) {
-    return [];
+    return "";
   }
 
-  if (/\/wedstudentuser$/i.test(normalizedBaseUrl)) {
-    return [normalizedBaseUrl];
+  if (!appendRouteBase || /\/wedstudentuser$/i.test(normalizedBaseUrl)) {
+    return normalizedBaseUrl;
   }
 
-  return [normalizedBaseUrl, `${normalizedBaseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`];
+  return `${normalizedBaseUrl}${WEBSITE_STUDENT_ROUTE_BASE}`;
 }
 
 function getBackendBaseUrlCandidates() {
   const baseUrls = [];
   const seenBaseUrls = new Set();
 
-  getBackendBaseUrlVariants(process.env[BACKEND_BASE_ENV_KEY]).forEach((baseUrl) => {
-    appendBackendBaseUrl(baseUrls, seenBaseUrls, baseUrl);
+  BACKEND_BASE_ENV_KEYS.forEach((envKey) => {
+    const rawBaseUrl = String(process.env[envKey] || "").trim();
+
+    if (!rawBaseUrl) {
+      return;
+    }
+
+    appendBackendBaseUrl(baseUrls, seenBaseUrls, normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: false}));
+    appendBackendBaseUrl(baseUrls, seenBaseUrls, normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: true}));
   });
 
   return baseUrls;
@@ -56,7 +59,7 @@ function getBackendBaseUrl() {
   }
 
   throw new Error(
-    `Student website backend URL is not configured. Set ${BACKEND_BASE_ENV_KEY}.`,
+    `Student website backend URL is not configured. Set ${BACKEND_BASE_ENV_KEYS.join(" or ")}.`,
   );
 }
 
@@ -80,14 +83,14 @@ function getBackendUrlCandidates(segments, searchParams) {
 }
 
 function appendBackendBaseUrl(baseUrls, seenBaseUrls, baseUrl) {
-  getBackendBaseUrlVariants(baseUrl).forEach((candidateBaseUrl) => {
-    if (!candidateBaseUrl || seenBaseUrls.has(candidateBaseUrl)) {
-      return;
-    }
+  const normalizedBaseUrl = normalizeBackendBaseUrl(baseUrl, {appendRouteBase: false});
 
-    seenBaseUrls.add(candidateBaseUrl);
-    baseUrls.push(candidateBaseUrl);
-  });
+  if (!normalizedBaseUrl || seenBaseUrls.has(normalizedBaseUrl)) {
+    return;
+  }
+
+  seenBaseUrls.add(normalizedBaseUrl);
+  baseUrls.push(normalizedBaseUrl);
 }
 
 function getPinnedBackendBaseUrl(request) {
@@ -98,9 +101,9 @@ function getPinnedBackendBaseUrl(request) {
   }
 
   try {
-    return normalizeBackendBaseUrl(decodeURIComponent(encodedBaseUrl));
+    return normalizeBackendBaseUrl(decodeURIComponent(encodedBaseUrl), {appendRouteBase: false});
   } catch {
-    return normalizeBackendBaseUrl(encodedBaseUrl);
+    return normalizeBackendBaseUrl(encodedBaseUrl, {appendRouteBase: false});
   }
 }
 
@@ -133,6 +136,16 @@ function getAccessToken(request) {
   return request.cookies.get(ACCESS_COOKIE)?.value || "";
 }
 
+function getAuthorizationHeaderAccessToken(request) {
+  const authHeader = request.headers.get("authorization") || "";
+
+  if (!authHeader.startsWith("Bearer ")) {
+    return "";
+  }
+
+  return authHeader.slice(7).trim();
+}
+
 function getRefreshToken(request) {
   return request.cookies.get(REFRESH_COOKIE)?.value || "";
 }
@@ -144,7 +157,7 @@ function clearSessionCookies(response) {
 }
 
 function setPinnedBackendBaseUrl(response, backendBaseUrl) {
-  const normalizedBaseUrl = normalizeBackendBaseUrl(backendBaseUrl);
+  const normalizedBaseUrl = normalizeBackendBaseUrl(backendBaseUrl, {appendRouteBase: false});
 
   if (!normalizedBaseUrl) {
     response.cookies.set(BACKEND_BASE_COOKIE, "", getCookieOptions(0));
@@ -178,18 +191,23 @@ function setSessionCookies(response, authData) {
   response.cookies.set(REFRESH_COOKIE, authData.refreshToken, getCookieOptions(REFRESH_MAX_AGE));
 }
 
-function normalizeAuthPayload(payload) {
+function normalizeAuthPayload(payload, {includeAccessToken = false} = {}) {
   if (!payload?.success) {
     return payload;
   }
 
   const userData = payload?.data?.userData || payload?.data || null;
+  const normalizedData = {
+    userData,
+  };
+
+  if (includeAccessToken && payload?.data?.accessToken) {
+    normalizedData.accessToken = payload.data.accessToken;
+  }
 
   return {
     ...payload,
-    data: {
-      userData,
-    },
+    data: normalizedData,
   };
 }
 
@@ -208,6 +226,10 @@ function createUnauthorizedResult() {
   };
 }
 
+function logProxyWarning(message, details = {}) {
+  console.warn(`[website-student proxy] ${message}`, details);
+}
+
 function normalizeBackendTextError(rawPayload, requestMethod, segments, backendUrl) {
   const textPayload = String(rawPayload || "").trim();
 
@@ -218,7 +240,7 @@ function normalizeBackendTextError(rawPayload, requestMethod, segments, backendU
   const missingRouteMatch = textPayload.match(/Cannot\s+(GET|POST|PATCH|DELETE|PUT|HEAD|OPTIONS)\s+([^<\s]+)/i);
 
   if (missingRouteMatch) {
-    return `Backend route is unavailable at ${missingRouteMatch[2]} while calling ${backendUrl}. Check ${BACKEND_BASE_ENV_KEY} in the frontend deployment.`;
+    return `Backend route is unavailable at ${missingRouteMatch[2]} while calling ${backendUrl}. Check ${BACKEND_BASE_ENV_KEYS.join(" or ")} in the frontend deployment.`;
   }
 
   if (/<!doctype html|<html/i.test(textPayload)) {
@@ -248,25 +270,53 @@ function shouldTryNextBackendCandidate(result, rawPayload, retryOnAuthFailure = 
 
 async function parseRequestBody(request) {
   if (request.method === "GET" || request.method === "HEAD") {
-    return undefined;
+    return {
+      body: undefined,
+      bodyType: "empty",
+      contentType: "",
+    };
   }
 
   const contentType = request.headers.get("content-type") || "";
 
   if (contentType.includes("application/json")) {
-    return request.json().catch(() => ({}));
+    return {
+      body: await request.json().catch(() => ({})),
+      bodyType: "json",
+      contentType: "application/json",
+    };
+  }
+
+  if (contentType.includes("multipart/form-data") || contentType.includes("application/x-www-form-urlencoded")) {
+    return {
+      body: await request.formData().catch(() => undefined),
+      bodyType: "form-data",
+      contentType,
+    };
   }
 
   const rawBody = await request.text();
 
   if (!rawBody) {
-    return undefined;
+    return {
+      body: undefined,
+      bodyType: "empty",
+      contentType,
+    };
   }
 
   try {
-    return JSON.parse(rawBody);
+    return {
+      body: JSON.parse(rawBody),
+      bodyType: "json",
+      contentType: "application/json",
+    };
   } catch {
-    return undefined;
+    return {
+      body: rawBody,
+      bodyType: "text",
+      contentType: contentType || "text/plain;charset=UTF-8",
+    };
   }
 }
 
@@ -280,15 +330,17 @@ async function proxyToBackend({
   const headers = {
     Accept: "application/json",
   };
-  const requestBody = await parseRequestBody(request);
+  const {body: requestBody, bodyType, contentType} = await parseRequestBody(request);
   let backendBaseUrls = [];
 
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  if (requestBody !== undefined) {
+  if (bodyType === "json") {
     headers["Content-Type"] = "application/json";
+  } else if (bodyType === "text" && contentType) {
+    headers["Content-Type"] = contentType;
   }
 
   try {
@@ -318,7 +370,7 @@ async function proxyToBackend({
       const backendResponse = await fetch(backendUrl, {
         method: request.method,
         headers,
-        body: requestBody !== undefined ? JSON.stringify(requestBody) : undefined,
+        body: requestBody !== undefined ? (bodyType === "json" ? JSON.stringify(requestBody) : requestBody) : undefined,
         cache: "no-store",
       });
 
@@ -433,11 +485,22 @@ async function refreshStudentTokens(request) {
 }
 
 async function proxyProtectedRequest(request, segments) {
-  let accessToken = getAccessToken(request);
+  const cookieAccessToken = getAccessToken(request);
+  const headerAccessToken = getAuthorizationHeaderAccessToken(request);
+  const refreshToken = getRefreshToken(request);
+  let accessToken = cookieAccessToken || headerAccessToken;
   let refreshedAuthData = null;
   let preferredBackendBaseUrls = undefined;
 
   if (!accessToken) {
+    logProxyWarning("Protected request arrived without a student access token", {
+      routePath: getRoutePath(segments) || "/",
+      hasAccessCookie: Boolean(cookieAccessToken),
+      hasAuthorizationHeader: Boolean(headerAccessToken),
+      hasRefreshCookie: Boolean(refreshToken),
+      origin: request.headers.get("origin") || "",
+    });
+
     const refreshResult = await refreshStudentTokens(request);
 
     if (!refreshResult?.payload?.success) {
@@ -461,6 +524,15 @@ async function proxyProtectedRequest(request, segments) {
   });
 
   if (!result.payload?.success && isAuthFailure(result.payload) && !refreshedAuthData) {
+    logProxyWarning("Backend rejected the student access token", {
+      routePath: getRoutePath(segments) || "/",
+      backendBaseUrl: result.backendBaseUrl || "",
+      usedCookieToken: Boolean(cookieAccessToken),
+      usedHeaderToken: !cookieAccessToken && Boolean(headerAccessToken),
+      hasRefreshCookie: Boolean(refreshToken),
+      message: result.payload?.message || "Student authentication required",
+    });
+
     const refreshResult = await refreshStudentTokens(request);
 
     if (refreshResult?.payload?.success) {
@@ -507,7 +579,7 @@ async function handleAuthRequest(request, segments) {
     segments,
     accessToken: "",
   });
-  const normalizedPayload = normalizeAuthPayload(payload);
+  const normalizedPayload = normalizeAuthPayload(payload, {includeAccessToken: true});
   const response = NextResponse.json(normalizedPayload, {
     status: normalizedPayload?.success ? 200 : status,
   });
