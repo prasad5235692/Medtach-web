@@ -8,6 +8,7 @@ const REFRESH_MAX_AGE = 60 * 60 * 24 * 7;
 const WEBSITE_STUDENT_ROUTE_BASE = "/wedstudentuser";
 const PROTECTED_WEBSITE_STUDENT_SEGMENTS = new Set(["profile", "cart", "favorites", "purchases"]);
 const BACKEND_BASE_ENV_KEYS = ["WEBSITE_STUDENT_BASE_URL", "NEXT_PUBLIC_WEBSITE_STUDENT_BASE_URL"];
+const DEFAULT_BACKEND_BASE_URLS = ["https://app-6rgaaxy4aq-uc.a.run.app"];
 
 function getCookieOptions(maxAge) {
   return {
@@ -36,6 +37,7 @@ function normalizeBackendBaseUrl(baseUrl, {appendRouteBase = true} = {}) {
 function getBackendBaseUrlCandidates() {
   const baseUrls = [];
   const seenBaseUrls = new Set();
+  let hasConfiguredBaseUrl = false;
 
   BACKEND_BASE_ENV_KEYS.forEach((envKey) => {
     const rawBaseUrl = String(process.env[envKey] || "").trim();
@@ -43,6 +45,8 @@ function getBackendBaseUrlCandidates() {
     if (!rawBaseUrl) {
       return;
     }
+
+    hasConfiguredBaseUrl = true;
 
     const routeBaseUrl = normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: true});
     const exactBaseUrl = normalizeBackendBaseUrl(rawBaseUrl, {appendRouteBase: false});
@@ -57,6 +61,16 @@ function getBackendBaseUrlCandidates() {
     appendBackendBaseUrl(baseUrls, seenBaseUrls, routeBaseUrl);
     appendBackendBaseUrl(baseUrls, seenBaseUrls, exactBaseUrl);
   });
+
+  if (!hasConfiguredBaseUrl) {
+    DEFAULT_BACKEND_BASE_URLS.forEach((baseUrl) => {
+      const routeBaseUrl = normalizeBackendBaseUrl(baseUrl, {appendRouteBase: true});
+      const exactBaseUrl = normalizeBackendBaseUrl(baseUrl, {appendRouteBase: false});
+
+      appendBackendBaseUrl(baseUrls, seenBaseUrls, routeBaseUrl);
+      appendBackendBaseUrl(baseUrls, seenBaseUrls, exactBaseUrl);
+    });
+  }
 
   return baseUrls;
 }
