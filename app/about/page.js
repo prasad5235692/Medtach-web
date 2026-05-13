@@ -3,10 +3,8 @@ import SectionHeading from "@/components/SectionHeading";
 import Link from "next/link";
 
 const team = [
-  { name: "Dr. Kavitha Rajan",  role: "Founder & Director",           avatar: "KR", bg: "bg-purple-700" },
-  { name: "Mr. Senthil Kumar",  role: "Head of Training & Operations", avatar: "SK", bg: "bg-orange-500" },
-  { name: "Dr. Meena Iyer",     role: "Lead Faculty — Medical Coding", avatar: "MI", bg: "bg-purple-600" },
-  { name: "Ms. Rekha Venkatesh", role: "Lead Faculty — Medical Billing", avatar: "RV", bg: "bg-teal-600" },
+  { name: "Nithyanantham", role: "Managing Director", avatar: "N", bg: "bg-purple-700" },
+  { name: "Jenni Bowlin A", role: "Branch Head", avatar: "JB", bg: "bg-orange-500" },
 ];
 
 const milestones = [
@@ -139,7 +137,7 @@ export default function AboutPage() {
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Leadership" title="Meet Our Management Team" />
           </AnimateOnScroll>
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-6 md:grid-cols-2">
             {team.map((t, i) => (
               <AnimateOnScroll key={t.name} animation="fade-up" delay={i * 100}>
                 <div className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">

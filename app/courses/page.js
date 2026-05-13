@@ -68,7 +68,7 @@ export default async function CoursesPage() {
           </AnimateOnScroll>
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {healthcare.map((c, i) => (
-              <AnimateOnScroll key={c.slug} animation="fade-up" delay={i * 80}>
+              <AnimateOnScroll key={c.slug} animation="fade-up" delay={i * 80} className="h-full">
                 <CourseCard course={c} locale={locale} />
               </AnimateOnScroll>
             ))}

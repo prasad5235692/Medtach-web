@@ -1,12 +1,12 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
+import { localizeNodeTree, localizeText } from "@/lib/i18n/content";
+import { getLocale } from "@/lib/i18n/server";
 import Link from "next/link";
 
 const team = [
-  { name: "Dr. Kavitha Rajan",   role: "Founder & Director",            avatar: "KR", bg: "bg-purple-700" },
-  { name: "Mr. Senthil Kumar",   role: "Head of Training & Operations",  avatar: "SK", bg: "bg-orange-500" },
-  { name: "Dr. Meena Iyer",      role: "Lead Faculty — Medical Coding",  avatar: "MI", bg: "bg-purple-600" },
-  { name: "Ms. Rekha Venkatesh", role: "Lead Faculty — Medical Billing", avatar: "RV", bg: "bg-teal-600" },
+  { name: "Nithyanantham", role: "Managing Director", avatar: "N", bg: "bg-purple-700" },
+  { name: "Jenni Bowlin A", role: "Branch Head", avatar: "JB", bg: "bg-orange-500" },
 ];
 
 const milestones = [
@@ -18,12 +18,38 @@ const milestones = [
   { year: "2026", text: "3,000+ placements, 100% placement support, and a strong presence across Tamil Nadu." },
 ];
 
-export const metadata = {
-  title: "About Us — Medtech Career",
+const teamRoleTranslations = {
+  hi: {
+    Nithyanantham: "प्रबंध निदेशक",
+    "Jenni Bowlin A": "शाखा प्रमुख",
+  },
+  ml: {
+    Nithyanantham: "മാനേജിംഗ് ഡയറക്ടർ",
+    "Jenni Bowlin A": "ബ്രാഞ്ച് ഹെഡ്",
+  },
 };
 
-export default function AboutUsPage() {
-  return (
+export async function generateMetadata() {
+  const locale = await getLocale();
+  const titleByLocale = {
+    hi: "हमारे बारे में — मेडटेक करियर",
+    ml: "ഞങ്ങളേക്കുറിച്ച് — മെഡ്ടെക് കരിയർ",
+  };
+
+  return {
+    title: titleByLocale[locale] ?? localizeText(locale, "About Us — Medtech Career"),
+  };
+}
+
+export default async function AboutUsPage() {
+  const locale = await getLocale();
+  const localizedTeam = team.map((member) => ({
+    ...member,
+    role: teamRoleTranslations[locale]?.[member.name] ?? member.role,
+  }));
+
+  return localizeNodeTree(
+    locale,
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#faf5ff] pb-20 pt-36">
@@ -228,8 +254,8 @@ export default function AboutUsPage() {
           <AnimateOnScroll animation="fade-up">
             <SectionHeading center label="Leadership" title="Meet Our Management Team" />
           </AnimateOnScroll>
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {team.map((t, i) => (
+          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-6 md:grid-cols-2">
+            {localizedTeam.map((t, i) => (
               <AnimateOnScroll key={t.name} animation="fade-up" delay={i * 100}>
                 <div className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                   <div className={`flex h-16 w-16 items-center justify-center rounded-full ${t.bg} text-lg font-bold text-white shadow-md`}>

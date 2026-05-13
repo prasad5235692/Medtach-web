@@ -3,6 +3,64 @@ import { mergeLocalizedContent } from "@/lib/i18n/content";
 import { generatedCourseTranslationsOne } from "@/data/generated-course-translations-1";
 import { generatedCourseTranslationsTwo } from "@/data/generated-course-translations-2";
 
+const courseCategoryLabels = {
+  Healthcare: {
+    hi: "स्वास्थ्यसेवा",
+    ml: "ആരോഗ്യസേവനം",
+  },
+  School: {
+    hi: "स्कूल",
+    ml: "സ്കൂൾ",
+  },
+  Competitive: {
+    hi: "प्रतियोगी",
+    ml: "മത്സര പരീക്ഷ",
+  },
+};
+
+const visibleCourseTranslationOverrides = {
+  hi: {
+    bmct: {
+      duration: "1 महीना",
+      trainingDetails: {
+        duration: "66 घंटे (प्रति दिन 3 घंटे — 22 कक्षाएं)",
+      },
+    },
+    amct: {
+      duration: "2 महीने",
+      trainingDetails: {
+        duration: "126 घंटे (प्रति दिन 3 घंटे — 42 कक्षाएं)",
+      },
+    },
+    "cpc-certification": {
+      duration: "3 महीने",
+      trainingDetails: {
+        duration: "126 घंटे (प्रति दिन 3 घंटे — 42 कक्षाएं)",
+      },
+    },
+  },
+  ml: {
+    bmct: {
+      duration: "1 മാസം",
+      trainingDetails: {
+        duration: "66 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 22 ക്ലാസുകൾ)",
+      },
+    },
+    amct: {
+      duration: "2 മാസം",
+      trainingDetails: {
+        duration: "126 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 42 ക്ലാസുകൾ)",
+      },
+    },
+    "cpc-certification": {
+      duration: "3 മാസം",
+      trainingDetails: {
+        duration: "126 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 42 ക്ലാസുകൾ)",
+      },
+    },
+  },
+};
+
 const batchTwoTranslations = Object.keys(generatedCourseTranslationsTwo).reduce(
   (accumulator, slug) => {
     accumulator.hi[slug] = generatedCourseTranslationsTwo[slug].hi;
@@ -136,7 +194,7 @@ export const courses = [
       "Insurance denial resolution workflow",
       "Real hospital billing scenarios",
       "HIPAA compliance training",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "Medical Billing Training Manual",
@@ -159,8 +217,6 @@ export const courses = [
       "Medical Terminology & Anatomy Basics",
       "Introduction to ICD-10-CM",
       "Introduction to CPT-4 Codes",
-      "Healthcare Data & Documentation",
-      "Basic Claim Workflow",
       "Mock Assessment & Evaluation",
     ],
     highlights: [
@@ -173,9 +229,7 @@ export const courses = [
       "Medical Terminology",
       "Complete Anatomy, Physiology & Pathology",
       "ICD-10-CM General Coding Guidelines & conventions",
-      "ICD-10-CM Chapter Specific Guidelines (Fracture, Laceration, Poisoning)",
       "Introduction to CPT-4 Procedure Coding, HCPCS and Modifiers",
-      "HIPAA Training",
       "Revenue Cycle Management overview",
     ],
     trainingDetails: {
@@ -185,7 +239,7 @@ export const courses = [
       weekend: "Sunday only: 6 hours, 10 AM–5 PM",
       language: "Tamil & English",
       softSkills: "Spoken English, Personality Development, Interview & Resume Preparation",
-      eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates (MBBS, BDS, BHMS, Pharmacy, Nursing, Biotechnology, etc.)",
+      eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates (MBBS, BDS, BHMS, Pharmacy, Nursing, Biotechnology, etc.); Non-Life Science also",
     },
     features: [
       "Comprehensive Training focused on Job Training and Placement",
@@ -194,7 +248,7 @@ export const courses = [
       "CPT-4 Procedural Coding, HCPCS and Modifiers",
       "Anatomy and Physiology training through videos",
       "Certification provided after successful completion",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "Anatomy, Physiology & Pathology Training Manual",
@@ -208,17 +262,17 @@ export const courses = [
     badge: "2 Months",
     badgeColor: "purple",
     description:
-      "Deep-dive into specialty-wise coding — Radiology, Surgery, E/M, Anesthesia, and Pathology. Suitable for BMCT graduates and life-science professionals.",
+      "Medical Terminology, Anatomy, ICD-10-CM, CPT-4, Healthcare Data, Documentation, and Basic Claim Workflow training suitable for BMCT graduates and life-science professionals.",
     duration: "2 months",
     students: "700+",
     level: "Intermediate",
     modules: [
-      "Specialty Coding: E/M & Radiology",
-      "Operative & Surgical Procedure Coding",
-      "Anesthesia Coding Rules",
-      "Pathology & Laboratory Codes",
-      "Modifier Application",
-      "Advanced Case Studies",
+      "Medical Terminology & Anatomy Basics",
+      "Introduction to ICD-10-CM",
+      "Introduction to CPT-4 Codes",
+      "Healthcare Data & Documentation",
+      "Basic Claim Workflow",
+      "Mock Assessment & Evaluation",
     ],
     highlights: [
       "50+ specialty coding case studies",
@@ -230,11 +284,8 @@ export const courses = [
       "Medical Terminology, Anatomy, Physiology & Pathology",
       "ICD-10-CM General Coding Guidelines & Chapter Specific Guidelines",
       "ICD-10-CM: HIV/Sepsis, Neoplasm, Diabetes, Hypertension, Pregnancy, Burns, Fracture, MI & Stroke Coding",
-      "CPT-4 Procedure Coding and NCCI edits",
-      "Radiology & Pathology Coding (sample charts)",
-      "E&M Coding (ER/ED, Critical Care), Surgery, Medicine & Anesthesia Coding",
+      "Radiology & Pathology Coding",
       "Revenue Cycle Management & HIPAA Compliance",
-      "CPC, CPC-A, CCS-P Exam Training using solved question papers",
     ],
     trainingDetails: {
       duration: "126 Hours (3 Hrs/day — 42 classes)",
@@ -246,13 +297,11 @@ export const courses = [
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
     },
     features: [
-      "Training completely focused on CCA, CCS-P (AHIMA) and CPC, CPC-A (AAPC) certification",
-      "Complete ICD-10-CM, CPT-4 and HCPCS training",
+      "Training completely focused on CPC certification",
       "RCM training with HIPAA compliance",
-      "Multi-speciality coding (E&M, ER, Anesthesia, Surgery, Radiology, Pathology, Medicine)",
       "Anatomy and Physiology training through videos",
       "Suitable for those planning to work in UAE, Australia, Canada",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "Anatomy, Physiology & Pathology Training Manual",
@@ -269,15 +318,14 @@ export const courses = [
     badge: "High ROI",
     badgeColor: "blue",
     description:
-      "Comprehensive CPC prep covering all AAPC exam domains. Our students consistently pass with our methodology — 8 solved CPC papers included.",
+      "Comprehensive CPC preparation covering all AAPC exam domains with solved CPC practice papers included.",
     duration: "3 months",
     students: "1,200+",
     level: "Advanced",
     modules: [
       "AAPC CPC Exam Structure & Strategy",
-      "Full ICD-10-CM & CPT-4 Revision",
-      "Timed Practice Exams (8 papers)",
-      "Specialty Modules Deep-Dive",
+      "Full CPT-4 & ICD-10-CM Revision",
+      "Timed Practice Exams (5 papers)",
       "Speed & Accuracy Workshops",
       "Final Mock Exam & Review",
     ],
@@ -291,7 +339,6 @@ export const courses = [
       "Medical Terminology, Anatomy, Physiology & Pathology",
       "ICD-10-CM General & Chapter Specific guidelines",
       "ICD-10-CM: Neoplasm, Hypertension, Pregnancy, Trauma & Aftercare Coding",
-      "CPT-4 Procedure Coding and NCCI edits",
       "Radiology, Pathology Coding",
       "E&M Coding, Surgery Coding & Anesthesia Coding",
       "HIPAA Training & Revenue Cycle Management",
@@ -307,13 +354,13 @@ export const courses = [
       eligibility: "Any Medical, Paramedical, Life Science Graduates & Post Graduates",
     },
     features: [
-      "Training focused on CCA (AHIMA) and CPC, CPC-A (AAPC) certification",
+      "Training focused on CPC certification",
       "Complete ICD-10-CM, CPT-4 and HCPCS training",
       "RCM training with HIPAA compliance",
       "Multi-speciality coding (E&M, ER, Anesthesia, Surgery, Radiology, Pathology)",
       "Anatomy and Physiology training through videos",
       "Suitable for those planning to work in UAE, Australia, Canada",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "Anatomy, Physiology & Pathology Training Manual",
@@ -597,7 +644,7 @@ export const courses = [
       "Outpatient APC grouper and charge capture training",
       "Medical necessity, bundling rules and compliance",
       "CDM updates and fee schedule management",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "COC Training Manual",
@@ -655,7 +702,7 @@ export const courses = [
       "MS-DRG assignment and DRG optimisation",
       "CC/MCC and POA indicator training",
       "High-demand hospital inpatient coding role",
-      "Placement assurance after certification",
+      "Placement assistant after certification",
     ],
     studyMaterials: [
       "CIC Training Manual",
@@ -835,15 +882,23 @@ export function getCourses(locale = DEFAULT_LOCALE) {
   const resolvedLocale = resolveLocale(locale);
 
   if (resolvedLocale === DEFAULT_LOCALE) {
-    return courses;
+    return courses.map((course) => ({
+      ...course,
+      categoryLabel: course.category,
+    }));
   }
 
   return courses.map((course) => {
     const localizedCourse = mergeLocalizedContent(course, courseTranslations[resolvedLocale]?.[course.slug]);
+    const localizedWithOverrides = mergeLocalizedContent(
+      localizedCourse,
+      visibleCourseTranslationOverrides[resolvedLocale]?.[course.slug],
+    );
 
     return {
-      ...localizedCourse,
+      ...localizedWithOverrides,
       category: course.category,
+      categoryLabel: courseCategoryLabels[course.category]?.[resolvedLocale] ?? course.category,
     };
   });
 }

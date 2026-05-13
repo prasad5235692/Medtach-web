@@ -14,11 +14,11 @@ export const branchesPageContent = {
   branches: [
     {
       id: "thanjavur-branch-1",
-      name: "Thanjavur — Branch 1",
+      name: "Head Office",
       address:
         "No.7, 2nd Floor, Selvam Towers, New Housing Unit,\nOpp to Alamaram Bus Stand, Thanjavur — 613005",
-      phone: "+91-81227-52103",
-      email: "hello@medtechcareer.com",
+      phone: "+91 93637 28229",
+      email: "medtechcareer64@gmail.com",
       mapQuery: "MedTech+Career+Medical+Coding+Academy+Thanjavur+HO",
       badge: "Main Branch",
       badgeColor: "bg-purple-700",
@@ -28,8 +28,8 @@ export const branchesPageContent = {
       name: "Thanjavur — Branch 2",
       address:
         "Raja Serafoji Govt College,\nOpp to New Housing Unit, Thanjavur — 613005",
-      phone: "+91-93422-32855",
-      email: "thanjavur2@medtechcareer.com",
+      phone: "+91 93422 32855",
+      email: "medtechcareer64@gmail.com",
       mapQuery: "MedTech+Career+Medical+Coding+Academy+Thanjavur",
       badge: "Thanjavur",
       badgeColor: "bg-orange-500",
@@ -39,8 +39,8 @@ export const branchesPageContent = {
       name: "Trichy — Branch 3",
       address:
         "3rd Floor, Rockfort Towers, 52, Salai Rd,\nAnnamalai Nagar, Woraiyur, Trichy — 620001",
-      phone: "+91-73058-28229",
-      email: "trichy@medtechcareer.com",
+      phone: "+91 73058 28229",
+      email: "globalmedicalcodingtrichybranc@gmail.com",
       mapQuery: "MedTech+Career+Medical+Coding+Academy+Trichy",
       badge: "Trichy",
       badgeColor: "bg-teal-600",

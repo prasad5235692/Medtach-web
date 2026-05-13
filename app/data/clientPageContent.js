@@ -831,6 +831,7 @@ const clientPageContent = {
       { label: "Our Team", href: "/our-team" },
       { label: "College Training", href: "/college-training" },
       { label: "1:1 Counseling", href: "/counseling" },
+      { label: "About Us", href: "/about-us" },
       { label: "Blog", href: "/blog" },
     ],
     viewAllCoursesLabel: "View All Courses",
@@ -970,9 +971,9 @@ const clientPageContent = {
     description:
       "Empowering students and professionals with world-class online education in healthcare coding, billing, and competitive exam coaching.",
     contact: {
-      phone: "+91 98765 43210",
-      email: "hello@MedtechCareer.com",
-      address: "12 Innovation Park, Bengaluru, KA 560001",
+      phone: "+91 93637 28229",
+      email: "medtechcareer64@gmail.com",
+      address: "No.7, 2nd Floor, Selvam Towers, New Housing Unit, Opp to Alamaram Bus Stand, Thanjavur — 613005",
     },
     sections: [
       {
@@ -2004,6 +2005,7 @@ const clientPageTranslations = {
         { label: "हमारी टीम", href: "/our-team" },
         { label: "कॉलेज प्रशिक्षण", href: "/college-training" },
         { label: "1:1 काउंसलिंग", href: "/counseling" },
+        { label: "हमारे बारे में", href: "/about-us" },
         { label: "ब्लॉग", href: "/blog" },
       ],
       viewAllCoursesLabel: "सभी कोर्स देखें",
@@ -3151,6 +3153,7 @@ const clientPageTranslations = {
         { label: "ഞങ്ങളുടെ ടീം", href: "/our-team" },
         { label: "കോളേജ് ട്രെയിനിംഗ്", href: "/college-training" },
         { label: "1:1 കൗൺസിലിംഗ്", href: "/counseling" },
+        { label: "ഞങ്ങളേക്കുറിച്ച്", href: "/about-us" },
         { label: "ബ്ലോഗ്", href: "/blog" },
       ],
       viewAllCoursesLabel: "എല്ലാ കോഴ്സുകളും കാണൂ",

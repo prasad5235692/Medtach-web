@@ -14,6 +14,24 @@ function isDirectImageSource(value) {
   return /^(blob:|data:)/i.test(String(value || ""));
 }
 
+function getCourseRouteAliases(href) {
+  const normalizedHref = String(href || "");
+
+  if (normalizedHref.startsWith("/course/")) {
+    return [normalizedHref, normalizedHref.replace("/course/", "/courses/")];
+  }
+
+  if (normalizedHref.startsWith("/courses/")) {
+    return [normalizedHref, normalizedHref.replace("/courses/", "/course/")];
+  }
+
+  return [normalizedHref];
+}
+
+function isExploreLinkActive(pathname, href) {
+  return isAnyRouteActive(pathname, getCourseRouteAliases(href));
+}
+
 export default function Navbar() {
   const { session, logout } = useAuth();
   const { language } = useLanguage();
@@ -33,7 +51,7 @@ export default function Navbar() {
   const exploreLinks = content.exploreLinks;
   const moreLinks = content.moreLinks;
   const exploreIsCurrent = isAnyRouteActive(pathname, ["/courses", "/course", ...exploreLinks.map((link) => link.href)]);
-  const moreIsCurrent = isAnyRouteActive(pathname, moreLinks.map((link) => link.href));
+  const moreIsCurrent = isAnyRouteActive(pathname, ["/about", ...moreLinks.map((link) => link.href)]);
   const businessIsCurrent = isRouteActive(pathname, "/business");
   const contactIsCurrent = isRouteActive(pathname, "/contact");
   const profilePhoto = session?.photo || "";
@@ -103,7 +121,7 @@ export default function Navbar() {
                 </Link>
                 <div className="py-1">
                   {exploreLinks.map((link) => {
-                    const isCurrent = isRouteActive(pathname, link.href);
+                    const isCurrent = isExploreLinkActive(pathname, link.href);
 
                     return (
                       <Link
@@ -361,7 +379,7 @@ export default function Navbar() {
                     {content.viewAllCoursesLabel}
                   </Link>
                   {exploreLinks.map((link) => {
-                    const isCurrent = isRouteActive(pathname, link.href);
+                    const isCurrent = isExploreLinkActive(pathname, link.href);
 
                     return (
                       <Link

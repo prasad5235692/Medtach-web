@@ -39,7 +39,7 @@ export default async function CourseDetailPage({ params }) {
   const localizedCourses = getVisibleCourses(locale);
   const CourseIcon = categoryIcon[course.category] ?? BookOpen;
   const content = getCourseDetailPageContent(locale, course);
-  const categoryLabel = localizeText(locale, course.category);
+  const categoryLabel = course.categoryLabel ?? localizeText(locale, course.category);
   const trainingDetailRows = getCourseTrainingDetailRows(course, content);
 
   return (
