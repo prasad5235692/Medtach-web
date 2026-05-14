@@ -38,7 +38,7 @@ export default async function TestimonialsSection() {
           />
         </AnimateOnScroll>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
           {testimonials.map((t, i) => (
             <AnimateOnScroll
               key={t.name}

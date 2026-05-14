@@ -1,9 +1,11 @@
 ﻿import AnimateOnScroll from "@/components/AnimateOnScroll";
 import SectionHeading from "@/components/SectionHeading";
+import TestimonialCard from "@/components/TestimonialCard";
 import { getStaticPageContent } from "@/data/staticPageContent";
+import { getTestimonials } from "@/data/testimonials";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n/server";
-import { Briefcase, TrendingUp, Users, Award, Building2, CheckCircle, ArrowRight, BookOpen, MessageSquare, Handshake } from "lucide-react";
+import { Briefcase, TrendingUp, Users, Building2, CheckCircle, ArrowRight, BookOpen, MessageSquare, Handshake } from "lucide-react";
 
 const statIcons = {
   users: Users,
@@ -30,6 +32,7 @@ export async function generateMetadata() {
 export default async function PlacementsPage() {
   const locale = await getLocale();
   const content = getStaticPageContent("placements", locale);
+  const testimonials = getTestimonials(locale);
 
   return (
     <>
@@ -202,26 +205,9 @@ export default async function PlacementsPage() {
             />
           </AnimateOnScroll>
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {content.storiesSection.stories.map((story, i) => (
-              <AnimateOnScroll key={story.id} animation="fade-up" delay={i * 100}>
-                <div className="group flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                  <p className="text-sm italic leading-relaxed text-gray-600">
-                    &ldquo;{story.story}&rdquo;
-                  </p>
-                  <div className="mt-auto flex items-center gap-4 border-t border-gray-100 pt-5">
-                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${story.bg} text-sm font-bold text-white`}>
-                      {story.avatar}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold text-gray-900">{story.name}</p>
-                      <p className="text-xs text-gray-400">{story.role}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs font-semibold text-purple-700">{story.course}</p>
-                      <p className="text-xs font-bold text-green-600">{story.salary}</p>
-                    </div>
-                  </div>
-                </div>
+            {testimonials.map((testimonial, i) => (
+              <AnimateOnScroll key={testimonial.name} animation="fade-up" delay={i * 100} className="h-full">
+                <TestimonialCard testimonial={testimonial} />
               </AnimateOnScroll>
             ))}
           </div>
