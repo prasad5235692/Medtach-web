@@ -108,15 +108,16 @@ export default async function OurTeamPage() {
             {content.cta.description}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
+            {/* <Link
               href="/join-as-teacher"
               className="rounded-lg bg-orange-500 px-8 py-3.5 text-sm font-semibold transition hover:bg-orange-600"
             >
               {content.cta.primaryLabel}
-            </Link>
+            </Link> */}
             <Link
               href="/contact"
-              className="rounded-lg border border-white/30 px-8 py-3.5 text-sm font-semibold transition hover:bg-white/10"
+              // className="rounded-lg border border-white/30 px-8 py-3.5 text-sm font-semibold transition hover:bg-white/10"
+              className="rounded-lg bg-orange-500 px-8 py-3.5 text-sm font-semibold transition hover:bg-orange-600"
             >
               {content.cta.secondaryLabel}
             </Link>
