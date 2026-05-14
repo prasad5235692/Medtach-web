@@ -1155,7 +1155,7 @@ const clientPageContent = {
       { src: "/Clients/Omega_Logo_220w-01.png", alt: "Omega" },
       { src: "/Clients/pro1logo.svg", alt: "PRO 1 Healthcare" },
       { src: "/Clients/s2m-logo.svg", alt: "S2M Healthcare" },
-      { src: "/Clients/Medcode.jpg", alt: "Medcode" },
+      { src: "/Clients/Medcode.png", alt: "Medcode" },
       { src: "/Clients/Access-Healthcare-Logo.webp", alt: "Access Healthcare" },
       { src: "/Clients/VtechHealthcare.png", alt: "Vtech Health" },
       { src: "/Clients/clarus.png", alt: "Clarus" },
