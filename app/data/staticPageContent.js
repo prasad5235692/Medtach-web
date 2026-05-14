@@ -235,7 +235,7 @@ const staticPageContent = {
         {
           id: "awareness-workshop",
           title: "Medical Coding Awareness Workshop",
-          duration: "1 Day",
+          duration: "1 month",
           audience: "Final-year Life Science / Paramedical students",
           outcomes: [
             "Career overview of medical coding",

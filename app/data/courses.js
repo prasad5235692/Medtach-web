@@ -23,19 +23,19 @@ const visibleCourseTranslationOverrides = {
     bmct: {
       duration: "1 महीना",
       trainingDetails: {
-        duration: "66 घंटे (प्रति दिन 3 घंटे — 22 कक्षाएं)",
+        duration: "60 घंटे (प्रति दिन 2 घंटे — 30 कक्षाएं)",
       },
     },
     amct: {
       duration: "2 महीने",
       trainingDetails: {
-        duration: "126 घंटे (प्रति दिन 3 घंटे — 42 कक्षाएं)",
+        duration: "120 घंटे (प्रति दिन 2 घंटे — 60 कक्षाएं)",
       },
     },
     "cpc-certification": {
       duration: "3 महीने",
       trainingDetails: {
-        duration: "126 घंटे (प्रति दिन 3 घंटे — 42 कक्षाएं)",
+        duration: "180 घंटे (प्रति दिन 2 घंटे — 90 कक्षाएं)",
       },
     },
   },
@@ -43,19 +43,19 @@ const visibleCourseTranslationOverrides = {
     bmct: {
       duration: "1 മാസം",
       trainingDetails: {
-        duration: "66 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 22 ക്ലാസുകൾ)",
+        duration: "60 മണിക്കൂർ (ദിവസം 2 മണിക്കൂർ — 30 ക്ലാസുകൾ)",
       },
     },
     amct: {
       duration: "2 മാസം",
       trainingDetails: {
-        duration: "126 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 42 ക്ലാസുകൾ)",
+        duration: "120 മണിക്കൂർ (ദിവസം 2 മണിക്കൂർ — 60 ക്ലാസുകൾ)",
       },
     },
     "cpc-certification": {
       duration: "3 മാസം",
       trainingDetails: {
-        duration: "126 മണിക്കൂർ (ദിവസം 3 മണിക്കൂർ — 42 ക്ലാസുകൾ)",
+        duration: "180 മണിക്കൂർ (ദിവസം 2 മണിക്കൂർ — 90 ക്ലാസുകൾ)",
       },
     },
   },
@@ -233,7 +233,7 @@ export const courses = [
       "Revenue Cycle Management overview",
     ],
     trainingDetails: {
-      duration: "66 Hours (3 Hrs/day — 22 classes)",
+      duration: "60 Hours (2 Hrs/day — 30 classes Hrs/)",
       batches: "Weekdays & Weekend batches available",
       weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM",
       weekend: "Sunday only: 6 hours, 10 AM–5 PM",
@@ -277,7 +277,7 @@ export const courses = [
     highlights: [
       "50+ specialty coding case studies",
       "Expert faculty with 10+ years' experience",
-      "Industry-recognised certificate (ACMC)",
+      "Industry-recognised certificate (AAPC)",
       "Direct pathway to CPC preparation",
     ],
     topics: [
@@ -288,7 +288,7 @@ export const courses = [
       "Revenue Cycle Management & HIPAA Compliance",
     ],
     trainingDetails: {
-      duration: "126 Hours (3 Hrs/day — 42 classes)",
+      duration: "120 Hours (2 Hrs/day — 60 classes)",
       batches: "Weekdays & Weekend batches available",
       weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM; Sat: 10 AM–5 PM",
       weekend: "Sat & Sun: 6 hours, 10 AM–5 PM",
@@ -305,7 +305,7 @@ export const courses = [
     ],
     studyMaterials: [
       "Anatomy, Physiology & Pathology Training Manual",
-      "Advanced Certification in Medical Coding (ACMC) Training Manual",
+      "Advanced Certification in Medical Coding (AAPC) Training Manual",
       "ICD-10-CM Volume 1 & 2 (Latest Edition)",
       "CPT-4 (Latest Edition)",
       "HCPCS Codebook (Latest Edition)",
@@ -345,7 +345,7 @@ export const courses = [
       "CPC sample question papers with hundreds of coding scenarios",
     ],
     trainingDetails: {
-      duration: "126 Hours (3 Hrs/day — 42 classes)",
+      duration: "180 Hours (2 Hrs/day — 90 classes)",
       batches: "Weekdays & Weekend batches available",
       weekdays: "Mon–Thu: 10 AM–1 PM or 4–7 PM; Sat: 10 AM–5 PM",
       weekend: "Sat & Sun: 6 hours, 10 AM–5 PM",
@@ -364,7 +364,7 @@ export const courses = [
     ],
     studyMaterials: [
       "Anatomy, Physiology & Pathology Training Manual",
-      "Advanced Certification in Medical Coding Training Manual",
+      "Advanced Certification in Medical Coding (AAPC) Training Manual",
       "CPC Sample Exam Question Papers",
       "CPC Previous Years Question Paper with Rationale and Answers",
       "E&M Sample Charts and Coding Scenarios for OP/IP/ER-ED",
