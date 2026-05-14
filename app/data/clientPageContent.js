@@ -32,13 +32,13 @@ const clientPageContent = {
         id: "phone",
         icon: "phone",
         label: "Phone",
-        value: "+91 81227 52103",
+        value: "+91 93637 28229 ",
       },
       {
         id: "email",
         icon: "mail",
         label: "Email",
-        value: "hello@medtechcareer.com",
+        value: "medtechcareer64@gmail.com",
       },
       {
         id: "hours",
@@ -54,6 +54,12 @@ const clientPageContent = {
           label: "Full Name",
           type: "text",
           placeholder: "Your name",
+        },
+        {
+          id: "age",
+          label: "Age",
+          type: "number",
+          placeholder: "Your age",
         },
         {
           id: "email",
@@ -1215,13 +1221,13 @@ const clientPageTranslations = {
           id: "phone",
           icon: "phone",
           label: "फोन",
-          value: "+91 81227 52103",
+          value: "+91 93637 28229",
         },
         {
           id: "email",
           icon: "mail",
           label: "ईमेल",
-          value: "hello@medtechcareer.com",
+          value: "medtechcareer64@gmail.com",
         },
         {
           id: "hours",
@@ -1237,6 +1243,12 @@ const clientPageTranslations = {
             label: "पूरा नाम",
             type: "text",
             placeholder: "अपना नाम लिखें",
+          },
+          {
+            id: "age",
+            label: "आयु",
+            type: "number",
+            placeholder: "अपनी आयु लिखें",
           },
           {
             id: "email",
@@ -2363,13 +2375,13 @@ const clientPageTranslations = {
           id: "phone",
           icon: "phone",
           label: "ഫോൺ",
-          value: "+91 81227 52103",
+          value: "+91 93637 28229",
         },
-        {
+        {   
           id: "email",
           icon: "mail",
           label: "ഇമെയിൽ",
-          value: "hello@medtechcareer.com",
+          value: "medtechcareer64@gmail.com",
         },
         {
           id: "hours",
@@ -2385,6 +2397,12 @@ const clientPageTranslations = {
             label: "പൂർണ്ണനാമം",
             type: "text",
             placeholder: "നിങ്ങളുടെ പേര്",
+          },
+          {
+            id: "age",
+            label: "വയസ്",
+            type: "number",
+            placeholder: "നിങ്ങളുടെ വയസ്",
           },
           {
             id: "email",

@@ -5,6 +5,18 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { MapPin, Phone, Mail, Clock, CheckCircle2 } from "lucide-react";
 
+const initialFormState = {
+  name: "",
+  age: "",
+  email: "",
+  phone: "",
+  collegeName: "",
+  location: "",
+  educationalQualification: "",
+  subject: "",
+  message: "",
+};
+
 const contactIcons = {
   "map-pin": MapPin,
   phone: Phone,
@@ -13,14 +25,39 @@ const contactIcons = {
 };
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
+  const [form, setForm] = useState(initialFormState);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const { language } = useLanguage();
   const content = getClientPageContent("contact", language);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSent(true);
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/webcontactuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !payload?.success) {
+        throw new Error(payload?.message || "Unable to send message right now.");
+      }
+
+      setSent(true);
+      setForm(initialFormState);
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : "Unable to send message right now.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -89,6 +126,8 @@ export default function ContactPage() {
                       <input
                         id={field.id}
                         type={field.type}
+                        min={field.id === "age" ? 1 : undefined}
+                        max={field.id === "age" ? 120 : undefined}
                         required
                         placeholder={field.placeholder}
                         value={form[field.id] ?? ""}
@@ -112,9 +151,12 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {error ? <p className="text-sm text-red-600">{error}</p> : null}
+
                 <button
                   type="submit"
-                  className="self-start rounded-lg bg-purple-700 px-8 py-3 text-sm font-semibold text-white transition hover:bg-purple-800"
+                  disabled={submitting}
+                  className="self-start rounded-lg bg-purple-700 px-8 py-3 text-sm font-semibold text-white transition hover:bg-purple-800 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {content.form.submitLabel}
                 </button>
