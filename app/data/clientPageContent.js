@@ -256,9 +256,9 @@ const clientPageContent = {
       categories: [
         { id: "all", label: "All" },
         { id: "medical-coding", label: "Medical Coding" },
-        { id: "medical-billing", label: "Medical Billing" },
-        { id: "clinical-documentation", label: "Clinical Documentation" },
-        { id: "risk-coding", label: "Risk Coding" },
+        // { id: "medical-billing", label: "Medical Billing" },
+        // { id: "clinical-documentation", label: "Clinical Documentation" },
+        // { id: "risk-coding", label: "Risk Coding" },
       ],
       durations: [
         { id: "all", label: "All" },
@@ -419,6 +419,10 @@ const clientPageContent = {
           label: "Full Name *",
           placeholder: "Your full name",
         },
+        age: {
+          label: "Age *",
+          placeholder: "Your age",
+        },
         email: {
           label: "Email *",
           placeholder: "you@email.com",
@@ -431,20 +435,24 @@ const clientPageContent = {
           label: "Qualification *",
           placeholder: "BSc Nursing, Pharmacy, etc.",
         },
+        location: {
+          label: "Location *",
+          placeholder: "City, State",
+        },
       },
       trackLabel: "Internship Track *",
       trackPlaceholder: "Select a track",
       trackOptions: [
         { id: "medical-coding-internship", label: "Medical Coding Internship" },
-        { id: "medical-billing-internship", label: "Medical Billing Internship" },
-        { id: "clinical-documentation-internship", label: "Clinical Documentation Internship" },
+        // { id: "medical-billing-internship", label: "Medical Billing Internship" },
+        // { id: "clinical-documentation-internship", label: "Clinical Documentation Internship" },
       ],
       motivationLabel: "Why do you want this internship?",
       motivationPlaceholder: "Brief introduction and your motivation...",
       submitLabel: "Submit Application ->",
       successTitle: "Application Submitted!",
       successDescription:
-        "Thank you for applying. Our team will contact you within 2 business days.",
+        "Thank you for applying. Our team will contact you soon.",
     },
     cta: {
       label: "Take the First Step",
@@ -1441,9 +1449,7 @@ const clientPageTranslations = {
         categories: [
           { id: "all", label: "सभी" },
           { id: "medical-coding", label: "मेडिकल कोडिंग" },
-          { id: "medical-billing", label: "मेडिकल बिलिंग" },
-          { id: "clinical-documentation", label: "क्लिनिकल डॉक्यूमेंटेशन" },
-          { id: "risk-coding", label: "रिस्क कोडिंग" },
+   
         ],
         durations: [
           { id: "all", label: "सभी" },
@@ -1604,6 +1610,10 @@ const clientPageTranslations = {
             label: "पूरा नाम *",
             placeholder: "अपना पूरा नाम",
           },
+          age: {
+            label: "आयु *",
+            placeholder: "अपनी आयु लिखें",
+          },
           email: {
             label: "ईमेल *",
             placeholder: "you@email.com",
@@ -1616,20 +1626,24 @@ const clientPageTranslations = {
             label: "योग्यता *",
             placeholder: "BSc Nursing, Pharmacy आदि",
           },
+          location: {
+            label: "स्थान *",
+            placeholder: "शहर, राज्य",
+          },
         },
         trackLabel: "इंटर्नशिप ट्रैक *",
         trackPlaceholder: "एक ट्रैक चुनें",
         trackOptions: [
           { id: "medical-coding-internship", label: "मेडिकल कोडिंग इंटर्नशिप" },
-          { id: "medical-billing-internship", label: "मेडिकल बिलिंग इंटर्नशिप" },
-          { id: "clinical-documentation-internship", label: "क्लिनिकल डॉक्यूमेंटेशन इंटर्नशिप" },
+          // { id: "medical-billing-internship", label: "मेडिकल बिलिंग इंटर्नशिप" },
+          // { id: "clinical-documentation-internship", label: "क्लिनिकल डॉक्यूमेंटेशन इंटर्नशिप" },
         ],
         motivationLabel: "आप यह इंटर्नशिप क्यों चाहते हैं?",
         motivationPlaceholder: "संक्षिप्त परिचय और अपनी प्रेरणा लिखें...",
         submitLabel: "आवेदन भेजें ->",
         successTitle: "आवेदन सबमिट हो गया!",
         successDescription:
-          "आवेदन करने के लिए धन्यवाद। हमारी टीम 2 कार्यदिवस के भीतर आपसे संपर्क करेगी।",
+          "आवेदन करने के लिए धन्यवाद। हमारी टीम जल्द ही आपसे संपर्क करेगी।",
       },
       cta: {
         label: "पहला कदम उठाएँ",
@@ -2595,9 +2609,7 @@ const clientPageTranslations = {
         categories: [
           { id: "all", label: "എല്ലാം" },
           { id: "medical-coding", label: "മെഡിക്കൽ കോഡിംഗ്" },
-          { id: "medical-billing", label: "മെഡിക്കൽ ബില്ലിംഗ്" },
-          { id: "clinical-documentation", label: "ക്ലിനിക്കൽ ഡോക്യുമെന്റേഷൻ" },
-          { id: "risk-coding", label: "റിസ്ക് കോഡിംഗ്" },
+  
         ],
         durations: [
           { id: "all", label: "എല്ലാം" },
@@ -2758,6 +2770,10 @@ const clientPageTranslations = {
             label: "പൂർണ്ണനാമം *",
             placeholder: "നിങ്ങളുടെ പൂർണ്ണനാമം",
           },
+          age: {
+            label: "വയസ് *",
+            placeholder: "നിങ്ങളുടെ വയസ്",
+          },
           email: {
             label: "ഇമെയിൽ *",
             placeholder: "you@email.com",
@@ -2770,20 +2786,24 @@ const clientPageTranslations = {
             label: "യോഗ്യത *",
             placeholder: "BSc Nursing, Pharmacy എന്നിവ",
           },
+          location: {
+            label: "സ്ഥലം *",
+            placeholder: "നഗരം, സംസ്ഥാനം",
+          },
         },
         trackLabel: "ഇന്റേൺഷിപ്പ് ട്രാക്ക് *",
         trackPlaceholder: "ഒരു ട്രാക്ക് തിരഞ്ഞെടുക്കുക",
         trackOptions: [
           { id: "medical-coding-internship", label: "മെഡിക്കൽ കോഡിംഗ് ഇന്റേൺഷിപ്പ്" },
-          { id: "medical-billing-internship", label: "മെഡിക്കൽ ബില്ലിംഗ് ഇന്റേൺഷിപ്പ്" },
-          { id: "clinical-documentation-internship", label: "ക്ലിനിക്കൽ ഡോക്യുമെന്റേഷൻ ഇന്റേൺഷിപ്പ്" },
+          // { id: "medical-billing-internship", label: "മെഡിക്കൽ ബില്ലിംഗ് ഇന്റേൺഷിപ്പ്" },
+          // { id: "clinical-documentation-internship", label: "ക്ലിനിക്കൽ ഡോക്യുമെന്റേഷൻ ഇന്റേൺഷിപ്പ്" },
         ],
         motivationLabel: "ഈ ഇന്റേൺഷിപ്പ് നിങ്ങൾക്ക് എന്തുകൊണ്ട് വേണം?",
         motivationPlaceholder: "ചുരുക്കത്തിലുള്ള പരിചയപ്പെടുത്തലും നിങ്ങളുടെ പ്രചോദനവും എഴുതൂ...",
         submitLabel: "അപേക്ഷ സമർപ്പിക്കുക ->",
         successTitle: "അപേക്ഷ സമർപ്പിച്ചു!",
         successDescription:
-          "അപേക്ഷിച്ചതിന് നന്ദി. ഞങ്ങളുടെ ടീം 2 പ്രവൃത്തിദിവസത്തിനകം നിങ്ങളെ ബന്ധപ്പെടും.",
+          "അപേക്ഷിച്ചതിന് നന്ദി. ഞങ്ങളുടെ ടീം ഉടൻ നിങ്ങളെ ബന്ധപ്പെടും.",
       },
       cta: {
         label: "ആദ്യ ചുവട് വെക്കൂ",

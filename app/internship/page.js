@@ -7,6 +7,17 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { Laptop, Users, Award, TrendingUp, CheckCircle2, CheckCircle, Filter, Clock, MonitorSmartphone, MapPin } from "lucide-react";
 
+const initialFormState = {
+  name: "",
+  age: "",
+  email: "",
+  phone: "",
+  qualification: "",
+  location: "",
+  course: "",
+  message: "",
+};
+
 const benefitIcons = {
   laptop: Laptop,
   users: Users,
@@ -15,16 +26,41 @@ const benefitIcons = {
 };
 
 export default function InternshipPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", qualification: "", course: "", message: "" });
+  const [form, setForm] = useState(initialFormState);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [activeDuration, setActiveDuration] = useState("all");
   const { language } = useLanguage();
   const content = getClientPageContent("internship", language);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSent(true);
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/webinternshipuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !payload?.success) {
+        throw new Error(payload?.message || "Unable to submit application right now.");
+      }
+
+      setSent(true);
+      setForm(initialFormState);
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : "Unable to submit application right now.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const filtered = content.tracks.filter((track) => {
@@ -236,6 +272,21 @@ export default function InternshipPage() {
                     />
                   </div>
                   <div>
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-gray-400">{content.form.fields.age.label}</label>
+                    <input
+                      required
+                      min={1}
+                      max={120}
+                      type="number"
+                      value={form.age}
+                      onChange={(e) => setForm({ ...form, age: e.target.value })}
+                      className="w-full rounded-lg border border-gray-200 bg-[#f8fafc] px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                      placeholder={content.form.fields.age.placeholder}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div>
                     <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-gray-400">{content.form.fields.email.label}</label>
                     <input
                       required
@@ -246,8 +297,6 @@ export default function InternshipPage() {
                       placeholder={content.form.fields.email.placeholder}
                     />
                   </div>
-                </div>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div>
                     <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-gray-400">{content.form.fields.phone.label}</label>
                     <input
@@ -259,6 +308,8 @@ export default function InternshipPage() {
                       placeholder={content.form.fields.phone.placeholder}
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div>
                     <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-gray-400">{content.form.fields.qualification.label}</label>
                     <input
@@ -268,6 +319,17 @@ export default function InternshipPage() {
                       onChange={(e) => setForm({ ...form, qualification: e.target.value })}
                       className="w-full rounded-lg border border-gray-200 bg-[#f8fafc] px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
                       placeholder={content.form.fields.qualification.placeholder}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-gray-400">{content.form.fields.location.label}</label>
+                    <input
+                      required
+                      type="text"
+                      value={form.location}
+                      onChange={(e) => setForm({ ...form, location: e.target.value })}
+                      className="w-full rounded-lg border border-gray-200 bg-[#f8fafc] px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+                      placeholder={content.form.fields.location.placeholder}
                     />
                   </div>
                 </div>
@@ -293,9 +355,11 @@ export default function InternshipPage() {
                     placeholder={content.form.motivationPlaceholder}
                   />
                 </div>
+                {error ? <p className="text-sm text-red-600">{error}</p> : null}
                 <button
                   type="submit"
-                  className="rounded-lg bg-purple-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-purple-800"
+                  disabled={submitting}
+                  className="rounded-lg bg-purple-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-purple-800 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {content.form.submitLabel}
                 </button>

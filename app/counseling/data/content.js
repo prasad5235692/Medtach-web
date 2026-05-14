@@ -7,7 +7,7 @@ const counselingPageContent = {
       titleLeading: "Personal",
       titleHighlight: "Counseling Sessions",
       description:
-        "Get one-on-one guidance from certified industry experts. Whether it's exam prep, career switch, or job interview coaching - your mentor is focused entirely on you.",
+        "Get one-on-one guidance from certified industry experts. Whether it's exam preparation, career switch, or job interview coaching - your mentor is focused entirely on you.",
       primaryLabel: "Book a Session ->",
       secondaryLabel: "View Pricing",
     },
@@ -185,7 +185,7 @@ const counselingPageContent = {
       titleLeading: "व्यक्तिगत",
       titleHighlight: "काउंसलिंग सेशंस",
       description:
-        "प्रमाणित उद्योग विशेषज्ञों से व्यक्तिगत मार्गदर्शन प्राप्त करें। चाहे परीक्षा की तैयारी हो, करियर बदलना हो या इंटरव्यू कोचिंग - आपका मेंटर पूरी तरह आप पर केंद्रित है।",
+        "प्रमाणित उद्योग विशेषज्ञों से व्यक्तिगत मार्गदर्शन प्राप्त करें। चाहे परीक्षा की तैयारी तैयारी, करियर बदलना हो या इंटरव्यू कोचिंग - आपका मेंटर पूरी तरह आप पर केंद्रित है।",
       primaryLabel: "सेशन बुक करें ->",
       secondaryLabel: "प्राइसिंग देखें",
     },
