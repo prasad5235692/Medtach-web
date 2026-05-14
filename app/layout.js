@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansMalayalam.variable} antialiased bg-[#f8fafc] text-gray-900`}
       >
-        <Providers initialLanguage={locale}>
+        <Providers key={locale} initialLanguage={locale}>
           <LayoutShell>{children}</LayoutShell>
         </Providers>
       </body>

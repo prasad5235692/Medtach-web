@@ -1,6 +1,34 @@
 import { DEFAULT_LOCALE, resolveLocale } from "@/lib/i18n/config";
 import { localizeContent, mergeLocalizedContent } from "@/lib/i18n/content";
 
+const FOOTER_SOCIAL_LINKS = [
+  {
+    label: "Instagram",
+    icon: "instagram",
+    href: "https://www.instagram.com/medtech_career_tnj/",
+  },
+  {
+    label: "Facebook",
+    icon: "facebook",
+    href: "https://www.facebook.com/medtechcareerthanjavur/",
+  },
+  {
+    label: "LinkedIn",
+    icon: "linkedin",
+    href: "https://linkedin.com/company/medtech-career-thanjavur",
+  },
+  {
+    label: "YouTube",
+    icon: "youtube",
+    href: "https://www.youtube.com/@medtechcareers",
+  },
+  {
+    label: "WhatsApp",
+    icon: "whatsapp",
+    href: "https://wa.me/919363728229",
+  },
+];
+
 const clientPageContent = {
   contact: {
     hero: {
@@ -836,7 +864,7 @@ const clientPageContent = {
     exploreLinks: [
       { label: "Basic Medical Coding Training", href: "/course/bmct" },
       { label: "Advanced Medical Coding Training", href: "/course/amct" },
-      { label: "Certified Medical Coding Training", href: "/course/cpc-certification" },
+      { label: "Certified Professional Coder Training", href: "/course/cpc-certification" },
       // { label: "Healthcare Information Technology", href: "/healthcare-information-technology" },
       // { label: "Physiotherapy Courses", href: "/physiotherapy-courses" },
       // { label: "Verify", href: "/verify" },
@@ -995,7 +1023,7 @@ const clientPageContent = {
         links: [
           { label: "Basic Medical Coding Training", href: "/course/bmct" },
           { label: "Advanced Medical Coding Training", href: "/course/amct" },
-          { label: "Certified Medical Coding Training", href: "/course/cpc-certification" },
+          { label: "Certified Professional Coder Training", href: "/course/cpc-certification" },
           // { label: "Medical Coding", href: "/course/medical-coding" },
           // { label: "Medical Billing", href: "/course/medical-billing" },
           // { label: "BMCT", href: "/course/bmct" },
@@ -1017,19 +1045,14 @@ const clientPageContent = {
           { label: "College Training", href: "/college-training" },
           { label: "1:1 Counseling", href: "/counseling" },
           { label: "Blog", href: "/blog" },
-          { label: "Join as Teacher", href: "/join-as-teacher" },
+          // { label: "Join as Teacher", href: "/join-as-teacher" },
           { label: "Contact", href: "/contact" },
           { label: "Verify", href: "/verify" },
           { label: "About Us", href: "/about-us" },
         ],
       },
     ],
-    socials: [
-      { label: "LinkedIn", icon: "linkedin", href: "#" },
-      { label: "Twitter", icon: "twitter", href: "#" },
-      { label: "YouTube", icon: "youtube", href: "#" },
-      { label: "Instagram", icon: "instagram", href: "#" },
-    ],
+    socials: FOOTER_SOCIAL_LINKS,
     policies: ["Privacy Policy", "Terms of Use", "Refund Policy"],
     copyrightTemplate: "© {year} Medtech Career. All rights reserved.",
   },
@@ -1037,17 +1060,12 @@ const clientPageContent = {
     logoAlt: "Medtech Career",
     description:
       "India's trusted healthcare education platform. Empowering careers in Medical Coding, Billing, and allied health sciences.",
-    socials: [
-      { label: "facebook", href: "#" },
-      { label: "instagram", href: "#" },
-      { label: "linkedin", href: "#" },
-      { label: "youtube", href: "#" },
-    ],
+    socials: FOOTER_SOCIAL_LINKS,
     courseSectionTitle: "Our Courses",
     courseLinks: [
       { label: "Basic Medical Coding Training", href: "/courses/bmct" },
       { label: "Advanced Medical Coding Training", href: "/courses/amct" },
-      { label: "Certified Medical Coding Training", href: "/courses/cpc-certification" },
+      { label: "Certified Professional Coder Training", href: "/courses/cpc-certification" },
       // { label: "Medical Coding", href: "/courses/medical-coding" },
       // { label: "Medical Billing", href: "/courses/medical-billing" },
       // { label: "CPC Certification", href: "/courses/cpc-certification" },
@@ -1061,7 +1079,7 @@ const clientPageContent = {
       { label: "Online Training", href: "/training" },
       { label: "Internship Program", href: "/internship" },
       { label: "Placement Assistance", href: "/placements" },
-      { label: "Join as Teacher", href: "/join-as-teacher" },
+      // { label: "Join as Teacher", href: "/join-as-teacher" },
       { label: "Our Team", href: "/our-team" },
       { label: "Blog", href: "/blog" },
     ],
@@ -1120,16 +1138,11 @@ const clientPageContent = {
           { label: "Medtech Career", href: "/" },
           { label: "All Courses", href: "/courses" },
           { label: "Blog", href: "/blog" },
-          { label: "Join as Teacher", href: "/join-as-teacher" },
+          // { label: "Join as Teacher", href: "/join-as-teacher" },
         ],
       },
     ],
-    socials: [
-      { label: "LinkedIn", icon: "linkedin", href: "#" },
-      { label: "Twitter", icon: "twitter", href: "#" },
-      { label: "YouTube", icon: "youtube", href: "#" },
-      { label: "Instagram", icon: "instagram", href: "#" },
-    ],
+    socials: FOOTER_SOCIAL_LINKS,
     policies: ["Privacy Policy", "Terms of Use", "Enterprise Agreement"],
     copyrightTemplate: "© {year} Medtech Career Business. All rights reserved.",
   },
@@ -1139,16 +1152,16 @@ const clientPageContent = {
     subtitle: "Trusted by leading healthcare BPOs & MNCs across India.",
     trustLine: "4,000+ students placed across 50+ companies",
     logos: [
-      { src: "/Clients/1-1.jpg", alt: "Client 1" },
-      { src: "/Clients/2.jpg", alt: "Client 2" },
-      { src: "/Clients/3-5.jpg", alt: "Client 3" },
-      { src: "/Clients/4.jpg", alt: "Client 4" },
-      { src: "/Clients/5.jpg", alt: "Client 5" },
-      { src: "/Clients/corro.jpg", alt: "Corro" },
-      { src: "/Clients/medcode.jpg", alt: "MedCode" },
-      { src: "/Clients/optum.jpg", alt: "Optum" },
-      { src: "/Clients/pro1.jpg", alt: "Pro1" },
-      { src: "/Clients/vee.jpg", alt: "Vee Technologies" },
+      { src: "/Clients/Omega_Logo_220w-01.png", alt: "Omega" },
+      { src: "/Clients/pro1logo.svg", alt: "PRO 1 Healthcare" },
+      { src: "/Clients/s2m-logo.svg", alt: "S2M Healthcare" },
+      { src: "/Clients/Medcode.jpg", alt: "Medcode" },
+      { src: "/Clients/Access-Healthcare-Logo.webp", alt: "Access Healthcare" },
+      { src: "/Clients/VtechHealthcare.png", alt: "Vtech Health" },
+      { src: "/Clients/clarus.png", alt: "Clarus" },
+      { src: "/Clients/AGS-Health-Logo-White.svg", alt: "AJS Healthcare" },
+      { src: "/Clients/CorroHealth-logo_white_v2.svg", alt: "Corro Health" },
+      { src: "/Clients/optum-logo-ora-rgb1.svg", alt: "Optum" },
     ],
   },
   courseActions: {
@@ -2022,7 +2035,7 @@ const clientPageTranslations = {
       exploreLinks: [
         { label: "बेसिक मेडिकल कोडिंग ट्रेनिंग", href: "/course/bmct" },
         { label: "एडवांस्ड मेडिकल कोडिंग ट्रेनिंग", href: "/course/amct" },
-        { label: "प्रमाणित मेडिकल कोडिंग प्रशिक्षण", href: "/course/cpc-certification" },
+        { label: "प्रमाणित प्रोफेशनल कोडर प्रशिक्षण", href: "/course/cpc-certification" },
         // { label: "हेल्थकेयर इन्फॉर्मेशन टेक्नोलॉजी", href: "/healthcare-information-technology" },
         // { label: "फिजियोथेरेपी कोर्स", href: "/physiotherapy-courses" },
         // { label: "वेरिफ़ाई", href: "/verify" },
@@ -2166,7 +2179,7 @@ const clientPageTranslations = {
           links: [
             { label: "बेसिक मेडिकल कोडिंग ट्रेनिंग", href: "/course/bmct" },
             { label: "एडवांस्ड मेडिकल कोडिंग ट्रेनिंग", href: "/course/amct" },
-            { label: "प्रमाणित मेडिकल कोडिंग प्रशिक्षण", href: "/course/cpc-certification" },
+            { label: "प्रमाणित प्रोफेशनल कोडर प्रशिक्षण", href: "/course/cpc-certification" },
             // { label: "मेडिकल कोडिंग", href: "/course/medical-coding" },
             // { label: "मेडिकल बिलिंग", href: "/course/medical-billing" },
             // { label: "BMCT", href: "/course/bmct" },
@@ -2204,7 +2217,7 @@ const clientPageTranslations = {
       courseLinks: [
         { label: "बेसिक मेडिकल कोडिंग ट्रेनिंग", href: "/courses/bmct" },
         { label: "एडवांस्ड मेडिकल कोडिंग ट्रेनिंग", href: "/courses/amct" },
-        { label: "प्रमाणित मेडिकल कोडिंग प्रशिक्षण", href: "/courses/cpc-certification" },
+        { label: "प्रमाणित प्रोफेशनल कोडर प्रशिक्षण", href: "/courses/cpc-certification" },
         // { label: "मेडिकल कोडिंग", href: "/courses/medical-coding" },
         // { label: "मेडिकल बिलिंग", href: "/courses/medical-billing" },
         // { label: "CPC प्रमाणन", href: "/courses/cpc-certification" },
@@ -3182,7 +3195,7 @@ const clientPageTranslations = {
       exploreLinks: [
         { label: "ബേസിക് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/bmct" },
         { label: "അഡ്വാൻസ്ഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/amct" },
-        { label: "സർട്ടിഫൈഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/cpc-certification" },
+        { label: "സർട്ടിഫൈഡ് പ്രൊഫഷണൽ കോഡർ ട്രെയിനിംഗ്", href: "/course/cpc-certification" },
         // { label: "ഹെൽത്ത്‌കെയർ ഇൻഫർമേഷൻ ടെക്നോളജി", href: "/healthcare-information-technology" },
         // { label: "ഫിസിയോതെറാപ്പി കോഴ്സുകൾ", href: "/physiotherapy-courses" },
         // { label: "വെരിഫൈ", href: "/verify" },
@@ -3326,7 +3339,7 @@ const clientPageTranslations = {
           links: [
             { label: "ബേസിക് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/bmct" },
             { label: "അഡ്വാൻസ്ഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/amct" },
-            { label: "സർട്ടിഫൈഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/course/cpc-certification" },
+            { label: "സർട്ടിഫൈഡ് പ്രൊഫഷണൽ കോഡർ ട്രെയിനിംഗ്", href: "/course/cpc-certification" },
             // { label: "മെഡിക്കൽ കോഡിംഗ്", href: "/course/medical-coding" },
             // { label: "മെഡിക്കൽ ബില്ലിംഗ്", href: "/course/medical-billing" },
             // { label: "BMCT", href: "/course/bmct" },
@@ -3364,7 +3377,7 @@ const clientPageTranslations = {
       courseLinks: [
         { label: "ബേസിക് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/courses/bmct" },
         { label: "അഡ്വാൻസ്ഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/courses/amct" },
-        { label: "സർട്ടിഫൈഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്", href: "/courses/cpc-certification" },
+        { label: "സർട്ടിഫൈഡ് പ്രൊഫഷണൽ കോഡർ ട്രെയിനിംഗ്", href: "/courses/cpc-certification" },
         // { label: "മെഡിക്കൽ കോഡിംഗ്", href: "/courses/medical-coding" },
         // { label: "മെഡിക്കൽ ബില്ലിംഗ്", href: "/courses/medical-billing" },
         // { label: "CPC സർട്ടിഫിക്കേഷൻ", href: "/courses/cpc-certification" },

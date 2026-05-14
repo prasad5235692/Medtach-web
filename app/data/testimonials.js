@@ -3,100 +3,70 @@ import { mergeLocalizedContent } from "@/lib/i18n/content";
 
 const baseTestimonials = [
   {
-    name: "Ananya Sharma",
-    role: "Medical Coder at Apollo Hospitals",
-    avatar: "AS",
+    name: "Reeshman Banu",
+    courseLabel: "Course: AMCT & CPC Training",
+    avatar: "RB",
     stars: 5,
-    text: "Medtech Career completely transformed my career. Within 3 months of completing the Medical Coding course I landed a job at Apollo. The faculty are incredibly knowledgeable and the placement support was genuine.",
+    text: "I recently completed my AMCT & CPC training at MedTech Career. The trainers were extremely supportive, friendly, and knowledgeable. Thanks to their guidance, I secured my placement at S2M, Chennai. I'm truly grateful for the training and support!",
   },
   {
-    name: "Karthik Subramanian",
-    role: "CPC-certified Coder, Chennai BPO",
-    avatar: "KS",
+    name: "K. Varsha",
+    courseLabel: "Course: CPC",
+    avatar: "KV",
     stars: 5,
-    text: "I cleared the CPC exam on my very first attempt thanks to the structured training and the 8 solved CPC papers. The trainers are CPC-certified themselves and explain complex concepts in simple terms.",
+    text: "I had a great learning experience at MedTech Career Academy. My trainer, Asmi Mam, explained every topic very clearly and politely. She always cleared my doubts patiently, even when I asked multiple times. The daily assessments were very helpful and boosted my confidence for the CPC exam. Overall, I am fully satisfied with the training and support provided by the academy. Highly recommended!",
   },
   {
-    name: "Priya Nair",
-    role: "Revenue Cycle Analyst, Bengaluru",
-    avatar: "PN",
+    name: "Mariyaan",
+    courseLabel: "Course: AMCT",
+    avatar: "MA",
     stars: 5,
-    text: "Medical Billing course gave me practical skills that I use every single day at work. The real-world case studies and live billing software practice made all the difference.",
+    text: "MedTech Career is one of the best places to learn medical coding. The trainers explain every concept clearly, even for beginners without a medical background. Classes are well-structured, practical-oriented, and easy to understand. They always clarify doubts and focus on real-time examples, assessments, and exam preparation, which builds confidence. The learning environment is positive and motivating. I strongly recommend MedTech Career Academy for anyone serious about starting a career in medical coding.",
   },
   {
-    name: "Saraswathi Devi",
-    role: "Medical Billing Executive, Hyderabad",
-    avatar: "SD",
+    name: "S. Rawla Afrin",
+    courseLabel: "Course: CPC",
+    avatar: "SA",
     stars: 5,
-    text: "As a BSc Nursing graduate, I wasn't sure if I could transition into medical coding. Medtech Career guided every step — from the BMCT basics to AMCT advanced coding. Got placed within 45 days!",
-  },
-  {
-    name: "Deepika Rao",
-    role: "HCC Coder, Leading US Healthcare BPO",
-    avatar: "DR",
-    stars: 5,
-    text: "The CRC programme opened a completely new career path for me. HCC risk adjustment coding is a premium niche and Medtech Career's training is thorough, practical, and exam-focused.",
-  },
-  {
-    name: "Suresh Kumar",
-    role: "Medical Billing Lead, Chennai",
-    avatar: "SK",
-    stars: 4,
-    text: "Excellent course content and very supportive mentors. The placement support was genuine and helped me get my first healthcare job quickly. Highly recommend for life science graduates.",
+    text: "I am Afrin. I completed B.E (CSE) and joined MedTech Career for CPC training. I successfully cleared the CPC exam. The trainers explained concepts in a simple and easy-to-understand way, and their step-by-step teaching method helped me understand coding guidelines clearly. Thanks to MedTech Career.",
   },
 ];
 
 const testimonialTranslations = {
   hi: {
-    "Ananya Sharma": {
-      role: "अपोलो हॉस्पिटल्स में मेडिकल कोडर",
-      text: "मेडटेक करियर ने मेरा करियर पूरी तरह बदल दिया। मेडिकल कोडिंग कोर्स पूरा करने के 3 महीनों के भीतर मुझे अपोलो में नौकरी मिली। फैकल्टी बेहद जानकार है और प्लेसमेंट सहायता वास्तविक थी।",
+    "Reeshman Banu": {
+      courseLabel: "कोर्स: AMCT और CPC प्रशिक्षण",
+      text: "मैंने हाल ही में MedTech Career में अपना AMCT और CPC प्रशिक्षण पूरा किया। प्रशिक्षक बहुत सहयोगी, मित्रवत और ज्ञानवान थे। उनके मार्गदर्शन की बदौलत मुझे चेन्नई के S2M में प्लेसमेंट मिला। मैं इस प्रशिक्षण और सहयोग के लिए सचमुच आभारी हूं!",
     },
-    "Karthik Subramanian": {
-      role: "CPC-प्रमाणित कोडर, चेन्नई BPO",
-      text: "संरचित प्रशिक्षण और 8 हल किए गए CPC पेपर की बदौलत मैंने पहली ही कोशिश में CPC परीक्षा पास कर ली। प्रशिक्षक स्वयं CPC-प्रमाणित हैं और कठिन विषयों को आसान भाषा में समझाते हैं।",
+    "K. Varsha": {
+      courseLabel: "कोर्स: CPC",
+      text: "MedTech Career Academy में मेरा सीखने का अनुभव बहुत अच्छा रहा। मेरी ट्रेनर Asmi मैम ने हर विषय को बहुत स्पष्टता और विनम्रता से समझाया। मैंने कई बार पूछा तब भी उन्होंने मेरे सभी संदेह धैर्यपूर्वक दूर किए। दैनिक आकलन बहुत उपयोगी थे और उन्होंने CPC परीक्षा के लिए मेरा आत्मविश्वास बढ़ाया। कुल मिलाकर, मैं अकादमी द्वारा दिए गए प्रशिक्षण और सहयोग से पूरी तरह संतुष्ट हूं। अत्यधिक अनुशंसित!",
     },
-    "Priya Nair": {
-      role: "रेवेन्यू साइकल विश्लेषक, बेंगलुरु",
-      text: "मेडिकल बिलिंग कोर्स ने मुझे वे व्यावहारिक कौशल दिए जिनका उपयोग मैं हर दिन काम में करती हूँ। वास्तविक केस स्टडी और लाइव बिलिंग सॉफ़्टवेयर अभ्यास ने बहुत अंतर पैदा किया।",
+    Mariyaan: {
+      courseLabel: "कोर्स: AMCT",
+      text: "MedTech Career मेडिकल कोडिंग सीखने के लिए सबसे अच्छी जगहों में से एक है। प्रशिक्षक हर अवधारणा को स्पष्ट रूप से समझाते हैं, यहां तक कि उन शुरुआती विद्यार्थियों के लिए भी जिनकी मेडिकल पृष्ठभूमि नहीं है। कक्षाएं सुव्यवस्थित, व्यावहारिक और आसानी से समझ में आने वाली हैं। वे हमेशा संदेह दूर करते हैं और वास्तविक उदाहरणों, आकलन तथा परीक्षा की तैयारी पर ध्यान देते हैं, जिससे आत्मविश्वास बढ़ता है। सीखने का वातावरण सकारात्मक और प्रेरणादायक है। मेडिकल कोडिंग में करियर शुरू करने के लिए गंभीर किसी भी व्यक्ति को मैं MedTech Career Academy की जोरदार सिफारिश करता हूं।",
     },
-    "Saraswathi Devi": {
-      role: "मेडिकल बिलिंग एग्जीक्यूटिव, हैदराबाद",
-      text: "BSc Nursing स्नातक होने के नाते मुझे यकीन नहीं था कि मैं मेडिकल कोडिंग में जा पाऊँगी या नहीं। मेडटेक करियर ने BMCT की बुनियाद से लेकर AMCT एडवांस कोडिंग तक हर कदम पर मार्गदर्शन किया। 45 दिनों के भीतर प्लेसमेंट मिल गया!",
-    },
-    "Deepika Rao": {
-      role: "HCC कोडर, प्रमुख अमेरिकी हेल्थकेयर BPO",
-      text: "CRC प्रोग्राम ने मेरे लिए बिल्कुल नया करियर मार्ग खोला। HCC रिस्क एडजस्टमेंट कोडिंग प्रीमियम विशेषज्ञता है और मेडटेक करियर का प्रशिक्षण गहन, व्यावहारिक और परीक्षा-केंद्रित है।",
-    },
-    "Suresh Kumar": {
-      role: "मेडिकल बिलिंग लीड, चेन्नई",
-      text: "उत्कृष्ट कोर्स सामग्री और बहुत सहयोगी मेंटर्स। प्लेसमेंट सहायता वास्तविक थी और उसने मुझे मेरा पहला हेल्थकेयर जॉब जल्दी दिलाने में मदद की। लाइफ साइंस स्नातकों के लिए अत्यधिक अनुशंसित।",
+    "S. Rawla Afrin": {
+      courseLabel: "कोर्स: CPC",
+      text: "मैं अफरीन हूं। मैंने B.E (CSE) पूरा किया और CPC प्रशिक्षण के लिए MedTech Career से जुड़ी। मैंने सफलतापूर्वक CPC परीक्षा पास की। प्रशिक्षकों ने अवधारणाओं को सरल और आसानी से समझ आने वाले तरीके से समझाया, और उनकी चरण-दर-चरण शिक्षण पद्धति ने मुझे कोडिंग दिशानिर्देशों को स्पष्ट रूप से समझने में मदद की। MedTech Career का धन्यवाद।",
     },
   },
   ml: {
-    "Ananya Sharma": {
-      role: "അപ്പോളോ ഹോസ്പിറ്റലിലെ മെഡിക്കൽ കോഡർ",
-      text: "മെഡ്ടെക് കരിയർ എന്റെ കരിയർ പൂർണ്ണമായി മാറ്റിമറിച്ചു. മെഡിക്കൽ കോഡിംഗ് കോഴ്സ് പൂർത്തിയാക്കി 3 മാസത്തിനുള്ളിൽ എനിക്ക് അപ്പോളോയിൽ ജോലി ലഭിച്ചു. അധ്യാപകർ വളരെ പരിചയസമ്പന്നരും പ്ലേസ്‌മെന്റ് പിന്തുണ യഥാർത്ഥവുമായിരുന്നു.",
+    "Reeshman Banu": {
+      courseLabel: "കോഴ്സ്: AMCT & CPC പരിശീലനം",
+      text: "ഞാൻ അടുത്തിടെയാണ് MedTech Career ൽ എന്റെ AMCT & CPC പരിശീലനം പൂർത്തിയാക്കിയത്. പരിശീലകർ വളരെ സഹായകരും സൗഹൃദപരവും അറിവുള്ളവരുമായിരുന്നു. അവരുടെ മാർഗനിർദേശത്തിന്റെ സഹായത്തോടെ എനിക്ക് ചെന്നൈയിലെ S2M ൽ പ്ലേസ്‌മെന്റ് ലഭിച്ചു. ഈ പരിശീലനത്തിനും പിന്തുണയ്ക്കും ഞാൻ ഹൃദയം നിറഞ്ഞ നന്ദിയുണ്ട്!",
     },
-    "Karthik Subramanian": {
-      role: "CPC സർട്ടിഫൈഡ് കോഡർ, ചെന്നൈ BPO",
-      text: "ഘടനാപരമായ പരിശീലനവും 8 പരിഹരിച്ച CPC പേപ്പറുകളും കാരണം ഞാൻ ആദ്യ ശ്രമത്തിൽ തന്നെ CPC പരീക്ഷ വിജയിച്ചു. പരിശീലകർ സ്വയം CPC സർട്ടിഫൈഡ് ആയതിനാൽ സങ്കീർണ്ണമായ ആശയങ്ങൾ പോലും ലളിതമായി വിശദീകരിച്ചു.",
+    "K. Varsha": {
+      courseLabel: "കോഴ്സ്: CPC",
+      text: "MedTech Career Academy യിലെ എന്റെ പഠനാനുഭവം വളരെ നല്ലതായിരുന്നു. എന്റെ ട്രെയിനറായ Asmi മാം ഓരോ വിഷയവും വളരെ വ്യക്തമായും വിനയത്തോടെയും വിശദീകരിച്ചു. ഞാൻ പല തവണ ചോദിച്ചപ്പോഴും അവർ എന്റെ സംശയങ്ങൾ ക്ഷമയോടെ തീർത്ത് തന്നു. ദൈനംദിന അസസ്മെന്റുകൾ വളരെ സഹായകരമായിരുന്നു, അത് CPC പരീക്ഷയ്ക്കുള്ള എന്റെ ആത്മവിശ്വാസം വർധിപ്പിച്ചു. മൊത്തത്തിൽ അക്കാദമി നൽകിയ പരിശീലനത്തിലും പിന്തുണയിലും ഞാൻ പൂർണ്ണമായി സംതൃപ്തയാണ്. ശക്തമായി ശുപാർശ ചെയ്യുന്നു!",
     },
-    "Priya Nair": {
-      role: "റവന്യൂ സൈക്കിൾ അനലിസ്റ്റ്, ബെംഗളൂരു",
-      text: "മെഡിക്കൽ ബില്ലിംഗ് കോഴ്സ് ഞാൻ ജോലി സ്ഥലത്ത് ദിവസേന ഉപയോഗിക്കുന്ന പ്രായോഗിക കഴിവുകൾ തന്നു. യഥാർത്ഥ കേസ് സ്റ്റഡികളും ലൈവ് ബില്ലിംഗ് സോഫ്റ്റ്‌വെയർ പരിശീലനവും വലിയ മാറ്റം സൃഷ്ടിച്ചു.",
+    Mariyaan: {
+      courseLabel: "കോഴ്സ്: AMCT",
+      text: "മെഡിക്കൽ കോഡിംഗ് പഠിക്കാൻ ഏറ്റവും നല്ല ഇടങ്ങളിൽ ഒന്നാണ് MedTech Career. മെഡിക്കൽ പശ്ചാത്തലം ഇല്ലാത്ത തുടക്കക്കാരൻമാർക്കുപോലും പരിശീലകർ ഓരോ ആശയവും വ്യക്തമായി വിശദീകരിക്കുന്നു. ക്ലാസുകൾ ക്രമബദ്ധവും പ്രായോഗികമേധാവിത്വമുള്ളതും എളുപ്പത്തിൽ മനസ്സിലാക്കാവുന്നതുമാണ്. അവർ എപ്പോഴും സംശയങ്ങൾ തീർക്കുകയും റിയൽ-ടൈം ഉദാഹരണങ്ങൾ, അസസ്മെന്റുകൾ, പരീക്ഷാ തയ്യാറെടുപ്പ് എന്നിവയിൽ ശ്രദ്ധ കേന്ദ്രീകരിക്കുകയും ചെയ്യുന്നു, അത് ആത്മവിശ്വാസം വളർത്തുന്നു. പഠനാന്തരീക്ഷം വളരെ പോസിറ്റീവും പ്രചോദനാത്മകവുമാണ്. മെഡിക്കൽ കോഡിംഗിൽ കരിയർ ആരംഭിക്കാൻ ആഗ്രഹിക്കുന്ന ഏവർക്കും ഞാൻ MedTech Career Academyയെ ശക്തമായി ശുപാർശ ചെയ്യുന്നു.",
     },
-    "Saraswathi Devi": {
-      role: "മെഡിക്കൽ ബില്ലിംഗ് എക്സിക്യൂട്ടീവ്, ഹൈദരാബാദ്",
-      text: "BSc Nursing ബിരുദധാരിയായ എന്നെ മെഡിക്കൽ കോഡിംഗിലേക്കു മാറാനാകുമോ എന്ന് സംശയം ഉണ്ടായിരുന്നു. BMCT അടിസ്ഥാനങ്ങളിൽ നിന്ന് AMCT അഡ്വാൻസ്ഡ് കോഡിംഗുവരെ മെഡ്ടെക് കരിയർ ഓരോ ഘട്ടത്തിലും വഴികാട്ടി. 45 ദിവസത്തിനുള്ളിൽ പ്ലേസ്‌മെന്റ് ലഭിച്ചു!",
-    },
-    "Deepika Rao": {
-      role: "HCC കോഡർ, പ്രമുഖ യു.എസ്. ഹെൽത്ത്‌കെയർ BPO",
-      text: "CRC പ്രോഗ്രാം എനിക്ക് പൂർണ്ണമായും പുതിയ കരിയർ പാത തുറന്നു തന്നു. HCC റിസ്‌ക് അഡ്ജസ്റ്റ്മെന്റ് കോഡിംഗ് ഒരു പ്രീമിയം നിഷ് മേഖല ആണ്, മെഡ്ടെക് കരിയറിന്റെ പരിശീലനം സമഗ്രവും പ്രായോഗികവും പരീക്ഷാമുഖവുമാണ്.",
-    },
-    "Suresh Kumar": {
-      role: "മെഡിക്കൽ ബില്ലിംഗ് ലീഡ്, ചെന്നൈ",
-      text: "അഭിനന്ദനാർഹമായ കോഴ്സ് ഉള്ളടക്കവും വളരെ സഹായകരമായ മെന്റർമാരും. പ്ലേസ്‌മെന്റ് പിന്തുണ യാഥാർത്ഥ്യമായിരുന്നു, അത് എന്റെ ആദ്യ ഹെൽത്ത്‌കെയർ ജോലി വേഗത്തിൽ നേടാൻ സഹായിച്ചു. ലൈഫ് സയൻസ് ബിരുദധാരികൾക്ക് ശക്തമായി ശുപാർശ ചെയ്യുന്നു.",
+    "S. Rawla Afrin": {
+      courseLabel: "കോഴ്സ്: CPC",
+      text: "ഞാൻ അഫ്രീൻ ആണ്. ഞാൻ B.E (CSE) പൂർത്തിയാക്കി CPC പരിശീലനത്തിനായി MedTech Career ൽ ചേർന്നു. ഞാൻ വിജയകരമായി CPC പരീക്ഷ പാസായി. പരിശീലകർ ആശയങ്ങൾ ലളിതവും എളുപ്പം മനസ്സിലാക്കാവുന്ന രീതിയിലും വിശദീകരിച്ചു, അവരുടെ ഘട്ടംഘട്ടമായ പഠനരീതി കോഡിംഗ് മാർഗനിർദേശങ്ങൾ എനിക്ക് വ്യക്തമായി മനസ്സിലാക്കാൻ സഹായിച്ചു. MedTech Career ന് നന്ദി.",
     },
   },
 };

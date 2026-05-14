@@ -1,8 +1,10 @@
 ﻿import { Star, Quote } from "lucide-react";
 
 export default function TestimonialCard({ testimonial }) {
+  const subtitle = testimonial.courseLabel || testimonial.role;
+
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       {/* Background accent */}
       <div
         aria-hidden="true"
@@ -15,25 +17,27 @@ export default function TestimonialCard({ testimonial }) {
         className="absolute right-6 top-5 text-purple-100 group-hover:text-purple-200 transition-colors"
       />
 
-      {/* Stars */}
-      <div className="relative flex gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            size={14}
-            className={
-              i < testimonial.stars
-                ? "fill-yellow-400 text-yellow-400"
-                : "fill-gray-100 text-gray-200"
-            }
-          />
-        ))}
-      </div>
+      <div className="relative flex flex-1 flex-col">
+        {/* Stars */}
+        <div className="flex gap-0.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              size={14}
+              className={
+                i < testimonial.stars
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "fill-gray-100 text-gray-200"
+              }
+            />
+          ))}
+        </div>
 
-      {/* Quote */}
-      <p className="relative mt-4 text-sm leading-relaxed text-gray-600 italic">
-        &ldquo;{testimonial.text}&rdquo;
-      </p>
+        {/* Quote */}
+        <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-600 italic">
+          &ldquo;{testimonial.text}&rdquo;
+        </p>
+      </div>
 
       {/* Author */}
       <div className="mt-5 flex items-center gap-3 border-t border-gray-50 pt-5">
@@ -42,7 +46,7 @@ export default function TestimonialCard({ testimonial }) {
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-900">{testimonial.name}</p>
-          <p className="text-xs text-gray-400">{testimonial.role}</p>
+          <p className="text-xs text-gray-400">{subtitle}</p>
         </div>
       </div>
     </div>

@@ -101,11 +101,12 @@ export const generatedPageTranslationsSix = {
     "Main Site": "मुख्य साइट",
     "Medtech Career": "मेडटेक कैरियर",
     "All Courses": "सभी कोर्स",
-    "Join as Teacher": "शिक्षक के रूप में शामिल हों",
-    "LinkedIn": "लिंक्डइन",
-    "Twitter": "ट्विटर",
-    "YouTube": "यूट्यूब",
+    // "Join as Teacher": "शिक्षक के रूप में शामिल हों",
+    "Facebook": "फेसबुक",
     "Instagram": "इंस्टाग्राम",
+    "LinkedIn": "लिंक्डइन",
+    "WhatsApp": "व्हाट्सऐप",
+    "YouTube": "यूट्यूब",
     
     // Business Footer
     "Empowering healthcare organizations with targeted upskilling solutions for medical coding, billing, and compliance teams.": "चिकित्सा कोडिंग, बिलिंग और अनुपालन टीमों के लिए लक्षित कौशल वृद्धि समाधान के साथ स्वास्थ्यसेवा संगठनों को सशक्त बनाना।",
@@ -357,11 +358,12 @@ export const generatedPageTranslationsSix = {
     "Main Site": "പ്രധാന സൈറ്റ്",
     "Medtech Career": "മെഡ്ടെക് കരിയർ",
     "All Courses": "എല്ലാ കോഴ്സുകൾ",
-    "Join as Teacher": "ശിക്ഷകനായി ചേരുക",
-    "LinkedIn": "LinkedIn",
-    "Twitter": "ട്വിറ്റർ",
-    "YouTube": "YouTube",
+    // "Join as Teacher": "ശിക്ഷകനായി ചേരുക",
+    "Facebook": "Facebook",
     "Instagram": "Instagram",
+    "LinkedIn": "LinkedIn",
+    "WhatsApp": "WhatsApp",
+    "YouTube": "YouTube",
     
     // Business Footer
     "Empowering healthcare organizations with targeted upskilling solutions for medical coding, billing, and compliance teams.": "മെഡിക്കൽ കോഡിംഗ്, ബിലിംഗ്, കൂടാതെ അനുയോജ്യത ടീമുകൾക്കുള്ള ലക്ഷ്യ നൈപുണ്യ വർദ്ധനം പരിഹാരങ്ങളുള്ള ഹെൽത്ത്കെയർ സ്ഥാപനങ്ങൾ സശക്തമാക്കുന്നത്.",

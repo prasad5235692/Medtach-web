@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, Mail, MapPin, Linkedin, Twitter, Youtube, Instagram } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, MessageSquare, Phone, Youtube } from "lucide-react";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useLanguage } from "@/context/LanguageContext";
 
 const socialIcons = {
-  linkedin: Linkedin,
-  twitter: Twitter,
-  youtube: Youtube,
+  facebook: Facebook,
   instagram: Instagram,
+  linkedin: Linkedin,
+  whatsapp: MessageSquare,
+  youtube: Youtube,
 };
 
 export default function Footer() {
@@ -65,11 +66,17 @@ export default function Footer() {
               {content.socials.map(({ label, icon, href }) => {
                 const Icon = socialIcons[icon];
 
+                if (!Icon) {
+                  return null;
+                }
+
                 return (
                   <a
                     key={icon}
                     href={href}
                     aria-label={label}
+                    target="_blank"
+                    rel="noreferrer"
                     className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-gray-400 transition hover:border-purple-400/50 hover:bg-purple-400/10 hover:text-purple-300"
                   >
                     <Icon size={15} />

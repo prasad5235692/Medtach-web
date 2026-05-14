@@ -18,16 +18,15 @@ export default function ClientLogosSlider() {
 
         <div className="page-container relative">
           <div className="overflow-hidden rounded-3xl border border-white/40 bg-white/30 py-12 shadow-xl shadow-purple-100/40 backdrop-blur-md">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 rounded-l-3xl bg-linear-to-r from-[#faf5ff] to-transparent" />
-            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 rounded-r-3xl bg-linear-to-l from-[#faf5ff] to-transparent" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 rounded-l-3xl bg-linear-to-r from-white to-transparent" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 rounded-r-3xl bg-linear-to-l from-white to-transparent" />
 
             <div className="flex overflow-hidden">
               <div className="flex animate-logo-scroll items-center gap-6 hover:[animation-play-state:paused]">
                 {track.map((logo, index) => (
-                  <div key={`${logo.src}-${index}`} className="group relative flex h-30 w-60 shrink-0 cursor-pointer select-none items-center justify-center rounded-full border border-white/10 bg-white/40 p-3 shadow-md shadow-purple-100/30 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-purple-200/80 hover:bg-white/80 hover:shadow-lg hover:shadow-purple-200/40">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: "radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)" }} />
-                    <div className="relative h-full w-full transition-all duration-300">
-                      <Image src={logo.src} alt={logo.alt} fill sizes="400px" className="object-contain" draggable={false} />
+                  <div key={`${logo.src}-${index}`} className="group relative flex h-24 w-44 shrink-0 cursor-pointer select-none items-center justify-center rounded-2xl border border-purple-400/30 bg-purple-200 p-4 shadow-md shadow-purple-900/30 transition-all duration-300 hover:scale-105 hover:bg-purple-600 hover:shadow-lg hover:shadow-purple-500/40">
+                    <div className="relative h-full w-full">
+                      <Image src={logo.src} alt={logo.alt} fill sizes="176px" className="object-contain" draggable={false} />
                     </div>
                   </div>
                 ))}

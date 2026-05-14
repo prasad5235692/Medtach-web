@@ -38,9 +38,14 @@ export default async function TestimonialsSection() {
           />
         </AnimateOnScroll>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((t, i) => (
-            <AnimateOnScroll key={t.name} animation="fade-up" delay={i * 100}>
+            <AnimateOnScroll
+              key={t.name}
+              animation="fade-up"
+              delay={i * 100}
+              className="h-full"
+            >
               <TestimonialCard testimonial={t} />
             </AnimateOnScroll>
           ))}

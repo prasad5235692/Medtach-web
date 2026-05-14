@@ -9,6 +9,13 @@ import { localizeContent } from "@/lib/i18n/content";
 export default async function CoursesSection() {
   const locale = await getLocale();
   const featured = getVisibleCourses(locale);
+  const basicCourseTitle =
+    featured.find((course) => course.slug === "bmct")?.title ?? "Basic Medical Coding Training";
+  const advancedCourseTitle =
+    featured.find((course) => course.slug === "amct")?.title ?? "Advanced Medical Coding Training";
+  const certifiedCourseTitle =
+    featured.find((course) => course.slug === "cpc-certification")?.title ??
+    "Certified Professional Coder Training";
   const content = localizeContent(
     {
       label: "Popular Courses",
@@ -74,9 +81,9 @@ export default async function CoursesSection() {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
-            <Link href="/course/bmct" className="font-semibold text-purple-700 hover:underline">Basic Medical Coding Training</Link>,&nbsp;
-            <Link href="/course/amct" className="font-semibold text-purple-700 hover:underline">Advanced Medical Coding Training</Link>,&nbsp;
-            <Link href="/course/cpc-certification" className="font-semibold text-purple-700 hover:underline">Certified Medical Coding Training</Link>&nbsp;|
+            <Link href="/course/bmct" className="font-semibold text-purple-700 hover:underline">{basicCourseTitle}</Link>,&nbsp;
+            <Link href="/course/amct" className="font-semibold text-purple-700 hover:underline">{advancedCourseTitle}</Link>,&nbsp;
+            <Link href="/course/cpc-certification" className="font-semibold text-purple-700 hover:underline">{certifiedCourseTitle}</Link>&nbsp;|
             <Link href="/courses" className="ml-2 font-semibold text-orange-600 hover:underline">{content.browseAll}</Link>
           </p>
         </div>

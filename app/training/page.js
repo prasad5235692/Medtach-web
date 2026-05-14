@@ -67,7 +67,7 @@ const programs = [
     topics: [
       "AAPC CPC Exam Strategy & Structure",
       "Complete ICD-10-CM & CPT-4 Review",
-      "8 Fully Solved CPC Practice Papers",
+      "5 Fully Solved CPC Practice Papers",
       "Specialty Module Deep-Dives",
       "Speed & Accuracy Workshops",
       "Final Mock Exam & Performance Review",

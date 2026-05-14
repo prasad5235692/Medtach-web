@@ -15,7 +15,7 @@ const coursesPageContent = {
   },
   learningPath: {
     label: "Recommended Learning Path",
-    value: "Healthcare → Basic Medical Coding Training → Advanced Medical Coding Training → Certified Medical Coding Training",
+    value: "Healthcare → Basic Medical Coding Training → Advanced Medical Coding Training → Certified Professional Coder Training",
     ctaLabel: "View Training Details →",
   },
   sectionHeading: {
@@ -108,7 +108,7 @@ const coursesPageTranslations = {
     },
     learningPath: {
       label: "अनुशंसित लर्निंग पाथ",
-      value: "हेल्थकेयर → बेसिक मेडिकल कोडिंग प्रशिक्षण → उन्नत मेडिकल कोडिंग प्रशिक्षण → प्रमाणित मेडिकल कोडिंग प्रशिक्षण",
+      value: "हेल्थकेयर → बेसिक मेडिकल कोडिंग प्रशिक्षण → उन्नत मेडिकल कोडिंग प्रशिक्षण → प्रमाणित प्रोफेशनल कोडर प्रशिक्षण",
       ctaLabel: "प्रशिक्षण विवरण देखें →",
     },
     sectionHeading: {
@@ -138,7 +138,7 @@ const coursesPageTranslations = {
     },
     learningPath: {
       label: "ശുപാർശ ചെയ്യുന്ന ലേണിംഗ് പാത",
-      value: "ഹെൽത്ത്‌കെയർ → അടിസ്ഥാന മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ് → അഡ്വാൻസ്ഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ് → സർട്ടിഫൈഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ്",
+      value: "ഹെൽത്ത്‌കെയർ → അടിസ്ഥാന മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ് → അഡ്വാൻസ്ഡ് മെഡിക്കൽ കോഡിംഗ് ട്രെയിനിംഗ് → സർട്ടിഫൈഡ് പ്രൊഫഷണൽ കോഡർ ട്രെയിനിംഗ്",
       ctaLabel: "ട്രെയിനിംഗ് വിശദാംശങ്ങൾ കാണുക →",
     },
     sectionHeading: {

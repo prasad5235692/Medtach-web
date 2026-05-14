@@ -313,7 +313,7 @@ export const courses = [
   },
   {
     slug: "cpc-certification",
-    title: "Certified Medical Coding Training",
+    title: "Certified Professional Coder Training",
     category: "Healthcare",
     badge: "High ROI",
     badgeColor: "blue",
@@ -330,7 +330,7 @@ export const courses = [
       "Final Mock Exam & Review",
     ],
     highlights: [
-      "8 fully solved CPC practice papers",
+      "5 fully solved CPC practice papers",
       "CPC-certified trainers (10+ years)",
       "High first-attempt pass rate",
       "Post-certification placement support",

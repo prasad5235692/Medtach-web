@@ -65,26 +65,16 @@ const staticPageContent = {
       subtitle:
         "Our placement network spans the top healthcare BPOs, hospitals, and MNCs in India.",
       companies: [
-        { id: "apollo", name: "Apollo Hospitals" },
-        { id: "hcl", name: "HCL Healthcare" },
-        { id: "cognizant", name: "Cognizant Health" },
-        { id: "accenture", name: "Accenture" },
         { id: "omega", name: "Omega Healthcare" },
-        { id: "medrecords", name: "MedRecords India" },
-        { id: "allscripts", name: "Allscripts" },
-        { id: "change", name: "Change Healthcare" },
-        { id: "conifer", name: "Conifer Health" },
-        { id: "nthrive", name: "nThrive" },
-        { id: "r1", name: "R1 RCM" },
-        { id: "sutherland", name: "Sutherland Healthcare" },
-        { id: "wns", name: "WNS Healthcare" },
-        { id: "startek", name: "Startek Health" },
-        { id: "firstsource", name: "Firstsource" },
-        { id: "mphasis", name: "Mphasis" },
-        { id: "wipro", name: "Wipro BPS Health" },
-        { id: "gebbs", name: "Gebbs Healthcare" },
-        { id: "infosonics", name: "Infosonics" },
-        { id: "maximus", name: "Maximus India" },
+        { id: "pro-1", name: "PRO 1 Health Care" },
+        { id: "s2m", name: "S2M Health" },
+        { id: "medcode", name: "Medcode" },
+        { id: "access-healthcare", name: "Access Healthcare" },
+        { id: "vtech-health", name: "Vtech Health" },
+        { id: "clarus", name: "CLARUS" },
+        { id: "ajs-healthcare", name: "AJS Healthcare" },
+        { id: "corrohealth", name: "CorroHealth" },
+        { id: "optum-india", name: "Optum India" },
       ],
     },
     supportSection: {
@@ -205,12 +195,12 @@ const staticPageContent = {
   },
   collegeTraining: {
     metadata: {
-      title: "In-Campus College Training - Medtech Career",
+      title: "In-Campus College Orientation Program - Medtech Career",
     },
     hero: {
       label: "Institutional Training",
       titleLeading: "In-Campus",
-      titleHighlight: "College Training",
+      titleHighlight: "College Orientation Program",
       description:
         "Medtech Career partners with colleges across India to deliver industry-aligned medical coding and billing training directly on campus - preparing students before graduation.",
       primaryCtaLabel: "Partner With Us ->",
@@ -228,14 +218,11 @@ const staticPageContent = {
       subtitle:
         "Trusted by leading medical and paramedical colleges across South India and beyond.",
       colleges: [
-        { id: "sri-ramachandra", name: "Sri Ramachandra Institute of Higher Education", location: "Chennai, TN" },
-        { id: "manipal", name: "Manipal College of Health Professions", location: "Manipal, KA" },
-        { id: "kmch", name: "KMCH College of Pharmacy", location: "Coimbatore, TN" },
-        { id: "psg", name: "PSG College of Arts & Science", location: "Coimbatore, TN" },
-        { id: "sri-venkateswara", name: "Sri Venkateswara College of Pharmacy", location: "Tirupati, AP" },
-        { id: "srm", name: "SRM Institute of Science & Technology", location: "Chennai, TN" },
-        { id: "kle", name: "KLE University", location: "Belagavi, KA" },
-        { id: "saveetha", name: "Saveetha Institute of Medical & Technical Sciences", location: "Chennai, TN" },
+        { id: "bon-secours", name: "Bon Secours", location: "Thanjavur" },
+        { id: "marudhupandiyar", name: "Marudhupandiyar College", location: "Thanjavur" },
+        { id: "cms", name: "CMS College", location: "Namakkal" },
+        { id: "prist", name: "Prist University", location: "Thanjavur" },
+        { id: "holy-cross", name: "Holy Cross", location: "Trichy" },
       ],
     },
     programsSection: {
@@ -532,12 +519,12 @@ const staticPageTranslations = {
     },
     collegeTraining: {
       metadata: {
-        title: "ऑन-कैंपस कॉलेज ट्रेनिंग - Medtech Career",
+        title: "कैंपस-स्थित कॉलेज ओरिएंटेशन कार्यक्रम - Medtech Career",
       },
       hero: {
         label: "संस्थागत प्रशिक्षण",
         titleLeading: "ऑन-कैंपस",
-        titleHighlight: "कॉलेज ट्रेनिंग",
+        titleHighlight: "कॉलेज ओरिएंटेशन कार्यक्रम",
         description:
           "Medtech Career भारत भर के कॉलेजों के साथ मिलकर कैंपस पर ही उद्योग-अनुरूप मेडिकल कोडिंग और बिलिंग प्रशिक्षण देता है - ताकि छात्र ग्रेजुएशन से पहले तैयार हो जाएं।",
         primaryCtaLabel: "हमारे साथ साझेदारी करें ->",
@@ -555,14 +542,11 @@ const staticPageTranslations = {
         subtitle:
           "दक्षिण भारत और उससे आगे के अग्रणी मेडिकल और पैरामेडिकल कॉलेजों द्वारा विश्वसनीय।",
         colleges: [
-          { id: "sri-ramachandra", name: "श्री रामचंद्रा इंस्टीट्यूट ऑफ हायर एजुकेशन", location: "चेन्नई, तमिलनाडु" },
-          { id: "manipal", name: "मणिपाल कॉलेज ऑफ हेल्थ प्रोफेशन्स", location: "मणिपाल, कर्नाटक" },
-          { id: "kmch", name: "केएमसीएच कॉलेज ऑफ फार्मेसी", location: "कोयंबटूर, तमिलनाडु" },
-          { id: "psg", name: "पीएसजी कॉलेज ऑफ आर्ट्स एंड साइंस", location: "कोयंबटूर, तमिलनाडु" },
-          { id: "sri-venkateswara", name: "श्री वेंकटेश्वर कॉलेज ऑफ फार्मेसी", location: "तिरुपति, आंध्र प्रदेश" },
-          { id: "srm", name: "एसआरएम इंस्टीट्यूट ऑफ साइंस एंड टेक्नोलॉजी", location: "चेन्नई, तमिलनाडु" },
-          { id: "kle", name: "केएलई यूनिवर्सिटी", location: "बेलगावी, कर्नाटक" },
-          { id: "saveetha", name: "सविता इंस्टीट्यूट ऑफ मेडिकल एंड टेक्निकल साइंसेज", location: "चेन्नई, तमिलनाडु" },
+          { id: "bon-secours", name: "Bon Secours", location: "तंजावुर" },
+          { id: "marudhupandiyar", name: "Marudhupandiyar College", location: "तंजावुर" },
+          { id: "cms", name: "CMS College", location: "नामक्कल" },
+          { id: "prist", name: "Prist University", location: "तंजावुर" },
+          { id: "holy-cross", name: "Holy Cross", location: "तिरुचिरापल्ली" },
         ],
       },
       programsSection: {
@@ -857,12 +841,12 @@ const staticPageTranslations = {
     },
     collegeTraining: {
       metadata: {
-        title: "ക്യാമ്പസ് കോളജ് പരിശീലനം - Medtech Career",
+        title: "കോളേജ് ക്യാമ്പസിലെ ഓറിയന്റേഷൻ പ്രോഗ്രാം - Medtech Career",
       },
       hero: {
         label: "സ്ഥാപന പരിശീലനം",
         titleLeading: "ക്യാമ്പസിലെ",
-        titleHighlight: "കോളജ് പരിശീലനം",
+        titleHighlight: "കോളേജ് ഓറിയന്റേഷൻ പ്രോഗ്രാം",
         description:
           "Medtech Career ഇന്ത്യയിലെ കോളജുകളുമായി ചേർന്ന് ക്യാമ്പസിൽ തന്നെ ഇൻഡസ്ട്രി-അലൈൻഡ് മെഡിക്കൽ കോഡിംഗ്, ബില്ലിംഗ് പരിശീലനം നൽകുന്നു - വിദ്യാർത്ഥികളെ ബിരുദദാനത്തിന് മുൻപേ തയ്യാറാക്കാൻ.",
         primaryCtaLabel: "ഞങ്ങളോടൊപ്പം പങ്കാളിയാകൂ ->",
@@ -880,14 +864,11 @@ const staticPageTranslations = {
         subtitle:
           "ദക്ഷിണേന്ത്യയിലും അതിനപ്പുറവും ഉള്ള മുൻനിര മെഡിക്കൽ, പാരാമെഡിക്കൽ കോളജുകൾ വിശ്വസിക്കുന്ന പരിശീലന പങ്കാളി.",
         colleges: [
-          { id: "sri-ramachandra", name: "ശ്രീ രാമചന്ദ്ര ഇൻസ്റ്റിറ്റ്യൂട്ട് ഓഫ് ഹൈയർ എജ്യുക്കേഷൻ", location: "ചെന്നൈ, തമിഴ്നാട്" },
-          { id: "manipal", name: "മണിപ്പാൽ കോളജ് ഓഫ് ഹെൽത്ത് പ്രൊഫഷൻസ്", location: "മണിപ്പാൽ, കര്‍ണാടക" },
-          { id: "kmch", name: "കെഎംസിഎച്ച് കോളജ് ഓഫ് ഫാർമസി", location: "കോയമ്പത്തൂർ, തമിഴ്നാട്" },
-          { id: "psg", name: "പിഎസ്ജി കോളജ് ഓഫ് ആർട്സ് ആൻഡ് സയൻസ്", location: "കോയമ്പത്തൂർ, തമിഴ്നാട്" },
-          { id: "sri-venkateswara", name: "ശ്രീ വെങ്കടേശ്വര കോളജ് ഓഫ് ഫാർമസി", location: "തിരുപ്പതി, ആന്ധ്രാപ്രദേശ്" },
-          { id: "srm", name: "എസ്ആർഎം ഇൻസ്റ്റിറ്റ്യൂട്ട് ഓഫ് സയൻസ് ആൻഡ് ടെക്നോളജി", location: "ചെന്നൈ, തമിഴ്നാട്" },
-          { id: "kle", name: "കെഎൽഇ യൂണിവേഴ്സിറ്റി", location: "ബെളഗാവി, കര്‍ണാടക" },
-          { id: "saveetha", name: "സവീത ഇൻസ്റ്റിറ്റ്യൂട്ട് ഓഫ് മെഡിക്കൽ ആൻഡ് ടെക്നിക്കൽ സയൻസസ്", location: "ചെന്നൈ, തമിഴ്നാട്" },
+          { id: "bon-secours", name: "Bon Secours", location: "തഞ്ചാവൂർ" },
+          { id: "marudhupandiyar", name: "Marudhupandiyar College", location: "തഞ്ചാവൂർ" },
+          { id: "cms", name: "CMS College", location: "നാമക്കൽ" },
+          { id: "prist", name: "Prist University", location: "തഞ്ചാവൂർ" },
+          { id: "holy-cross", name: "Holy Cross", location: "തിരുച്ചി" },
         ],
       },
       programsSection: {

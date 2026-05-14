@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, ExternalLink } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, MessageSquare, Phone, Youtube } from "lucide-react";
 import { getClientPageContent } from "@/data/clientPageContent";
 import { useLanguage } from "@/context/LanguageContext";
+
+const socialIcons = {
+  facebook: Facebook,
+  instagram: Instagram,
+  linkedin: Linkedin,
+  whatsapp: MessageSquare,
+  youtube: Youtube,
+};
 
 export default function AuthFooter() {
   const { language } = useLanguage();
@@ -20,11 +28,26 @@ export default function AuthFooter() {
             </Link>
             <p className="text-sm leading-relaxed text-gray-500">{content.description}</p>
             <div className="mt-1 flex gap-3">
-              {content.socials.map((social) => (
-                <a key={social.label} href={social.href} aria-label={social.label} className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition hover:border-purple-400 hover:text-purple-600">
-                  <ExternalLink size={13} />
-                </a>
-              ))}
+              {content.socials.map(({ href, icon, label }) => {
+                const Icon = socialIcons[icon];
+
+                if (!Icon) {
+                  return null;
+                }
+
+                return (
+                  <a
+                    key={icon}
+                    href={href}
+                    aria-label={label}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 transition hover:border-purple-400 hover:text-purple-600"
+                  >
+                    <Icon size={13} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

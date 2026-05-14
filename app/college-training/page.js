@@ -103,7 +103,7 @@ export default async function CollegeTrainingPage() {
               subtitle={content.partnersSection.subtitle}
             />
           </AnimateOnScroll>
-          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {content.partnersSection.colleges.map((college, i) => (
               <AnimateOnScroll key={college.id} animation="fade-up" delay={Math.floor(i / 4) * 80}>
                 <div className="group flex flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">

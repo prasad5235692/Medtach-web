@@ -96,7 +96,7 @@ export default function CounselingPage() {
                 {content.hero.primaryLabel}
               </a>
               <a
-                href="#pricing"
+                href="/contact"
                 className="rounded-lg border border-purple-200 bg-white px-8 py-3.5 text-sm font-semibold text-purple-700 transition hover:bg-purple-50"
               >
                 {content.hero.secondaryLabel}
