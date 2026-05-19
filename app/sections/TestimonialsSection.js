@@ -22,7 +22,7 @@ export default async function TestimonialsSection() {
       {/* Soft glowing blurred circles */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-20 top-1/3 h-72 w-72 rounded-full bg-purple-200/20 blur-3xl"
+        className="pointer-events-none absolute -left-20 top-1/3 h-72 w-72 rounded-full bg-purple-100/10 blur-3xl"
       />
       <div
         aria-hidden="true"

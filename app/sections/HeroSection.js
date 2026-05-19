@@ -22,6 +22,7 @@ export default async function HeroSection() {
         "MedTech Career is your trusted platform for building a successful future in the ever-evolving healthcare industry. We specialize in providing comprehensive training and career pathways for doctors, nurses, and aspiring healthcare IT professionals, life science and paramedical graduates helping them stay ahead in a technology-driven medical world.",
       primaryCta: "Explore Courses",
       secondaryCta: "Join 1-1 career Counseling",
+      instructorCta: "Join as Instructor",
       stats: [
         { value: "50+", label: "Courses" },
         { value: "3000+", label: "Placed" },
@@ -80,6 +81,9 @@ export default async function HeroSection() {
               <Link href="/contact" className="inline-flex w-full items-center justify-center rounded-lg border border-white/15 bg-white/5 px-7 py-3.5 text-center text-sm font-semibold text-white/85 backdrop-blur-sm transition hover:border-white/30 hover:bg-white/10 sm:w-auto">
                 {content.secondaryCta}
               </Link>
+              <Link href="/join-as-mentor" className="inline-flex w-full items-center justify-center rounded-lg border border-orange-400/30 bg-orange-500/10 px-7 py-3.5 text-center text-sm font-semibold text-orange-300 backdrop-blur-sm transition hover:border-orange-400/50 hover:bg-orange-500/20 sm:w-auto">
+                {content.instructorCta}
+              </Link>
             </div>
 
             <div className="animate-fadeIn flex flex-wrap items-start gap-6 border-t border-white/10 pt-6 sm:gap-8" style={{ animationDelay: "1.8s" }}>
@@ -95,13 +99,13 @@ export default async function HeroSection() {
             <div className="relative w-full max-w-md">
               <Image src="/background/students.png" alt="Hero Image" width={500} height={500} className="relative z-10 rounded-2xl shadow-lg" />
 
-              <div className="absolute -bottom-5 -left-5 z-10 flex items-center gap-3 rounded-xl border border-white/10 bg-[#07071a] px-4 py-3 shadow-xl">
+              {/* <div className="absolute -bottom-5 -left-5 z-10 flex items-center gap-3 rounded-xl border border-white/10 bg-[#07071a] px-4 py-3 shadow-xl">
                 <Award size={20} className="text-white/60" />
                 <div>
                   <p className="text-xs text-white/40">{content.certificationLabel}</p>
                   <p className="text-sm font-bold text-white">{content.certificationValue}</p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="absolute -right-5 -top-5 z-10 flex items-center gap-3 rounded-xl border border-purple-500/20 bg-purple-600/10 px-4 py-3 shadow-xl backdrop-blur-sm">
                 <Calendar size={20} className="text-purple-300/60" />
